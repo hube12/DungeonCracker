@@ -25,7 +25,7 @@ public class Main15 {
                 break;
             }
         }
-        return res;
+        return (int) (Math.log(res) / Math.log(2) + 1e-10);
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -40,11 +40,12 @@ public class Main15 {
         int posY = in.nextInt();
         System.out.println("Enter posZ of spawner, read it ");
         int posZ = in.nextInt();
-        System.out.println("Enter the sequence");
+        System.out.println("Enter the sequence, Read it from the image with the supplied script");
         String stringPattern = in.nextLine();
         stringPattern = in.nextLine();
 
         int THREAD_COUNT = 1 << THREAD_BITS;
+        System.out.println("Running on " + THREAD_COUNT + " threads");
         ExecutorService SERVICE = Executors.newFixedThreadPool(THREAD_COUNT);
         // int posX = 106;
         //int posY = 56;

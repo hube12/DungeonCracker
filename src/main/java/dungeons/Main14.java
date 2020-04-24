@@ -15,37 +15,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main14 {
 
-    static int highestPowerof2(int n)
-    {
+    static int highestPowerof2(int n) {
         int res = 0;
-        for (int i = n; i >= 1; i--)
-        {
+        for (int i = n; i >= 1; i--) {
             // If i is a power of 2
-            if ((i & (i - 1)) == 0)
-            {
+            if ((i & (i - 1)) == 0) {
                 res = i;
                 break;
             }
         }
-        return res;
+        return (int) (Math.log(res) / Math.log(2) + 1e-10);
     }
+
     public static void main(String[] args) throws InterruptedException {
         //============================================================ START INPUT
         Scanner in = new Scanner(System.in);
         System.out.println("Enter number of threads");
         int threads = in.nextInt();
-        int THREAD_BITS =highestPowerof2(threads);
-        System.out.println("Enter an posX");
+        int THREAD_BITS = highestPowerof2(threads);
+        System.out.println("Enter posX of spawner");
         int posX = in.nextInt();
-        System.out.println("Enter an posY");
+        System.out.println("Enter posY of spawner");
         int posY = in.nextInt();
-        System.out.println("Enter an posZ");
+        System.out.println("Enter posZ of spawner ");
         int posZ = in.nextInt();
-        System.out.println("Enter the sequence");
+        System.out.println("Enter the sequence Read it from the image with the supplied script");
         String stringPattern = in.nextLine();
         stringPattern = in.nextLine();
-
         int THREAD_COUNT = 1 << THREAD_BITS;
+        System.out.println("Running on " + THREAD_COUNT + " threads");
         ExecutorService SERVICE = Executors.newFixedThreadPool(THREAD_COUNT);
         // int posX = 106;
         //int posY = 56;
@@ -76,9 +74,9 @@ public class Main14 {
                     long seedCopy = seed;
                     long temp = back.nextSeed(seed);
 
-                    if(temp >>> (48 - 4) != offsetX)continue;
+                    if (temp >>> (48 - 4) != offsetX) continue;
                     seedCopy = Rand.JAVA_LCG.nextSeed(seedCopy);
-                    if(seedCopy >>> (48 - 4) != offsetZ)continue;
+                    if (seedCopy >>> (48 - 4) != offsetZ) continue;
 
                     seedCopy = skipFloorSize.nextSeed(seedCopy);
                     boolean floorMatches = true;
