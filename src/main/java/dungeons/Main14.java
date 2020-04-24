@@ -55,7 +55,7 @@ public class Main14 {
 
         int offsetX = posX & 15;
         int offsetZ = posZ & 15;
-        Integer[] pattern = stringPattern.chars().mapToObj(c -> c == '0' ? 0 : 1).toArray(Integer[]::new);
+        Integer[] pattern = stringPattern.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
         LCG back = Rand.JAVA_LCG.combine(-2);
         LCG skipFloorSize = Rand.JAVA_LCG.combine(2);

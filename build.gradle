@@ -19,7 +19,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "dungeons.Main"
+    mainClassName = "dungeons.Main15"
 }
 
 
@@ -44,9 +44,25 @@ test {
 
 
 
+task jar15(type: Jar) {
+    manifest {
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Main-Class": "dungeons.Main15"
+        )
+    }
+    outputs.upToDateWhen{false}
+    project.archivesBaseName = "DungeonCracker15"
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
+}
 
-
-task fatJar14(type: Jar) {
+task jar14(type: Jar) {
     manifest {
         attributes(
                 "Implementation-Title": project.name,
@@ -54,7 +70,8 @@ task fatJar14(type: Jar) {
                 "Main-Class": "dungeons.Main14"
         )
     }
-    project.archivesBaseName = "DungeonCracker15"
+    outputs.upToDateWhen{false}
+    project.archivesBaseName = "DungeonCracker14"
     from {
         configurations.runtimeClasspath.collect {
             it.isDirectory() ? it : zipTree(it)
