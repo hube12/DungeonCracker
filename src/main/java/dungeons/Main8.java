@@ -46,10 +46,10 @@ public class Main8 {
         int THREAD_COUNT = 1 << THREAD_BITS;
         System.out.println("Running on " + THREAD_COUNT + " threads");
         ExecutorService SERVICE = Executors.newFixedThreadPool(THREAD_COUNT);
-        int posX = 402 ;
-        int posY = 50;
-        int posZ = -146;
-        String stringPattern = "010101001101110110111100001101111011111101111111111111111101010111111110111111111";
+        int posX = -15 ;
+        int posY = 16 ;
+        int posZ = 102 ;
+        String stringPattern = "100111011010110011101010101011101111110111100110001000101111101";
         // 1 mossy
         // 0 cobble
         //============================================================ END INPUT
@@ -62,12 +62,17 @@ public class Main8 {
         LCG skipFloorSize = Rand.JAVA_LCG.combine(3);
 
         List<Long> decoratorSeeds = new ArrayList<>();
-        System.out.format("Seed space is in the range [%d, %d). \n", (long) posY << 39, (long) (posY + 1) << 39);
+        System.out.format("Seed space is in the range [%d, %d). \n", (long) posY << 41, (long) (posY + 1) << 41);
         AtomicInteger completedThreads = new AtomicInteger(0);
 
         for (int threadId = 0; threadId < THREAD_COUNT; threadId++) {
-            long seedsPerThread = (1L << 39) >> THREAD_BITS;
-            long lower = ((long) posY << 39) + seedsPerThread * threadId;
+            // nextInt(128)==posY means
+            // posY== (128*next(31))>>31
+            // so (posY<<31)/128 == next(31) but 128==2^7
+            // so (posY<<24) == this.seed>>17
+            // so posY << 41 == this.seed
+            long seedsPerThread = (1L << 41) >> THREAD_BITS;
+            long lower = ((long) posY << 41) + seedsPerThread * threadId;
             long upper = lower + seedsPerThread;
             System.out.format("Thread %d starting with bounds [%d, %d). \n", threadId, lower, upper);
             SERVICE.submit(() -> {
