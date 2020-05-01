@@ -19,7 +19,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "dungeons.Main15"
+    mainClassName = "dungeons.Main8"
 }
 
 
