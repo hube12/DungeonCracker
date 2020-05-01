@@ -1,6 +1,8 @@
+Deprecated, use: https://github.com/KaptainWutax/SeedCracker
+
 # Dungeon Cracker
 
-Support 1.14 and 1.15
+Support 1.14 and 1.15, able to crack a world seed from a single dungeon
 
 Credits to KaptainWutax and Matthew Bolan
 # Run on google colab
