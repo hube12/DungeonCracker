@@ -45,18 +45,18 @@ public class Main14 {
         int THREAD_COUNT = 1 << THREAD_BITS;
         System.out.println("Running on " + THREAD_COUNT + " threads");
         ExecutorService SERVICE = Executors.newFixedThreadPool(THREAD_COUNT);
-        // int posX = 106;
-        //int posY = 56;
-        //int posZ = -269;
-        //String stringPattern = "101110101111110111111101001011111111111111011111111110101101101";
+        // int posX = -162723;
+        //int posY = 16;
+        //int posZ = 116987;
+        //String stringPattern = "111101001101101011110111100010011111111101110011111111111110100";
         //============================================================ END INPUT
 
         int offsetX = posX & 15;
         int offsetZ = posZ & 15;
         Integer[] pattern = stringPattern.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
-        LCG back = Rand.JAVA_LCG.combine(-2);
-        LCG skipFloorSize = Rand.JAVA_LCG.combine(2);
+        LCG back = Rand.JAVA_LCG.combine(-1);
+        LCG skipFloorSize = Rand.JAVA_LCG.combine(3);
 
         List<Long> decoratorSeeds = new ArrayList<>();
         System.out.format("Seed space is in the range [%d, %d). \n", (long) posY << 40, (long) (posY + 1) << 40);
