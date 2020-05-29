@@ -107,7 +107,7 @@ public class Main1m2 {
                         count++;
                     }
                     if (floorMatches) {
-                        long decoratorSeed = Rand.JAVA_LCG.combine(-3).nextSeed(seed);
+                        long decoratorSeed = Rand.JAVA_LCG.combine(-2).nextSeed(seed);
                         decoratorSeeds.add(decoratorSeed);
                         System.out.format("Found seed %d.\n", decoratorSeed);
                     }
@@ -126,7 +126,7 @@ public class Main1m2 {
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
             for (int i = 0; i < 100000; i++) {
-                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, posX >> 4, posZ >> 4).forEach(el-> System.out.println(el+","));
+                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, (posX-8)>>4, (posZ-8)>>4).forEach(el-> System.out.println(el+","));
                 decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
             }
         }
