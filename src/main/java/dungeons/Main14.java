@@ -5,34 +5,23 @@ import dungeons.kaptainwutax.magic.PopulationReversal;
 import dungeons.kaptainwutax.magic.RandomSeed;
 import dungeons.kaptainwutax.util.LCG;
 import dungeons.kaptainwutax.util.Rand;
+import randomreverser.ReverserDevice;
+import randomreverser.call.FilteredSkip;
+import randomreverser.call.NextInt;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Main14 {
-
-    static int highestPowerof2(int n) {
-        int res = 0;
-        for (int i = n; i >= 1; i--) {
-            // If i is a power of 2
-            if ((i & (i - 1)) == 0) {
-                res = i;
-                break;
-            }
-        }
-        return (int) (Math.log(res) / Math.log(2) + 1e-10);
-    }
-
     public static void main(String[] args) throws InterruptedException {
         //============================================================ START INPUT
         Scanner in = new Scanner(System.in);
-        System.out.println("Enter number of threads");
-        int threads = in.nextInt();
-        int THREAD_BITS = highestPowerof2(threads);
         System.out.println("Enter posX of spawner");
         int posX = in.nextInt();
         System.out.println("Enter posY of spawner");
@@ -42,69 +31,36 @@ public class Main14 {
         System.out.println("Enter the sequence Read it from the image with the supplied script");
         String stringPattern = in.nextLine();
         stringPattern = in.nextLine();
-        int THREAD_COUNT = 1 << THREAD_BITS;
-        System.out.println("Running on " + THREAD_COUNT + " threads");
-        ExecutorService SERVICE = Executors.newFixedThreadPool(THREAD_COUNT);
         // int posX = -162723;
         //int posY = 16;
         //int posZ = 116987;
         //String stringPattern = "111101001101101011110111100010011111111101110011111111111110100";
         //============================================================ END INPUT
 
+
         int offsetX = posX & 15;
         int offsetZ = posZ & 15;
         Integer[] pattern = stringPattern.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
-        LCG back = Rand.JAVA_LCG.combine(-1);
-        LCG skipFloorSize = Rand.JAVA_LCG.combine(3);
+        ReverserDevice device = new ReverserDevice();
+        device.addCall(NextInt.withValue(16, offsetX));
+        device.addCall(NextInt.withValue(256, posY));
 
-        List<Long> decoratorSeeds = new ArrayList<>();
-        System.out.format("Seed space is in the range [%d, %d). \n", (long) posY << 40, (long) (posY + 1) << 40);
-        AtomicInteger completedThreads = new AtomicInteger(0);
+        device.addCall(NextInt.withValue(16, offsetZ));
+        device.addCall(NextInt.consume(2, 2)); //Skip size.
 
-        for (int threadId = 0; threadId < THREAD_COUNT; threadId++) {
-            long seedsPerThread = (1L << 40) >> THREAD_BITS;
-            long lower = ((long) posY << 40) + seedsPerThread * threadId;
-            long upper = lower + seedsPerThread;
-
-            System.out.format("Thread %d starting with bounds [%d, %d). \n", threadId, lower, upper);
-
-            SERVICE.submit(() -> {
-                for (long seed = lower; seed < upper; seed++) {
-                    long seedCopy = seed;
-                    long temp = back.nextSeed(seed);
-
-                    if (temp >>> (48 - 4) != offsetX) continue;
-                    seedCopy = Rand.JAVA_LCG.nextSeed(seedCopy);
-                    if (seedCopy >>> (48 - 4) != offsetZ) continue;
-
-                    seedCopy = skipFloorSize.nextSeed(seedCopy);
-                    boolean floorMatches = true;
-
-                    for (int block : pattern) {
-                        seedCopy = Rand.JAVA_LCG.nextSeed(seedCopy);
-                        int nextInt4 = (int) (seedCopy >>> (48 - 2));
-
-                        if ((block == 1 && nextInt4 == 0) || (block == 0 && nextInt4 != 0)) {
-                            floorMatches = false;
-                            break;
-                        }
-                    }
-
-                    if (floorMatches) {
-                        long decoratorSeed = Rand.JAVA_LCG.combine(-2).nextSeed(seed);
-                        decoratorSeeds.add(decoratorSeed);
-                        System.out.format("Found seed %d.\n", decoratorSeed);
-                    }
-                }
-
-                completedThreads.getAndIncrement();
-            });
+        for (Integer integer : pattern) {
+            if (integer == 0) {
+                device.addCall(NextInt.withValue(4, 0));
+            } else if (integer == 1) {
+                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
+            } else {
+                device.addCall(NextInt.consume(4, 1));
+            }
         }
 
-        while (completedThreads.get() != THREAD_COUNT) {
-            Thread.sleep(50);
-        }
+        Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        decoratorSeeds.forEach(s -> System.out.println("Found Dungeon seed: " + decoratorSeeds));
 
         System.out.format("Finished dungeon search and looking for world seeds.\n");
 

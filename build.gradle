@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.mjtb49:LattiCG:3bc6fbdd94fc4763ba6fce3f96353018eae15e84'
+    implementation 'com.github.KaptainWutax:LattiCG:b2a338f7bd765dcd184136c2245ea5765b75edf8'
 }
 
 application {
