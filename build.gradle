@@ -6,6 +6,7 @@ defaultTasks 'clean', 'run'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -15,7 +16,7 @@ repositories {
 }
 
 dependencies {
-
+    implementation 'com.github.KaptainWutax:LattiCG:b2a338f7bd765dcd184136c2245ea5765b75edf8'
 }
 
 application {
