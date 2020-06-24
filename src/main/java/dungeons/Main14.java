@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Main14 {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         //============================================================ START INPUT
         Scanner in = new Scanner(System.in);
         System.out.println("Enter posX of spawner");
@@ -36,7 +36,6 @@ public class Main14 {
         //int posZ = 116987;
         //String stringPattern = "111101001101101011110111100010011111111101110011111111111110100";
         //============================================================ END INPUT
-
 
         int offsetX = posX & 15;
         int offsetZ = posZ & 15;

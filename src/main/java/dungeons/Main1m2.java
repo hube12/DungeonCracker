@@ -65,7 +65,6 @@ public class Main1m2 {
         Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
         decoratorSeeds.forEach(s -> System.out.println("Found Dungeon seed: " + decoratorSeeds));
         System.out.format("Finished dungeon search and looking for structure seeds, you need other structure or dungeon to get the correct one, outputting 1000.\n");
-        //decoratorSeeds.add(42704106289324L);
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
             for (int i = 0; i < 100000; i++) {

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class Main15 {
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         //============================================================ START INPUT
         Scanner in = new Scanner(System.in);
         System.out.println("Enter posX of spawner");
@@ -33,10 +33,11 @@ public class Main15 {
         System.out.println("Enter the sequence, Read it from the image with the supplied script");
         String stringPattern = in.nextLine();
         stringPattern = in.nextLine();
-        // int posX = 106;
-        //int posY = 56;
-        //int posZ = -269;
-        //String stringPattern = "101110101111110111111101001011111111111111011111111110101101101";
+
+        //int posX = 61  ;
+        //int posY = 13  ;
+        //int posZ = 1194;
+        //String stringPattern = "110111111111111111111100101101001111001011011010111111101100111010111111011101101";
         //============================================================ END INPUT
 
         int offsetX = posX & 15;
