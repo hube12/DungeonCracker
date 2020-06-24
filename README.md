@@ -2,7 +2,7 @@ Deprecated, use: https://github.com/KaptainWutax/SeedCracker
 
 # Dungeon Cracker
 
-Support 1.14 and 1.15, able to crack a world seed from a single dungeon
+Support all versions of minecraft (1.16 incluede), able to crack a world seed from a single dungeon (or 2 for 1.13-)
 
 Credits to KaptainWutax and Matthew Bolan
 # Run on google colab
