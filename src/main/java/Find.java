@@ -7,13 +7,13 @@ import dungeons.kaptainwutax.util.Rand;
 public class Find {
     public static void main(String[] args) {
 
-        sixteen();
+        twelve();
     }
     private static void twelve(){
-        int posX = 1673  ;
+        int posX = 2394  ;
         int posY = 20  ;
-        int posZ = -292;
-        long dungeonSeed = 255455040733081L;
+        int posZ = 15510;
+        long dungeonSeed = 227076706119835L;
         for (int i = 0; i < 10000; i++) {
             PopReversal2TheHalvening.getSeedFromChunkseedPre13(dungeonSeed ^ Rand.JAVA_LCG.multiplier, (posX - 8) >> 4, (posZ - 8) >> 4).forEach(System.out::println);
             dungeonSeed=Rand.JAVA_LCG.combine(-1).nextSeed(dungeonSeed);

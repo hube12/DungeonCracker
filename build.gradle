@@ -17,6 +17,8 @@ repositories {
 
 dependencies {
     implementation 'com.github.KaptainWutax:LattiCG:b2a338f7bd765dcd184136c2245ea5765b75edf8'
+    implementation 'com.github.KaptainWutax:SeedUtils:-SNAPSHOT'
+    implementation 'com.github.KaptainWutax:BiomeUtils:-SNAPSHOT'
 }
 
 application {
