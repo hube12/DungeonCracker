@@ -5,12 +5,15 @@ import dungeons.kaptainwutax.magic.PopulationReversal;
 import dungeons.kaptainwutax.magic.RandomSeed;
 import dungeons.kaptainwutax.util.LCG;
 import dungeons.kaptainwutax.util.Rand;
-
 import gui.MCVersion;
+import kaptainwutax.biomeutils.Biome;
 import randomreverser.ReverserDevice;
 import randomreverser.call.FilteredSkip;
 import randomreverser.call.NextInt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,21 +21,31 @@ public class VersionCrack {
     private int posX;
     private final int posY;
     private int posZ;
+    private final Biome biome;
     String stringPattern;
     MCVersion version;
 
+    public VersionCrack(MCVersion version, int posX, int posY, int posZ, String stringPattern, Biome biome) {
+        this.posX = posX;
+        this.posY = posY;
+        this.posZ = posZ;
+        this.stringPattern = stringPattern;
+        this.version = version;
+        this.biome = biome;
+    }
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String stringPattern) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
         this.stringPattern = stringPattern;
         this.version = version;
+        this.biome = Biome.PLAINS;
     }
 
     public Result run() {
         switch (version) {
             case v1_16:
-                return crack1_16();
+                return crack1_16(biome);
             case v1_15:
                 return crack1_15();
             case v1_14:
@@ -51,7 +64,18 @@ public class VersionCrack {
         }
     }
 
-    public Result crack1_16() {
+    private int getOrdinalBiome(Biome biome) {
+        // there is a mineshaft in all 68 biomes ( 46 in defaultLand, 10 in defaultOcean,
+        // 6 in DefaultFeature, 6 in defaultMesa), 2 biomes have burried treasure and
+        // 3 have fossils
+        List<Biome> beachBiomes = new ArrayList<>(Arrays.asList(Biome.SNOWY_BEACH, Biome.BEACH));
+        List<Biome> fossilBiomes = new ArrayList<>(Arrays.asList(Biome.SWAMP, Biome.SWAMP_HILLS, Biome.DESERT));
+        return 1 + (beachBiomes.contains(biome) ? 1 : 0) + (fossilBiomes.contains(biome) ? 1 : 0);
+    }
+
+    public Result crack1_16(Biome biome) {
+
+
         Result result = new Result();
         int offsetX = posX & 15;
         int offsetZ = posZ & 15;
@@ -86,7 +110,7 @@ public class VersionCrack {
 
             for (int i = 0; i < 8; i++) {
                 // they changed and added lake in the enum so 3 * 10000 + pos in the UNDERGROUND_STRUCTURES so 2 (yeah it changed)
-                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30002L, posX & -16, posZ & -16).forEach(structureSeed -> {
+                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - getOrdinalBiome(biome), posX & -16, posZ & -16).forEach(structureSeed -> {
                     System.out.format("Structure seed %d... \n", structureSeed);
                     result.addStructureSeed(structureSeed);
                     for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
