@@ -4,6 +4,8 @@ import kaptainwutax.biomeutils.Biome;
 
 public class Main {
     public static void main(String[] args) {
+        test1_16();
+    }
 
         System.out.println(new VersionCrack(MCVersion.v1_8, 863, 30, 224, "1001111110111011101010111122001000100111101100001").run().toString());
     }

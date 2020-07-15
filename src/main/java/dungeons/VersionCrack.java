@@ -67,11 +67,10 @@ public class VersionCrack {
 
     private int getOrdinalBiome(Biome biome) {
         // there is a mineshaft (so 2 because 2 loops) in all 68 biomes ( 46 in defaultLand, 10 in defaultOcean,
-        // 6 in DefaultFeature, 6 in defaultMesa), 2 biomes have burried treasure and
+        // 6 in DefaultFeature, 6 in defaultMesa) and
         // 3 have fossils
-        List<Biome> beachBiomes = new ArrayList<>(Arrays.asList(Biome.SNOWY_BEACH, Biome.BEACH));
         List<Biome> fossilBiomes = new ArrayList<>(Arrays.asList(Biome.SWAMP, Biome.SWAMP_HILLS, Biome.DESERT));
-        return 2 + (beachBiomes.contains(biome) ? 1 : 0) + (fossilBiomes.contains(biome) ? 1 : 0);
+        return 2 + (fossilBiomes.contains(biome) ? 1 : 0);
     }
 
     public Result crack1_16(Biome biome) {
