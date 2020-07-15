@@ -43,6 +43,7 @@ public class VersionCrack {
     }
 
     public Result run() {
+        System.out.println(version);
         switch (version) {
             case v1_16:
                 return crack1_16(biome);

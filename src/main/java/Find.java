@@ -7,7 +7,7 @@ import dungeons.kaptainwutax.util.Rand;
 public class Find {
     public static void main(String[] args) {
 
-        twelve();
+        sixteen();
     }
     private static void twelve(){
         int posX = 2394  ;
@@ -20,9 +20,9 @@ public class Find {
         }
     }
     private static void fifteen(){
-        int posX = 701300 ;
-        int posZ = -599977;
-        long decoratorSeed = 201550308667634L;
+        int posX = 5749   ;
+        int posZ = -7617;
+        long decoratorSeed = 239658245455776L;
         LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
         for (int i = 0; i < 8; i++) {
             PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, posX & -16, posZ & -16).forEach(structureSeed -> {
@@ -39,17 +39,36 @@ public class Find {
     }
     private static void sixteen(){
 
-        int posX = -1840;
-        int posZ = -1275;
-        long decoratorSeed = 56031235379053L;
+        /*
+        Structure seed 198292443665051...
+Structure seed 232211695270555...
+Structure seed 108332548843494...
+Structure seed 158283023404932...
+Structure seed 264964616996740...
+Structure seed 18256993836932...
+Structure seed 135967568045807...
+Structure seed 220919009856239...
+Structure seed 249557224506058...
+Structure seed 99967220858405...
+Structure seed 122401275890213...
+Structure seed 41743401148965...
+Structure seed 83611965361736...
+
+         */
+        long dungeon1=239658245455776L;
+        int posX1=-2038;
+        int posZ1=7682;
+        int posX = -2038;
+        int posZ = 7682;
+        long decoratorSeed = 239658245455776L;
         LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
         for (int i = 0; i < 8; i++) {
             PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30002L, posX & -16, posZ & -16).forEach(structureSeed -> {
-                //System.out.format("Structure seed %d... \n", structureSeed);
+                System.out.format("Structure seed %d... \n", structureSeed);
                 for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                     long worldSeed = (upperBits << 48) | structureSeed;
                     if (!RandomSeed.isRandomSeed(worldSeed)) continue;
-                    System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
+                    //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
                 }
             });
             decoratorSeed = failedDungeon.nextSeed(decoratorSeed);

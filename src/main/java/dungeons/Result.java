@@ -1,7 +1,10 @@
 package dungeons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Result {
     private final List<Long> dungeonSeeds = new ArrayList<>();
@@ -40,7 +43,7 @@ public class Result {
     public String toString() {
         return "Result{" +
                 "dungeonSeeds=" + dungeonSeeds.toString() +
-                ", structureSeeds=" + structureSeeds.toString() +
+                ", structureSeeds=" + structureSeeds.stream().map(e->e.toString()+"L").collect(Collectors.toList())+
                 ", worldSeeds=" + worldSeeds.toString() +
                 '}';
     }
