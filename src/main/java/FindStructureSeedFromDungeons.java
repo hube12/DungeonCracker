@@ -42,7 +42,7 @@ public class FindStructureSeedFromDungeons {
             for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                 long worldSeed = (upperBits << 48) | seed;
                 if (!RandomSeed.isRandomSeed(worldSeed)) continue;
-                System.out.format("WorldSeed: %d", worldSeed);
+                System.out.format("WorldSeed: %d\n", worldSeed);
             }
         }
     }
