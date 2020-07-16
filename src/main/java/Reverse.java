@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Reverse {
     public static void main(String[] args) {
-        long structureSeed=169085438844924L;
+        long structureSeed=192904759275619L;
         for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
             long worldSeed = (upperBits << 48) | structureSeed;
             if (!RandomSeed.isRandomSeed(worldSeed)) continue;
