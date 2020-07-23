@@ -6,7 +6,8 @@ public class Main {
     public static void main(String[] args) {
 
 
-        System.out.println(new VersionCrack(MCVersion.v1_8, 863, 30, 224, "1001111110111011101010111122001000100111101100001").run().toString());
+        System.out.println(new VersionCrack(MCVersion.vLegacy, -367,
+                12 ,-964, "1111011111100101111111111011111010110011110111010").run().toString());
     }
 
     public static void test1_16() {

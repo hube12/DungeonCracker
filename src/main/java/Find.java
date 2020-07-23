@@ -7,7 +7,26 @@ import dungeons.kaptainwutax.util.Rand;
 public class Find {
     public static void main(String[] args) {
 
-        sixteen();
+        onedotsix();
+    }
+
+    private static void onedotsix(){
+        int posX = 131;
+        int posY = 36;
+        int posZ = 166;
+        long dungeonSeed = 88539881386199L;
+        for (int i = 0; i < 7; i++) {
+            LCG failedDungeon = Rand.JAVA_LCG.combine(-5*i);
+            dungeonSeed=failedDungeon.nextSeed(dungeonSeed);
+
+            LCG failedLava=Rand.JAVA_LCG.combine(-1);
+            dungeonSeed=failedLava.nextSeed(dungeonSeed);
+
+            LCG failedLavaHeight=Rand.JAVA_LCG.combine(-5);
+            dungeonSeed=failedLavaHeight.nextSeed(dungeonSeed);
+
+            PopReversal2TheHalvening.getSeedFromChunkseedPre13(dungeonSeed ^ Rand.JAVA_LCG.multiplier,(posX - 8) >> 4, (posZ - 8) >> 4).forEach(System.out::println);
+        }
     }
     private static void twelve(){
         int posX = 2394  ;
