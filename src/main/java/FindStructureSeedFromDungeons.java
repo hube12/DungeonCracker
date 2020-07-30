@@ -25,15 +25,43 @@ public class FindStructureSeedFromDungeons {
         public long getPrevious() {
             return dungeonSeed = nextSeed.nextSeed(dungeonSeed);
         }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "dungeonSeed=" + dungeonSeed +
+                    ", posX=" + posX +
+                    ", posZ=" + posZ +
+                    '}';
+        }
     }
 
 
     public static void main(String[] args) {
         List<Data> dataList = new ArrayList<>();
-        dataList.add( new Data(254892590318259L,  -367, -964));
-        dataList.add( new Data(72416206423802L, -271,  -1239));
-        dataList.add( new Data(263445769234434L, 1325,  -3919));
-        dataList.add( new Data(83106984196729L, -414,  -1769));
+        while (true){
+            Scanner in = new Scanner(System.in);
+            System.out.println("Enter posX of spawner");
+            int posX = in.nextInt();
+            System.out.println("Enter posZ of spawner");
+            int posZ = in.nextInt();
+            System.out.println("Enter the dungeon seed obtained before");
+            long seed = in.nextLong();
+            System.out.println("More dungeon seeds? (Y/N)");
+            String stringPattern = in.nextLine();
+            stringPattern = in.nextLine();
+            dataList.add( new Data(seed,  posX, posZ));
+            if (!stringPattern.toLowerCase().equals("y")){
+                break;
+            }
+
+        }
+
+        //System.out.println(Arrays.toString(dataList.toArray()));
+        //dataList.add( new Data(254892590318259L,  -367, -964));
+        //dataList.add( new Data(72416206423802L, -271,  -1239));
+        //dataList.add( new Data(263445769234434L, 1325,  -3919));
+        //dataList.add( new Data(83106984196729L, -414,  -1769));
 
         List<Long> res = crack(dataList);
         if (res.isEmpty()){
