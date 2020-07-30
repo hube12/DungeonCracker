@@ -47,14 +47,14 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<Long> seeds = new ArrayList<>();
-        int posX = 131;
+        int posX = 18;
         int posY = 36;
-        int posZ = 166;
-        long dungeonSeed = 88539881386199L;
+        int posZ = 162;
+        long dungeonSeed = 74295097218760L;
         BiomeData[] biomeDatas = new BiomeData[]{
                 new BiomeData(74, 164, BiomeGenBase.desert),
-                new BiomeData(-20, 164, BiomeGenBase.icePlains),
-                new BiomeData(-20, 230, BiomeGenBase.jungle)
+                new BiomeData(94, 164, BiomeGenBase.icePlains),
+                new BiomeData(94, 94, BiomeGenBase.jungle)
         };
 //count:3 -*\d*
         for (int i = 0; i < 1000; i++) {
@@ -65,7 +65,7 @@ public class Main {
         for (Long seed : seeds) {
             for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                 long worldSeed = (upperBits << 48) | seed;
-                if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                //if (!RandomSeed.isRandomSeed(worldSeed)) continue;
                 GenLayer[] var4 = GenLayer.initializeAllBiomeGenerators(worldSeed);
                 int count = 0;
                 int index=0;
@@ -86,7 +86,6 @@ public class Main {
 
                 IntCache.resetIntCache();
             }
-
         }
     }
 }

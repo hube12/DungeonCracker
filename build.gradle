@@ -22,7 +22,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "dungeons.Main8"
+    mainClassName = "FindStructureSeedFromDungeons"
 }
 
 
@@ -52,11 +52,11 @@ task jar15(type: Jar) {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
-                "Main-Class": "dungeons.Main15"
+                "Main-Class": "FindStructureSeedFromDungeons"
         )
     }
     outputs.upToDateWhen{false}
-    project.archivesBaseName = "DungeonCracker15"
+    project.archivesBaseName = "DungeonSeedReversal"
     from {
         configurations.runtimeClasspath.collect {
             it.isDirectory() ? it : zipTree(it)
@@ -65,20 +65,3 @@ task jar15(type: Jar) {
     with jar
 }
 
-task jar14(type: Jar) {
-    manifest {
-        attributes(
-                "Implementation-Title": project.name,
-                "Implementation-Version": project.version,
-                "Main-Class": "dungeons.Main14"
-        )
-    }
-    outputs.upToDateWhen{false}
-    project.archivesBaseName = "DungeonCracker14"
-    from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    with jar
-}
