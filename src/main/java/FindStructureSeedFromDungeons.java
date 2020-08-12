@@ -38,50 +38,41 @@ public class FindStructureSeedFromDungeons {
 
 
     public static void main(String[] args) {
+
         List<Data> dataList = new ArrayList<>();
-        while (true){
-            Scanner in = new Scanner(System.in);
-            System.out.println("Enter posX of spawner");
-            int posX = in.nextInt();
-            System.out.println("Enter posZ of spawner");
-            int posZ = in.nextInt();
-            System.out.println("Enter the dungeon seed obtained before");
-            long seed = in.nextLong();
-            System.out.println("More dungeon seeds? (Y/N)");
-            String stringPattern = in.nextLine();
-            stringPattern = in.nextLine();
-            dataList.add( new Data(seed,  posX, posZ));
-            if (!stringPattern.toLowerCase().equals("y")){
-                break;
+
+        dataList.add(new Data(248794591925024L, -577 , -848 ));
+        dataList.add(new Data(21447089443958L, -553 ,-973 ));
+        dataList.add(new Data(148135802758948L, -656 , -1133 ));
+        dataList.add(new Data(35670729128800L, -583 ,-1200 ));
+        dataList.add(new Data(162925418310042L, -448-262+10 ,-1144+65+10 ));
+        dataList.add(new Data(236341059760407L,  -448-257 ,-1144-240));
+    normal(dataList);
+
+
+    }
+    public static void normal(List<Data> dataList){
+            List<Long> res = crack(dataList);
+            if (res.isEmpty()) {
+                System.out.println("You failed !");
+                return;
+            }
+            System.out.println("If the seed was randomly generated: (else use biomes)");
+            for (long seed : res) {
+                for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
+                    long worldSeed = (upperBits << 48) | seed;
+                    if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                    System.out.format("WorldSeed: %d\n", worldSeed);
+                }
             }
 
-        }
 
-        //System.out.println(Arrays.toString(dataList.toArray()));
-        //dataList.add( new Data(254892590318259L,  -367, -964));
-        //dataList.add( new Data(72416206423802L, -271,  -1239));
-        //dataList.add( new Data(263445769234434L, 1325,  -3919));
-        //dataList.add( new Data(83106984196729L, -414,  -1769));
-
-        List<Long> res = crack(dataList);
-        if (res.isEmpty()){
-            System.out.println("You failed !");
-            return;
-        }
-        System.out.println("If the seed was randomly generated: (else use biomes)");
-        for (long seed:res) {
-            for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                long worldSeed = (upperBits << 48) | seed;
-                if (!RandomSeed.isRandomSeed(worldSeed)) continue;
-                System.out.format("WorldSeed: %d\n", worldSeed);
-            }
-        }
     }
 
     public static List<Long> crack(List<Data> dataList) {
         List<Long> res = new ArrayList<>();
         Map<Long, Boolean> map = new HashMap<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10000; i++) {
             for (Data data : dataList) {
                 PopReversal2TheHalvening.getSeedFromChunkseedPre13(
                         data.getPrevious() ^ Rand.JAVA_LCG.multiplier,
@@ -95,6 +86,16 @@ public class FindStructureSeedFromDungeons {
                     }
                 });
             }
+        }
+        return res;
+    }
+    public static List<Long> generateList(Data data) {
+        List<Long> res = new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            res.addAll(PopReversal2TheHalvening.getSeedFromChunkseedPre13(
+                    data.getPrevious() ^ Rand.JAVA_LCG.multiplier,
+                    data.posX >> 4, data.posZ >> 4));
+
         }
         return res;
     }
