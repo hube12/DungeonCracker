@@ -2,12 +2,13 @@ import dungeons.VersionCrack;
 import gui.MCVersion;
 import kaptainwutax.biomeutils.Biome;
 
+
 public class Main {
     public static void main(String[] args) {
+     System.out.println(new VersionCrack(MCVersion.v1_12,  26562,62, -38874, "101111111001111101011110111111101101110011111110011111101111111").run().toString());
+       // System.out.println(new VersionCrack(MCVersion.v1_7, 748,20,476, "001111101111111111111111111111101111111011100000110001101011111").run().toString());
 
 
-        System.out.println(new VersionCrack(MCVersion.vLegacy, -367,
-                12 ,-964, "1111011111100101111111111011111010110011110111010").run().toString());
     }
 
     public static void test1_16() {

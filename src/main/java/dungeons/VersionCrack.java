@@ -113,7 +113,7 @@ public class VersionCrack {
                     result.addStructureSeed(structureSeed);
                     for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                         long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                        if (!RandomSeed.getRandomSeed(worldSeed)) continue;
                         System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
                         result.addWorldSeed(worldSeed);
                     }
@@ -164,7 +164,7 @@ public class VersionCrack {
                     result.addStructureSeed(structureSeed);
                     for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                         long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                        if (!RandomSeed.getRandomSeed(worldSeed)) continue;
                         System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
                     }
                 });
@@ -215,7 +215,7 @@ public class VersionCrack {
                     result.addStructureSeed(structureSeed);
                     for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                         long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                        if (!RandomSeed.getRandomSeed(worldSeed)) continue;
                         System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
                         result.addWorldSeed(worldSeed);
                     }
@@ -237,10 +237,11 @@ public class VersionCrack {
 
         ReverserDevice device = new ReverserDevice();
         // device.setVerbose(true);
-        device.addCall(NextInt.withValue(16, offsetX));
+        device.addCall(NextInt.withValue(16,offsetX));
+       // device.addCall(NextInt.consume(256,1));
         device.addCall(NextInt.withValue(256, posY));
 
-        device.addCall(NextInt.withValue(16, offsetZ));
+        device.addCall(NextInt.withValue(16,offsetZ));
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
         for (Integer integer : pattern) {
@@ -261,7 +262,7 @@ public class VersionCrack {
         });
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 1000; i++) {
                 PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, posX >> 4, posZ >> 4).forEach(s -> {
                     System.out.println(s);
                     result.addStructureSeed(s);

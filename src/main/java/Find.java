@@ -48,7 +48,7 @@ public class Find {
                 //System.out.format("Structure seed %d... \n", structureSeed);
                 for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                     long worldSeed = (upperBits << 48) | structureSeed;
-                    if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                    if (!RandomSeed.getRandomSeed(worldSeed)) continue;
                     System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
                 }
             });
@@ -86,7 +86,7 @@ Structure seed 83611965361736...
                 System.out.format("Structure seed %d... \n", structureSeed);
                 for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                     long worldSeed = (upperBits << 48) | structureSeed;
-                    if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                    if (!RandomSeed.getRandomSeed(worldSeed)) continue;
                     //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
                 }
             });
