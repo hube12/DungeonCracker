@@ -1,17 +1,20 @@
-package java162;
+package java132;
 
 public class GenLayerBiome extends GenLayer
 {
     /** this sets all the biomes that are allowed to appear in the overworld */
     private BiomeGenBase[] allowedBiomes;
 
-    public GenLayerBiome(long par1, GenLayer par3GenLayer)
+    public GenLayerBiome(long par1, GenLayer par3GenLayer, WorldType par4WorldType)
     {
         super(par1);
         this.allowedBiomes = new BiomeGenBase[] {BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.taiga, BiomeGenBase.jungle};
         this.parent = par3GenLayer;
 
-
+        if (par4WorldType == WorldType.DEFAULT_1_1)
+        {
+            this.allowedBiomes = new BiomeGenBase[] {BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.taiga};
+        }
     }
 
     /**
@@ -21,7 +24,7 @@ public class GenLayerBiome extends GenLayer
     public int[] getInts(int par1, int par2, int par3, int par4)
     {
         int[] var5 = this.parent.getInts(par1, par2, par3, par4);
-        int[] var6 = IntCache162.getIntCache(par3 * par4);
+        int[] var6 = IntCache132.getIntCache(par3 * par4);
 
         for (int var7 = 0; var7 < par4; ++var7)
         {

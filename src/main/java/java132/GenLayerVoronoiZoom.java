@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerVoronoiZoom extends GenLayer
 {
@@ -25,7 +25,7 @@ public class GenLayerVoronoiZoom extends GenLayer
         int[] var11 = this.parent.getInts(var7, var8, var9, var10);
         int var12 = var9 << var5;
         int var13 = var10 << var5;
-        int[] var14 = IntCache162.getIntCache(var12 * var13);
+        int[] var14 = IntCache132.getIntCache(var12 * var13);
         int var16;
 
         for (int var15 = 0; var15 < var10 - 1; ++var15)
@@ -86,7 +86,7 @@ public class GenLayerVoronoiZoom extends GenLayer
             }
         }
 
-        int[] var50 = IntCache162.getIntCache(par3 * par4);
+        int[] var50 = IntCache132.getIntCache(par3 * par4);
 
         for (var16 = 0; var16 < par4; ++var16)
         {

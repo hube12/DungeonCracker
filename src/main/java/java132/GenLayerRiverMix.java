@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerRiverMix extends GenLayer
 {
@@ -31,7 +31,7 @@ public class GenLayerRiverMix extends GenLayer
     {
         int[] var5 = this.biomePatternGeneratorChain.getInts(par1, par2, par3, par4);
         int[] var6 = this.riverPatternGeneratorChain.getInts(par1, par2, par3, par4);
-        int[] var7 = IntCache162.getIntCache(par3 * par4);
+        int[] var7 = IntCache132.getIntCache(par3 * par4);
 
         for (int var8 = 0; var8 < par3 * par4; ++var8)
         {

@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerIsland extends GenLayer
 {
@@ -13,7 +13,7 @@ public class GenLayerIsland extends GenLayer
      */
     public int[] getInts(int par1, int par2, int par3, int par4)
     {
-        int[] var5 = IntCache162.getIntCache(par3 * par4);
+        int[] var5 = IntCache132.getIntCache(par3 * par4);
 
         for (int var6 = 0; var6 < par4; ++var6)
         {

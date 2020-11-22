@@ -1,8 +1,8 @@
-package java162;
+package java132;
 
-public class GenLayerAddMushroomIsland extends GenLayer
+public class GenLayerAddSnow extends GenLayer
 {
-    public GenLayerAddMushroomIsland(long par1, GenLayer par3GenLayer)
+    public GenLayerAddSnow(long par1, GenLayer par3GenLayer)
     {
         super(par1);
         this.parent = par3GenLayer;
@@ -19,26 +19,33 @@ public class GenLayerAddMushroomIsland extends GenLayer
         int var7 = par3 + 2;
         int var8 = par4 + 2;
         int[] var9 = this.parent.getInts(var5, var6, var7, var8);
-        int[] var10 = IntCache162.getIntCache(par3 * par4);
+        int[] var10 = IntCache132.getIntCache(par3 * par4);
 
         for (int var11 = 0; var11 < par4; ++var11)
         {
             for (int var12 = 0; var12 < par3; ++var12)
             {
-                int var13 = var9[var12 + 0 + (var11 + 0) * var7];
-                int var14 = var9[var12 + 2 + (var11 + 0) * var7];
-                int var15 = var9[var12 + 0 + (var11 + 2) * var7];
-                int var16 = var9[var12 + 2 + (var11 + 2) * var7];
-                int var17 = var9[var12 + 1 + (var11 + 1) * var7];
+                int var13 = var9[var12 + 1 + (var11 + 1) * var7];
                 this.initChunkSeed((long)(var12 + par1), (long)(var11 + par2));
 
-                if (var17 == 0 && var13 == 0 && var14 == 0 && var15 == 0 && var16 == 0 && this.nextInt(100) == 0)
+                if (var13 == 0)
                 {
-                    var10[var12 + var11 * par3] = BiomeGenBase.mushroomIsland.biomeID;
+                    var10[var12 + var11 * par3] = 0;
                 }
                 else
                 {
-                    var10[var12 + var11 * par3] = var17;
+                    int var14 = this.nextInt(5);
+
+                    if (var14 == 0)
+                    {
+                        var14 = BiomeGenBase.icePlains.biomeID;
+                    }
+                    else
+                    {
+                        var14 = 1;
+                    }
+
+                    var10[var12 + var11 * par3] = var14;
                 }
             }
         }

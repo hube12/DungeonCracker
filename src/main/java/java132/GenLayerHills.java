@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerHills extends GenLayer
 {
@@ -15,7 +15,7 @@ public class GenLayerHills extends GenLayer
     public int[] getInts(int par1, int par2, int par3, int par4)
     {
         int[] var5 = this.parent.getInts(par1 - 1, par2 - 1, par3 + 2, par4 + 2);
-        int[] var6 = IntCache162.getIntCache(par3 * par4);
+        int[] var6 = IntCache132.getIntCache(par3 * par4);
 
         for (int var7 = 0; var7 < par4; ++var7)
         {

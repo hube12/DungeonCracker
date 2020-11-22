@@ -1,11 +1,9 @@
-package java162;
-
-
+package java132;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntCache
+public class IntCache132
 {
     private static int intCacheSize = 256;
 
@@ -93,10 +91,4 @@ public class IntCache
         inUseLargeArrays.clear();
         inUseSmallArrays.clear();
     }
-
-    public static synchronized String func_85144_b()
-    {
-        return "cache: " + freeLargeArrays.size() + ", tcache: " + freeSmallArrays.size() + ", allocated: " + inUseLargeArrays.size() + ", tallocated: " + inUseSmallArrays.size();
-    }
 }
-

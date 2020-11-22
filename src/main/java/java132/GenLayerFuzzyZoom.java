@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerFuzzyZoom extends GenLayer
 {
@@ -19,7 +19,7 @@ public class GenLayerFuzzyZoom extends GenLayer
         int var7 = (par3 >> 1) + 3;
         int var8 = (par4 >> 1) + 3;
         int[] var9 = this.parent.getInts(var5, var6, var7, var8);
-        int[] var10 = IntCache162.getIntCache(var7 * 2 * var8 * 2);
+        int[] var10 = IntCache132.getIntCache(var7 * 2 * var8 * 2);
         int var11 = var7 << 1;
         int var13;
 
@@ -44,7 +44,7 @@ public class GenLayerFuzzyZoom extends GenLayer
             }
         }
 
-        int[] var20 = IntCache162.getIntCache(par3 * par4);
+        int[] var20 = IntCache132.getIntCache(par3 * par4);
 
         for (var13 = 0; var13 < par4; ++var13)
         {

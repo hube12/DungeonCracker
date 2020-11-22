@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerAddMushroomIsland extends GenLayer
 {
@@ -19,7 +19,7 @@ public class GenLayerAddMushroomIsland extends GenLayer
         int var7 = par3 + 2;
         int var8 = par4 + 2;
         int[] var9 = this.parent.getInts(var5, var6, var7, var8);
-        int[] var10 = IntCache162.getIntCache(par3 * par4);
+        int[] var10 = IntCache132.getIntCache(par3 * par4);
 
         for (int var11 = 0; var11 < par4; ++var11)
         {

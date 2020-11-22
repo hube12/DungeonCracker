@@ -1,4 +1,4 @@
-package java162;
+package java132;
 
 public class GenLayerZoom extends GenLayer
 {
@@ -19,7 +19,7 @@ public class GenLayerZoom extends GenLayer
         int var7 = (par3 >> 1) + 3;
         int var8 = (par4 >> 1) + 3;
         int[] var9 = this.parent.getInts(var5, var6, var7, var8);
-        int[] var10 = IntCache162.getIntCache(var7 * 2 * var8 * 2);
+        int[] var10 = IntCache132.getIntCache(var7 * 2 * var8 * 2);
         int var11 = var7 << 1;
         int var13;
 
@@ -38,13 +38,13 @@ public class GenLayerZoom extends GenLayer
                 var10[var14] = var15;
                 var10[var14++ + var11] = this.choose(var15, var16);
                 var10[var14] = this.choose(var15, var18);
-                var10[var14++ + var11] = this.modeOrRandom(var15, var18, var16, var19);
+                var10[var14++ + var11] = this.func_75916_b(var15, var18, var16, var19);
                 var15 = var18;
                 var16 = var19;
             }
         }
 
-        int[] var20 = IntCache162.getIntCache(par3 * par4);
+        int[] var20 = IntCache132.getIntCache(par3 * par4);
 
         for (var13 = 0; var13 < par4; ++var13)
         {
@@ -62,10 +62,7 @@ public class GenLayerZoom extends GenLayer
         return this.nextInt(2) == 0 ? par1 : par2;
     }
 
-    /**
-     * returns the mode (most frequently occuring number) or a random number from the 4 integers provided
-     */
-    protected int modeOrRandom(int par1, int par2, int par3, int par4)
+    protected int func_75916_b(int par1, int par2, int par3, int par4)
     {
         if (par2 == par3 && par3 == par4)
         {
@@ -138,10 +135,7 @@ public class GenLayerZoom extends GenLayer
         }
     }
 
-    /**
-     * Magnify a layer. Parms are seed adjustment, layer, number of times to magnify
-     */
-    public static GenLayer magnify(long par0, GenLayer par2GenLayer, int par3)
+    public static GenLayer func_75915_a(long par0, GenLayer par2GenLayer, int par3)
     {
         Object var4 = par2GenLayer;
 
