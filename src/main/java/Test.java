@@ -83,6 +83,41 @@ public class Test {
         }
 
     }
+
+    private static void check12(long seed, int offsetX, int posY, int offsetZ, String pattern) {
+        System.out.println(Rand.JAVA_LCG.combine(-1).nextSeed(seed));
+        Random random = new Random(seed ^ Rand.JAVA_LCG.multiplier);
+        System.out.println(random.nextInt(16));
+        //System.out.print(random.nextInt(16) == offsetX);
+        System.out.print(" ");
+        System.out.println(random.nextInt(256));
+        //System.out.print(random.nextInt(256) == posY);
+        System.out.print(" ");
+        System.out.println(random.nextInt(16));
+        //System.out.print(random.nextInt(16) == offsetZ);
+        System.out.print(" ");
+        random.nextInt(2);
+        random.nextInt(2);
+        Integer[] patterns = pattern.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
+
+        for (Integer s : patterns) {
+            switch (s) {
+                case 0:
+                    System.out.print(random.nextInt(4) == 0);
+                    System.out.print(" ");
+                    break;
+                case 1:
+                    System.out.print(random.nextInt(4) != 0);
+                    System.out.print(" ");
+                    break;
+                default:
+                    random.nextInt(4);
+                    break;
+
+            }
+        }
+
+    }
 }
 
 
