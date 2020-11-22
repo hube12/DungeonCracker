@@ -69,7 +69,7 @@ public class Main {
                 GenLayer voronoi = GenLayer.initializeAllBiomeGenerators(worldSeed, WorldType.DEFAULT)[1];
                 int count = 0;
                 int index = 0;
-                long[] biomes = new long[3];
+                long[] biomes = new long[biomeDatas.length];
                 for (BiomeData biomeData : biomeDatas) {
                     int biome = voronoi.getInts(biomeData.x, biomeData.z, 1, 1)[0];
                     biomes[index++] = biome;
@@ -77,7 +77,7 @@ public class Main {
                         count++;
                     }
                 }
-                if (count > 1) {
+                if (count > biomeDatas.length-2) {
                     System.out.println("biomes:" + Arrays.toString(biomes));
                     System.out.println("count:" + count + " " + worldSeed);
                     System.out.println("----");

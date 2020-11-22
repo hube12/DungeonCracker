@@ -65,12 +65,12 @@ public class Main {
             for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                 long worldSeed = (upperBits << 48) | seed;
                 //if (!RandomSeed.isRandomSeed(worldSeed)) continue;
-                GenLayer[] var4 = GenLayer.initializeAllBiomeGenerators(worldSeed);
+                GenLayer voronoi = GenLayer.initializeAllBiomeGenerators(worldSeed)[1];
                 int count = 0;
                 int index=0;
-                long[]biomes=new long[3];
+                long[]biomes=new long[biomeDatas.length];
                 for (BiomeData biomeData : biomeDatas) {
-                    int biome = var4[1].getInts(biomeData.x, biomeData.z, 1, 1)[0];
+                    int biome = voronoi.getInts(biomeData.x, biomeData.z, 1, 1)[0];
                     biomes[index++]=biome;
                     if (biome == biomeData.biome.biomeID) {
                         count++;
