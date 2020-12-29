@@ -100,15 +100,25 @@ public class VersionCrack {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
         });
-
-        System.out.format("Finished dungeon search and looking for world seeds.\n");
-
+        if (!decoratorSeeds.isEmpty()){
+            System.out.format("Finished dungeon search and looking for world seeds.\n");
+        }
         for (long decoratorSeed : decoratorSeeds) {
             LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
 
             for (int i = 0; i < 8; i++) {
                 // they changed and added lake in the enum so 3 * 10000 + pos in the UNDERGROUND_STRUCTURES so 2 (yeah it changed)
-                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - getOrdinalBiome(biome), posX & -16, posZ & -16).forEach(structureSeed -> {
+                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 2, posX & -16, posZ & -16).forEach(structureSeed -> {
+                    System.out.format("Structure seed %d... \n", structureSeed);
+                    result.addStructureSeed(structureSeed);
+                    for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
+                        long worldSeed = (upperBits << 48) | structureSeed;
+                        if (!RandomSeed.isRandomSeed(worldSeed)) continue;
+                        System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
+                        result.addWorldSeed(worldSeed);
+                    }
+                });
+                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 3, posX & -16, posZ & -16).forEach(structureSeed -> {
                     System.out.format("Structure seed %d... \n", structureSeed);
                     result.addStructureSeed(structureSeed);
                     for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
@@ -153,7 +163,9 @@ public class VersionCrack {
             System.out.println("Found Dungeon seed: " + s);
         });
 
-        System.out.format("Finished dungeon search and looking for world seeds.\n");
+        if (!decoratorSeeds.isEmpty()){
+            System.out.format("Finished dungeon search and looking for world seeds.\n");
+        }
 
         for (long decoratorSeed : decoratorSeeds) {
             LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
@@ -204,7 +216,9 @@ public class VersionCrack {
             System.out.println("Found Dungeon seed: " + s);
         });
 
-        System.out.format("Finished dungeon search and looking for world seeds.\n");
+        if (!decoratorSeeds.isEmpty()){
+            System.out.format("Finished dungeon search and looking for world seeds.\n");
+        }
 
         for (long decoratorSeed : decoratorSeeds) {
             LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
@@ -254,14 +268,16 @@ public class VersionCrack {
         }
 
         Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
-        decoratorSeeds.forEach(s -> System.out.println("Found Dungeon seed: " + decoratorSeeds));
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
         });
+        if (!decoratorSeeds.isEmpty()){
+            System.out.format("Finished dungeon search and looking for world seeds.\n");
+        }
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 2000; i++) {
                 PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, posX >> 4, posZ >> 4).forEach(s -> {
                     System.out.println(s);
                     result.addStructureSeed(s);
@@ -298,14 +314,13 @@ public class VersionCrack {
         }
 
         Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
-        decoratorSeeds.forEach(s -> System.out.println("Found Dungeon seed: " + decoratorSeeds));
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
         });
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 2000; i++) {
                 PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, posX >> 4, posZ >> 4).forEach(s -> {
                     System.out.println(s);
                     result.addStructureSeed(s);

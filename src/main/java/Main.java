@@ -1,13 +1,34 @@
+import dungeons.Result;
 import dungeons.VersionCrack;
 import gui.MCVersion;
 import kaptainwutax.biomeutils.Biome;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Main {
     public static void main(String[] args) {
 
+        for (MCVersion version: new MCVersion[] {MCVersion.v1_14, MCVersion.v1_15, MCVersion.v1_16}){
+            Result r1=new VersionCrack(version, -8642, 37, 13766, "101011100010110010110111101110011101011101110111011111010111111110101111000111111").run();
+            Result r2=new VersionCrack(version, -330, 34 ,639, "111111101110010111111100101110110111100111101111010101001111111").run();
+            Result r3=new VersionCrack(version, -330, 34 ,639, "111111101110010111111100101110110111100111101111010101001111111").run();
+            Set<Long> set1=new HashSet<>(r1.getStructureSeeds());
+            Set<Long> set2=new HashSet<>(r2.getStructureSeeds());
+            Set<Long> set3=new HashSet<>(r3.getStructureSeeds());
 
-        System.out.println(new VersionCrack(MCVersion.vLegacy, -367,
-                12 ,-964, "1111011111100101111111111011111010110011110111010").run().toString());
+            Set<Long> copy1 = new HashSet<>(set1);
+            set1.retainAll(set2);
+            copy1.retainAll(set3);
+            set2.retainAll(set3);
+            System.out.println(Arrays.toString(set1.toArray()));
+            System.out.println(Arrays.toString(copy1.toArray()));
+            System.out.println(Arrays.toString(set2.toArray()));
+        }
+
+
+
     }
 
     public static void test1_16() {

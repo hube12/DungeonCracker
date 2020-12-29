@@ -30,10 +30,8 @@ public class FindStructureSeedFromDungeons {
 
     public static void main(String[] args) {
         List<Data> dataList = new ArrayList<>();
-        dataList.add( new Data(254892590318259L,  -367, -964));
-        dataList.add( new Data(72416206423802L, -271,  -1239));
-        dataList.add( new Data(263445769234434L, 1325,  -3919));
-        dataList.add( new Data(83106984196729L, -414,  -1769));
+        dataList.add( new Data(8268238195924L,  -8642, 13766));
+        dataList.add( new Data(261766848770482L, -330 ,639));
 
         List<Long> res = crack(dataList);
         if (res.isEmpty()){
@@ -53,7 +51,7 @@ public class FindStructureSeedFromDungeons {
     public static List<Long> crack(List<Data> dataList) {
         List<Long> res = new ArrayList<>();
         Map<Long, Boolean> map = new HashMap<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             for (Data data : dataList) {
                 PopReversal2TheHalvening.getSeedFromChunkseedPre13(
                         data.getPrevious() ^ Rand.JAVA_LCG.multiplier,
