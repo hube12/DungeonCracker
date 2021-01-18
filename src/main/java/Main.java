@@ -9,22 +9,25 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
+        Result r=new VersionCrack(MCVersion.v1_16, 201,15,-96,  "0011100001111110111121011101010011111110100111011").run();
+        System.out.println(r);
+        if (false) {
+            for (MCVersion version : new MCVersion[] {MCVersion.v1_14, MCVersion.v1_15, MCVersion.v1_16}) {
+                Result r1 = new VersionCrack(version, -8642, 37, 13766, "022222222100101222111011222210111222201011022222101122220111222211011222222222222").run();
+                Result r2 = new VersionCrack(version, -330, 34, 639, "111111101110010111111100101110110111100111101111010101001111111").run();
+                Result r3 = new VersionCrack(version, -527, 19, 899, "011100011111110101111111010111111101011011111100010001111111111").run();
+                Set<Long> set1 = new HashSet<>(r1.getStructureSeeds());
+                Set<Long> set2 = new HashSet<>(r2.getStructureSeeds());
+                Set<Long> set3 = new HashSet<>(r3.getStructureSeeds());
 
-        for (MCVersion version: new MCVersion[] {MCVersion.v1_14, MCVersion.v1_15, MCVersion.v1_16}){
-            Result r1=new VersionCrack(version, -8642, 37, 13766, "101011100010110010110111101110011101011101110111011111010111111110101111000111111").run();
-            Result r2=new VersionCrack(version, -330, 34 ,639, "111111101110010111111100101110110111100111101111010101001111111").run();
-            Result r3=new VersionCrack(version, -330, 34 ,639, "111111101110010111111100101110110111100111101111010101001111111").run();
-            Set<Long> set1=new HashSet<>(r1.getStructureSeeds());
-            Set<Long> set2=new HashSet<>(r2.getStructureSeeds());
-            Set<Long> set3=new HashSet<>(r3.getStructureSeeds());
-
-            Set<Long> copy1 = new HashSet<>(set1);
-            set1.retainAll(set2);
-            copy1.retainAll(set3);
-            set2.retainAll(set3);
-            System.out.println(Arrays.toString(set1.toArray()));
-            System.out.println(Arrays.toString(copy1.toArray()));
-            System.out.println(Arrays.toString(set2.toArray()));
+                Set<Long> copy1 = new HashSet<>(set1);
+                set1.retainAll(set2);
+                copy1.retainAll(set3);
+                set2.retainAll(set3);
+                System.out.println(Arrays.toString(set1.toArray()));
+                System.out.println(Arrays.toString(copy1.toArray()));
+                System.out.println(Arrays.toString(set2.toArray()));
+            }
         }
 
 

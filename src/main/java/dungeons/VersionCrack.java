@@ -33,6 +33,7 @@ public class VersionCrack {
         this.version = version;
         this.biome = biome;
     }
+
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String stringPattern) {
         this.posX = posX;
         this.posY = posY;
@@ -100,7 +101,7 @@ public class VersionCrack {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
         });
-        if (!decoratorSeeds.isEmpty()){
+        if (!decoratorSeeds.isEmpty()) {
             System.out.format("Finished dungeon search and looking for world seeds.\n");
         }
         for (long decoratorSeed : decoratorSeeds) {
@@ -163,7 +164,7 @@ public class VersionCrack {
             System.out.println("Found Dungeon seed: " + s);
         });
 
-        if (!decoratorSeeds.isEmpty()){
+        if (!decoratorSeeds.isEmpty()) {
             System.out.format("Finished dungeon search and looking for world seeds.\n");
         }
 
@@ -216,7 +217,7 @@ public class VersionCrack {
             System.out.println("Found Dungeon seed: " + s);
         });
 
-        if (!decoratorSeeds.isEmpty()){
+        if (!decoratorSeeds.isEmpty()) {
             System.out.format("Finished dungeon search and looking for world seeds.\n");
         }
 
@@ -272,7 +273,7 @@ public class VersionCrack {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
         });
-        if (!decoratorSeeds.isEmpty()){
+        if (!decoratorSeeds.isEmpty()) {
             System.out.format("Finished dungeon search and looking for world seeds.\n");
         }
         for (long seed : decoratorSeeds) {
