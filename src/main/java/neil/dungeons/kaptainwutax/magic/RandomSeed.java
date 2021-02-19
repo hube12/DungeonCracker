@@ -1,8 +1,8 @@
-package dungeons.kaptainwutax.magic;
+package neil.dungeons.kaptainwutax.magic;
 
 
-import dungeons.kaptainwutax.util.LCG;
-import dungeons.kaptainwutax.util.Rand;
+import neil.dungeons.kaptainwutax.util.LCG;
+import neil.dungeons.kaptainwutax.util.Rand;
 
 public class RandomSeed {
 

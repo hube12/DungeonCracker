@@ -1,4 +1,4 @@
-package gui;
+package neil.gui;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,8 +8,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Objects;
 
 public class Floor {

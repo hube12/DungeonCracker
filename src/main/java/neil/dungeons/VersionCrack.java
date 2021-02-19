@@ -1,11 +1,12 @@
-package dungeons;
+package neil.dungeons;
 
-import dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
-import dungeons.kaptainwutax.magic.PopulationReversal;
-import dungeons.kaptainwutax.magic.RandomSeed;
-import dungeons.kaptainwutax.util.LCG;
-import dungeons.kaptainwutax.util.Rand;
-import gui.MCVersion;
+import neil.Main;
+import neil.dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
+import neil.dungeons.kaptainwutax.magic.PopulationReversal;
+import neil.dungeons.kaptainwutax.magic.RandomSeed;
+import neil.dungeons.kaptainwutax.util.LCG;
+import neil.dungeons.kaptainwutax.util.Rand;
+import neil.gui.MCVersion;
 import kaptainwutax.biomeutils.Biome;
 import randomreverser.ReverserDevice;
 import randomreverser.call.FilteredSkip;
@@ -99,7 +100,12 @@ public class VersionCrack {
             }
         }
 
-        Set<Long> decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE){
+            decoratorSeeds=device.streamSeeds().sequential().collect(Collectors.toSet());
+        }else{
+            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        }
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
@@ -161,7 +167,12 @@ public class VersionCrack {
             }
         }
 
-        Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE){
+            decoratorSeeds=device.streamSeeds().sequential().collect(Collectors.toSet());
+        }else{
+            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        }
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
@@ -214,7 +225,12 @@ public class VersionCrack {
             }
         }
 
-        Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE){
+            decoratorSeeds=device.streamSeeds().sequential().collect(Collectors.toSet());
+        }else{
+            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        }
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
@@ -271,7 +287,12 @@ public class VersionCrack {
             }
         }
 
-        Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE){
+            decoratorSeeds=device.streamSeeds().sequential().collect(Collectors.toSet());
+        }else{
+            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        }
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
@@ -316,7 +337,7 @@ public class VersionCrack {
             }
         }
         Set<Long> decoratorSeeds;
-        if (){
+        if (Main.PARTIAL_OVERRIDE){
             decoratorSeeds=device.streamSeeds().sequential().collect(Collectors.toSet());
         }else{
             decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());

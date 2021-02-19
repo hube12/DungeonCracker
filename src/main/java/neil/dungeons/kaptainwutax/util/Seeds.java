@@ -1,4 +1,4 @@
-package dungeons.kaptainwutax.util;
+package neil.dungeons.kaptainwutax.util;
 
 public class Seeds {
 

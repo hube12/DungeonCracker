@@ -1,4 +1,4 @@
-package gui;
+package neil.gui;
 
 import java.util.function.BiPredicate;
 

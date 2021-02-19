@@ -1,4 +1,4 @@
-package gui;
+package neil.gui;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;

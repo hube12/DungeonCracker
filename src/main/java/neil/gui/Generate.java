@@ -1,6 +1,6 @@
-package gui;
+package neil.gui;
 
-import dungeons.Result;
+import neil.dungeons.Result;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 

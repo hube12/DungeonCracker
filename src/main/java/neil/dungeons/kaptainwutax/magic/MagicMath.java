@@ -1,4 +1,4 @@
-package dungeons.kaptainwutax.magic;
+package neil.dungeons.kaptainwutax.magic;
 
 /**
  * Math utility library-- I have no idea how it works, don't ask.

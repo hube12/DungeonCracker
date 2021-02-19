@@ -1,8 +1,8 @@
-package gui;
+package neil.gui;
 
-import dungeons.Result;
-import dungeons.VersionCrack;
-import dungeons.kaptainwutax.magic.RandomSeed;
+import neil.dungeons.Result;
+import neil.dungeons.VersionCrack;
+import neil.dungeons.kaptainwutax.magic.RandomSeed;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static gui.DungeonCracker.generate;
+import static neil.gui.DungeonCracker.generate;
 
 
 public class Bruteforce extends Stage {
