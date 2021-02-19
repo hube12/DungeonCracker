@@ -81,8 +81,11 @@ public class VersionCrack {
         Integer[] pattern = stringPattern.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
         ReverserDevice device = new ReverserDevice();
+
+//        device.addCall(NextInt.consume(16, 2));
         device.addCall(NextInt.withValue(16, offsetX));
         device.addCall(NextInt.withValue(16, offsetZ));
+//        device.addCall(NextInt.consume(256, 1));
         device.addCall(NextInt.withValue(256, posY));
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
@@ -96,7 +99,7 @@ public class VersionCrack {
             }
         }
 
-        Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        Set<Long> decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);
@@ -300,7 +303,6 @@ public class VersionCrack {
         ReverserDevice device = new ReverserDevice();
         device.addCall(NextInt.withValue(16, offsetX));
         device.addCall(NextInt.withValue(128, posY));
-
         device.addCall(NextInt.withValue(16, offsetZ));
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
@@ -313,8 +315,13 @@ public class VersionCrack {
                 device.addCall(NextInt.consume(4, 1));
             }
         }
+        Set<Long> decoratorSeeds;
+        if (){
+            decoratorSeeds=device.streamSeeds().sequential().collect(Collectors.toSet());
+        }else{
+            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+        }
 
-        Set<Long> decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
         decoratorSeeds.forEach(s -> {
             result.addDungeonSeed(s);
             System.out.println("Found Dungeon seed: " + s);

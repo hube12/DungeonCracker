@@ -1,11 +1,11 @@
-import dungeons.kaptainwutax.magic.RandomSeed;
+package neil;
 
-import java.util.Random;
+import neil.dungeons.kaptainwutax.magic.RandomSeed;
 
 public class Reverse {
     public static void main(String[] args) {
         long[] seeds=new long[]{
-                27594263
+                242514422597820L
         };
         for (long structureSeed : seeds) {
             for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {

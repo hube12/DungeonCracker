@@ -1,6 +1,8 @@
-import dungeons.kaptainwutax.magic.PopulationReversal;
-import dungeons.kaptainwutax.util.LCG;
-import dungeons.kaptainwutax.util.Rand;
+package neil;
+
+import neil.dungeons.kaptainwutax.magic.PopulationReversal;
+import neil.dungeons.kaptainwutax.util.LCG;
+import neil.dungeons.kaptainwutax.util.Rand;
 import kaptainwutax.seedutils.mc.seed.WorldSeed;
 
 import java.util.ArrayList;

@@ -1,14 +1,15 @@
-import dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
-import dungeons.kaptainwutax.magic.RandomSeed;
-import dungeons.kaptainwutax.util.LCG;
-import dungeons.kaptainwutax.util.Rand;
-import kaptainwutax.seedutils.mc.seed.WorldSeed;
+package neil;
+
+import neil.dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
+import neil.dungeons.kaptainwutax.magic.RandomSeed;
+import neil.dungeons.kaptainwutax.util.LCG;
+import neil.dungeons.kaptainwutax.util.Rand;
 
 import java.util.*;
 
 public class FindStructureSeedFromDungeons {
     /*
-    Reverse any number of dungeon seed to their common structure seed
+    neil.Reverse any number of dungeon seed to their common structure seed
      */
     public static class Data {
         static final LCG nextSeed = Rand.JAVA_LCG.combine(-1);
@@ -30,8 +31,11 @@ public class FindStructureSeedFromDungeons {
 
     public static void main(String[] args) {
         List<Data> dataList = new ArrayList<>();
-        dataList.add( new Data(8268238195924L,  -8642, 13766));
-        dataList.add( new Data(261766848770482L, -330 ,639));
+        dataList.add( new Data(185722226341362L, 142,-934));
+        dataList.add( new Data(90295624369451L, 142,-934));
+        dataList.add( new Data(74781141041798L,-29,76));
+        dataList.add( new Data(14827381471212L,-29,76));
+        //dataList.add( new Data());
 
         List<Long> res = crack(dataList);
         if (res.isEmpty()){

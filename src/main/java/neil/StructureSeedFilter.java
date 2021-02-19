@@ -1,3 +1,5 @@
+package neil;
+
 public class StructureSeedFilter {
 
 

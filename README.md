@@ -32,5 +32,5 @@ Go in a console and type: java -jar DungeonCracker14-0.1.0.jar / java -jar Dunge
 Enter the X Y and Z of the spawner (use the looking at or Targeted block line in the F3 menu)
 then enter the sequence you previously got with the .exe
 
-Before 1.14 use twice the jar for the version, get the dungeons seed and the coordinates in a text file then use the FindStructureSeedFromDungeons-0.1.0.jar to get the common structure seed
+Before 1.14 use twice the jar for the version, get the neil.dungeons seed and the coordinates in a text file then use the neil.FindStructureSeedFromDungeons-0.1.0.jar to get the common structure seed
 ```

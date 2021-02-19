@@ -1,10 +1,13 @@
-import dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
-import dungeons.kaptainwutax.magic.PopulationReversal;
-import dungeons.kaptainwutax.magic.RandomSeed;
-import dungeons.kaptainwutax.util.LCG;
-import dungeons.kaptainwutax.util.Rand;
+package neil;
+
+import neil.dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
+import neil.dungeons.kaptainwutax.magic.PopulationReversal;
+import neil.dungeons.kaptainwutax.magic.RandomSeed;
+import neil.dungeons.kaptainwutax.util.LCG;
+import neil.dungeons.kaptainwutax.util.Rand;
 
 public class Find {
+    private static final int TEE = 12;
     public static void main(String[] args) {
 
         onedotsix();

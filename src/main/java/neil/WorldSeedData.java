@@ -1,3 +1,5 @@
+package neil;
+
 import kaptainwutax.seedutils.mc.seed.WorldSeed;
 
 import java.util.ArrayList;

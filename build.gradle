@@ -22,7 +22,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "dungeons.Main8"
+    mainClassName = "neil.dungeons.Main8"
 }
 
 
@@ -52,7 +52,7 @@ task jar15(type: Jar) {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
-                "Main-Class": "dungeons.Main15"
+                "Main-Class": "neil.dungeons.Main15"
         )
     }
     outputs.upToDateWhen{false}
@@ -70,7 +70,7 @@ task jar14(type: Jar) {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
-                "Main-Class": "dungeons.Main14"
+                "Main-Class": "neil.dungeons.Main14"
         )
     }
     outputs.upToDateWhen{false}

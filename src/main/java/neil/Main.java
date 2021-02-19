@@ -1,6 +1,8 @@
-import dungeons.Result;
-import dungeons.VersionCrack;
-import gui.MCVersion;
+package neil;
+
+import neil.dungeons.Result;
+import neil.dungeons.VersionCrack;
+import neil.gui.MCVersion;
 import kaptainwutax.biomeutils.Biome;
 
 import java.util.Arrays;
@@ -8,8 +10,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
+    public static final boolean PARTIAL_OVERRIDE=false;
     public static void main(String[] args) {
-        Result r=new VersionCrack(MCVersion.v1_16, 201,15,-96,  "0011100001111110111121011101010011111110100111011").run();
+        Result r=new VersionCrack(MCVersion.vLegacy, -29,72,76,  "1201111001111010111111112011111011110110011110222").run();
+//      Result r=new VersionCrack(MCVersion.vLegacy, 142,27,-934,  "222222222011101122111101012111021012121000101211111210222222222").run();
         System.out.println(r);
         if (false) {
             for (MCVersion version : new MCVersion[] {MCVersion.v1_14, MCVersion.v1_15, MCVersion.v1_16}) {

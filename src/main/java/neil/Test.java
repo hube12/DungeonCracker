@@ -1,5 +1,7 @@
-import dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
-import dungeons.kaptainwutax.util.Rand;
+package neil;
+
+import neil.dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
+import neil.dungeons.kaptainwutax.util.Rand;
 
 import java.util.Random;
 
