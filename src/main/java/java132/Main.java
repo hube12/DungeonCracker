@@ -1,5 +1,7 @@
 package java132;
 
+import kaptainwutax.seedutils.mc.seed.WorldSeed;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -47,12 +49,14 @@ public class Main {
         int posZ = 162;
 //        long dungeonSeed = 74295097218760L;
         BiomeData[] biomeDatas = new BiomeData[]{
-                new BiomeData(706, 674, BiomeGenBase.beach),
-                new BiomeData(441, 601, BiomeGenBase.ocean),
-                new BiomeData(699, 515, BiomeGenBase.jungle),
-                new BiomeData(719, 711, BiomeGenBase.forest),
-                new BiomeData(726, 788, BiomeGenBase.river),
-
+                new BiomeData(-279,25, BiomeGenBase.extremeHills),
+                new BiomeData(-144,100, BiomeGenBase.jungle),
+                new BiomeData( -97,-107, BiomeGenBase.forest),
+                new BiomeData(-191,-1470, BiomeGenBase.desert),
+                new BiomeData(-393, -1508, BiomeGenBase.ocean),
+                new BiomeData( 64, -1528,BiomeGenBase.forest),
+                new BiomeData(  360,-1536,BiomeGenBase.desert),
+                new BiomeData(  335,-1137,BiomeGenBase.plains),
         };
 //count:3 -*\d*
 //        for (int i = 0; i < 1000; i++) {
@@ -60,8 +64,8 @@ public class Main {
 //            dungeonSeed = failed.nextSeed(dungeonSeed);
 //            seeds.addAll(PopReversal2TheHalvening.getSeedFromChunkseedPre13(dungeonSeed ^ Rand.JAVA_LCG.multiplier, (posX - 8) >> 4, (posZ - 8) >> 4));
 //        }
-
-        seeds.add(38435922701078L);
+        seeds.add(WorldSeed.toStructureSeed(9053361151027974540L));
+        seeds.add(WorldSeed.toStructureSeed(-3453416489156603508L));
         for (Long seed : seeds) {
             for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                 long worldSeed = (upperBits << 48) | seed;
@@ -69,7 +73,7 @@ public class Main {
                 GenLayer voronoi = GenLayer.initializeAllBiomeGenerators(worldSeed, WorldType.DEFAULT)[1];
                 int count = 0;
                 int index = 0;
-                long[] biomes = new long[3];
+                long[] biomes = new long[biomeDatas.length];
                 for (BiomeData biomeData : biomeDatas) {
                     int biome = voronoi.getInts(biomeData.x, biomeData.z, 1, 1)[0];
                     biomes[index++] = biome;
@@ -77,7 +81,7 @@ public class Main {
                         count++;
                     }
                 }
-                if (count > 1) {
+                if (count > 5) {
                     System.out.println("biomes:" + Arrays.toString(biomes));
                     System.out.println("count:" + count + " " + worldSeed);
                     System.out.println("----");
