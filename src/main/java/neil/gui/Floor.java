@@ -24,7 +24,7 @@ public class Floor {
 			MOSSY = new Image(Objects.requireNonNull(Floor.class.getClassLoader().getResourceAsStream("mossy.png")));
 			COBBLE = new Image(Objects.requireNonNull(Floor.class.getClassLoader().getResourceAsStream("cobble.png")));
 			IMAGES = new Image[] {UNKNOWN, MOSSY, COBBLE};
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -40,8 +40,8 @@ public class Floor {
 	}
 
 	public Floor(Image defaultImage) {
-		for(int i = 0; i < this.floorPattern.length; i++) {
-			for(int j = 0; j < this.floorPattern[i].length; j++) {
+		for (int i = 0; i < this.floorPattern.length; i++) {
+			for (int j = 0; j < this.floorPattern[i].length; j++) {
 				ImageView imageView = new ImageView(defaultImage);
 				imageView.setScaleX(0.125D);
 				imageView.setScaleY(0.125D);
@@ -92,28 +92,28 @@ public class Floor {
 	private void updateBits(boolean init) {
 		this.bits = 0.0F;
 
-		for(int i = 0; i < this.floorPattern.length; i++) {
-			for(int j = 0; j < this.floorPattern[i].length; j++) {
-				if(!this.floorSize.test(j, i))continue;
+		for (int i = 0; i < this.floorPattern.length; i++) {
+			for (int j = 0; j < this.floorPattern[i].length; j++) {
+				if (!this.floorSize.test(j, i)) continue;
 				bits += getBits(this.floorPattern[i][j].getImage());
 			}
 		}
 
-		this.bitsButton.setText("         Bits Count: " + (int)this.bits + " / 32         ");
-		if(!init)DungeonCracker.generate.update();
+		this.bitsButton.setText("         Bits Count: " + (int) this.bits + " / 32         ");
+		if (!init) DungeonCracker.generate.update();
 	}
 
 	private float getBits(Image image) {
-		if(image == COBBLE)return 2.0F;
-		else if(image == MOSSY)return 0.415F;
+		if (image == COBBLE) return 2.0F;
+		else if (image == MOSSY) return 0.415F;
 		else return 0.0F;
 	}
 
 	private void updateFloorSize(boolean init) {
 		this.floorSizeButton.setText("          Floor Size: " + this.floorSize.toString() + "          ");
 
-		for(int i = 0; i < this.floorPattern.length; i++) {
-			for(int j = 0; j < this.floorPattern[i].length; j++) {
+		for (int i = 0; i < this.floorPattern.length; i++) {
+			for (int j = 0; j < this.floorPattern[i].length; j++) {
 				ImageView imageView = this.floorPattern[i][j];
 				imageView.setVisible(this.floorSize.test(j, i));
 			}
@@ -123,16 +123,16 @@ public class Floor {
 	}
 
 	public static int indexOf(Image image) {
-		for(int i = 0; i < IMAGES.length; i++) {
-			if(IMAGES[i] == image)return i;
+		for (int i = 0; i < IMAGES.length; i++) {
+			if (IMAGES[i] == image) return i;
 		}
 
 		return -1;
 	}
 
 	public void addToPane(StackPane pane) {
-		for(int i = 0; i < this.floorPattern.length; i++) {
-			for(int j = 0; j < this.floorPattern[i].length; j++) {
+		for (int i = 0; i < this.floorPattern.length; i++) {
+			for (int j = 0; j < this.floorPattern[i].length; j++) {
 				ImageView imageView = this.floorPattern[i][j];
 				pane.getChildren().add(imageView);
 			}

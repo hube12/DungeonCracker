@@ -10,7 +10,7 @@ public class RandomSeed {
 
 	/**
 	 * Source: https://twitter.com/Geosquare_/status/1169623192153010176
-	 * */
+	 */
 	public static boolean isRandomSeed(long worldSeed) {
 		long upperBits = worldSeed >>> 32;
 		long lowerBits = worldSeed & MagicMath.MASK_32;

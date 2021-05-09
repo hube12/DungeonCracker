@@ -1,8 +1,8 @@
 package neil.gui;
 
-import neil.dungeons.Result;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import neil.dungeons.Result;
 
 
 public class Generate {
@@ -33,11 +33,11 @@ public class Generate {
 		this.findSeedsButton.setDisable(true);
 
 		this.findSeedsButton.setOnMouseClicked(event -> {
-			if(!Bruteforce.instance.isShowing()) {
+			if (!Bruteforce.instance.isShowing()) {
 				Bruteforce.instance.show();
 				try {
-					Result result=Bruteforce.instance.init();
-					if (result!=null){
+					Result result = Bruteforce.instance.init();
+					if (result != null) {
 						Bruteforce.instance.setResult(result);
 					}
 				} catch (InterruptedException e) {
