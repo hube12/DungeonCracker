@@ -454,14 +454,15 @@ public class VersionCrack {
 
                 for (int i = 0; i < 8; i++) {
                     PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, posX & -16, posZ & -16).forEach(structureSeed -> {
-                        //System.out.format("Structure seed %d... \n", structureSeed);
+                        System.out.format("Structure seed %d... \n", structureSeed);
                         result.addStructureSeed(structureSeed);
                         for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
                             long worldSeed = (upperBits << 48) | structureSeed;
                             if (!RandomSeed.isRandomSeed(worldSeed)) {
                                 continue;
                             }
-                            //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
+                            System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
+                            result.addWorldSeed(worldSeed);
                         }
                     });
 
