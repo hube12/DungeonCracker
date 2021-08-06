@@ -7,12 +7,20 @@ import neil.gui.MCVersion;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
+
+import static neil.gui.MCVersion.*;
 
 public class Main {
 	public static final boolean PARTIAL_OVERRIDE = true;
 
 	public static void main(String[] args) {
+        Scanner userInput = new Scanner(System.in);
+        Boolean validVersion = false;
+        Boolean enoughSpaners = false;
+        int version = 0;
+        int spawnerCount = 0;
 //        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222221110022011112211111221111022101112211001221111122222222").run();
 //        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222222211111012211011112210111112210111102211110102222222222").run();
 //        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222221111122100112211101220111122111112211110220011122222222").run();
@@ -30,42 +38,96 @@ public class Main {
 //            }
 //        }
 //        device.streamSeeds().parallel().forEach(System.out::println);
-		Result r = new VersionCrack(MCVersion.v1_16, -121, 20, 64, "100100101011100010111111101011000110101110111011111101101111110").run();
-		System.out.println(r);
+		/*Result r = new VersionCrack(MCVersion.v1_16, -121, 20, 64, "100100101011100010111111101011000110101110111011111101101111110").run();
+		System.out.println(r);*/
 		//
 
+        //Ask the user for the version they want to use
+        System.out.print("Please provide the version number the world was created in as listed below:\n16:    Release 1.16.x\n15:    Release 1.15.x\n13:    Releases 1.13.x and 1.14.x\n8:     Releases 1.8.x through 1.12.x\n7:     Releases 1.7.x and earlier\n0:     I don't know\nType the corresponding number on the left: ");
+        while(!validVersion) {
+            String input = userInput.nextLine();
+            if(validateUserVersionInput(input)==-1){
+                System.out.println("Please provide a supported version number like \"16\". If you do not know the version, put 0");
+                System.out.print("Version number: ");
+            } else {
+                validVersion = true;
+                version = validateUserVersionInput(input);
+            }
+        }
 
-//      Result r=new VersionCrack(MCVersion.vLegacy, 142,27,-934,  "222222222011101122111101012111021012121000101211111210222222222").run();
-//        System.out.println(r);
-		if (false) {
-			for (MCVersion version : new MCVersion[] {MCVersion.v1_14, MCVersion.v1_15, MCVersion.v1_16}) {
-				Result r1 = new VersionCrack(version, -8642, 37, 13766, "022222222100101222111011222210111222201011022222101122220111222211011222222222222").run();
-				Result r2 = new VersionCrack(version, -330, 34, 639, "111111101110010111111100101110110111100111101111010101001111111").run();
-				Result r3 = new VersionCrack(version, -527, 19, 899, "011100011111110101111111010111111101011011111100010001111111111").run();
-				Set<Long> set1 = new HashSet<>(r1.getStructureSeeds());
-				Set<Long> set2 = new HashSet<>(r2.getStructureSeeds());
-				Set<Long> set3 = new HashSet<>(r3.getStructureSeeds());
+        System.out.print("How many spawners do you have? Versions below 1.13 require a minimum of 2.\nSpawner count: ");
+        while(!enoughSpaners){
+            enoughSpaners = true;
+            String input = userInput.nextLine();
+            if(input.equals("1") && version >= 3){
+                spawnerCount = 1;
+            } else if(input.equals("2")){
+                spawnerCount = 2;
+            } else if(input.equals("3")){
+                spawnerCount = 3;
+            } else if(input.equals("4")){
+                spawnerCount = 4;
+            } else {
+                if(version < 3){
+                    System.out.println("Please input a valid number greater than 1.");
+                } else {
+                    System.out.println("Please input a valid number.");
+                }
+                System.out.print("Spawner count: ");
+                enoughSpaners = false;
+            }
+        }
 
-				Set<Long> copy1 = new HashSet<>(set1);
-				set1.retainAll(set2);
-				copy1.retainAll(set3);
-				set2.retainAll(set3);
-				System.out.println(Arrays.toString(set1.toArray()));
-				System.out.println(Arrays.toString(copy1.toArray()));
-				System.out.println(Arrays.toString(set2.toArray()));
-			}
-		}
 
 
+        switch(version) {
+            case 0: System.out.println("Unknown Version.."); break;
+            case 1: System.out.println("Running version for 1.7 and older.."); test(vLegacy); break;
+            case 2: System.out.println("Running version for 1.8 through 1.12.."); test(v1_7); break;
+            case 3: System.out.println("Running version for 1.13 and 1.14.."); test(v1_13); break;
+            case 4: System.out.println("Running version for 1.15.."); test(v1_15); break;
+            case 5: System.out.println("Running version for 1.16.."); test(v1_16); break;
+            default: System.out.println("Something went wrong..");
+        }
 	}
 
-	public static void test1_16() {
-		// -720350949281663006
-		System.out.println(new VersionCrack(MCVersion.v1_16, -1840, 23, -1275, "1001011111001010111011100110111110101001011101011", Biomes.OCEAN).run().toString());
-		System.out.println(new VersionCrack(MCVersion.v1_16, -2420, 40, -1693, "1111101100100111101111000011110101110101100111111", Biomes.JUNGLE_EDGE).run().toString());
+	public static int validateUserVersionInput(String input){
+	    switch(input){
+            case "16": return 5;
+            case "15": return 4;
+            case "14":
+            case "13": return 3;
+            case "12":
+            case "11":
+            case "10":
+            case "9":
+            case "8": return 2;
+            case "7": return 1;
+            case "6":
+            case "5":
+            case "4":
+            case "3":
+            case "2":
+            case "1":
+            case "0": return 0;
+            default: return -1;
+        }
+    }
 
-		System.out.println(new VersionCrack(MCVersion.v1_16, -5620, 34, -2062, "111110111101111111100101111111110110011111110111101111111001211011101111001101011", Biomes.SWAMP).run().toString());
-		System.out.println(new VersionCrack(MCVersion.v1_16, -6799, 61, -1473, "011010011111011111011110011100111011110111011110001011110111011111000011111101011", Biomes.DESERT).run().toString());
-
-	}
+    public static void test(MCVersion version) {
+        // 1.16                       Dungeon Seed: [66991252199345]; Coords: [-6799 61 -1473]; World Seed: [-720350949281663006]
+        // 1.15                       Dungeon Seed: [54954658892082]; Coords: [161 16 -716]; World Seed: [7298916735143357077]
+        // 1.14, 1.13                 Dungeon Seed: [82836126371671]; Coords: [693 30 -74]; World Seed: [1724951870366438529]
+        // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [246636189820814,269259332384656]; Coords: [-296 19 26, -178 14 219];  World Seed: [-1700538326672817507]
+        // 1.7 and below              Dungeon Seed: [41813458706666,190214760258714]; Coords: [544 49 -229, 774 54 -129]; World Seed: [-6812128122949736898]
+        switch(version){
+            case v1_16: System.out.println(new VersionCrack(version, -6799, 61, -1473, "011010011111011111011110011100111011110111011110001011110111011111000011111101011", Biomes.DESERT).run().toString()); break;
+            case v1_15: System.out.println(new VersionCrack(version, 161, 16, -716, "1111111101101110111110111011101111111101101100101").run().toString()); break;
+            case v1_13: System.out.println(new VersionCrack(version, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").run().toString()); break;
+            case v1_7: System.out.println(new VersionCrack(version, 544, 49, -229, "0110110110011001111111011111001110111011111111101").run().toString()); break;
+            //case v1_7: System.out.println(new VersionCrack(version, 774, 54, -129, "100110111101111011100101101110101101111111111100010111110111110101011100101111100").run().toString()); break;
+            case vLegacy: System.out.println(new VersionCrack(version, -296, 19, 261, "010111111111011110001110011110120111111111101110011101111111011").run().toString()); break;
+            //case vLegacy: System.out.println(new VersionCrack(version, -178, 14, 219, "010111110110110100101101100111101111111101111110111101111011110").run().toString()); break;
+        }
+    }
 }

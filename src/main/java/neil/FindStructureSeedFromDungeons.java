@@ -40,7 +40,7 @@ public class FindStructureSeedFromDungeons {
 
 		List<Long> res = crack(dataList);
 		if (res.isEmpty()) {
-			System.out.println("You failed !");
+			System.out.println("You failed!");
 			return;
 		}
 		System.out.println("If the seed was randomly generated: (else use biomes)");
@@ -56,7 +56,7 @@ public class FindStructureSeedFromDungeons {
 	public static List<Long> crack(List<Data> dataList) {
 		List<Long> res = new ArrayList<>();
 		Map<Long, Boolean> map = new HashMap<>();
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10; i++) {
 			for (Data data : dataList) {
 				PopReversal2TheHalvening.getSeedFromChunkseedPre13(
 						data.getPrevious() ^ Rand.JAVA_LCG.multiplier,
