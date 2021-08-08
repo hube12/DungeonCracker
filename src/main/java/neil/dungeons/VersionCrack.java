@@ -27,9 +27,7 @@ public class VersionCrack {
     String sequence1, sequence2;
     MCVersion version;
     List<Long> dungeonSeeds = new ArrayList<>();
-    List<Long> structureSeeds = new ArrayList<>();
     List<Long> worldSeeds = new ArrayList<>();
-    Set<Long> decoratorSeeds;
 
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String sequence1, Biome biome) {
         this.pos1X = posX;
@@ -76,14 +74,6 @@ public class VersionCrack {
 
     public void runTest(){
         getSeedTest(version);
-    }
-
-    private int getOrdinalBiome(Biome biome) {
-        // there is a mineshaft (so 2 because 2 loops) in all 68 biomes ( 46 in defaultLand, 10 in defaultOcean,
-        // 6 in DefaultFeature, 6 in defaultMesa) and
-        // 3 have fossils
-        List<Biome> fossilBiomes = new ArrayList<>(Arrays.asList(Biomes.SWAMP, Biomes.SWAMP_HILLS, Biomes.DESERT));
-        return 2 + (fossilBiomes.contains(biome) ? 1 : 0);
     }
 
     //MCVersion.v1_16 MCVersion.v1_17
@@ -383,7 +373,7 @@ public class VersionCrack {
     }
 
     /***
-     * @return Returns an array list of DungeonSeeds (also known as DecoratorSeeds)
+     * @return Returns an array list of DungeonSeeds (also known as DecoratorSeeds for this code)
      */
     public ArrayList<Long> getDungeonSeedsLegacy() {
         ArrayList<Long> dungeonSeeds = new ArrayList<>();
@@ -396,8 +386,8 @@ public class VersionCrack {
 
         ReverserDevice device = new ReverserDevice();
         device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
         device.addCall(NextInt.withValue(128, pos1Y));
+        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
         for (Integer integer : pattern) {
@@ -418,6 +408,7 @@ public class VersionCrack {
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
         return dungeonSeeds;
     }
 
@@ -488,6 +479,7 @@ public class VersionCrack {
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
         return dungeonSeeds;
     }
 
@@ -522,6 +514,7 @@ public class VersionCrack {
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
         return dungeonSeeds;
     }
 
@@ -556,6 +549,7 @@ public class VersionCrack {
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
         return dungeonSeeds;
     }
 
@@ -616,8 +610,7 @@ public class VersionCrack {
         for (long decoratorSeed : decoratorSeeds) {
             LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
             for (int i = 0; i < 8; i++) {
-                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 2, pos1X & -16, pos1Z & -16));
-                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 3, pos1X & -16, pos1Z & -16));
+                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - fossilBiomeSalt(), pos1X & -16, pos1Z & -16));
                 decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
             }
         }
@@ -634,17 +627,12 @@ public class VersionCrack {
                 worldSeeds.add(worldSeed);
             }
         }
+        System.out.println("Your dungeon seed is: " + dungeonSeeds);
         System.out.println("Your world may be one of these seeds: " + worldSeeds);
     }
 
     public void getWorldSeedUnknown(){
-        /*case v1_17, v1_16 -> {
-            if (FOSSIL_BIOMES.contains(biome)) {
-                30003L;
-            } else {
-                30002L;
-            }
-        }*/
+
     }
 
     public Long fossilBiomeSalt(){
@@ -657,12 +645,12 @@ public class VersionCrack {
 
     public void getSeedTest(MCVersion version) {
         switch (version) {
-            case v1_16: getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617())); break;
-            case v1_15: getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15())); break;
-            case v1_13: getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314())); break;
-            case v1_8: getWorldSeedsUniversal(getStructureSeeds812(getDungeonSeeds812())); break;
-            case vLegacy: getWorldSeedsUniversal(getStructureSeedsLegacy(getDungeonSeedsLegacy())); break;
-            case vUnknown: getWorldSeedUnknown(); break;
+            case v1_16: System.out.println("1.16/1.17"); getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617())); break;
+            case v1_15: System.out.println("1.15"); getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15())); break;
+            case v1_13: System.out.println("1.13/1.14"); getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314())); break;
+            case v1_8: System.out.println("1.8-1.12"); getWorldSeedsUniversal(getStructureSeeds812(getDungeonSeeds812())); break;
+            case vLegacy: System.out.println("Legacy"); getWorldSeedsUniversal(getStructureSeedsLegacy(getDungeonSeedsLegacy())); break;
+            case vUnknown: System.out.println("Oh Lawd"); getWorldSeedUnknown(); break;
         }
     }
 
