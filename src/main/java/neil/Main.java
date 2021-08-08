@@ -286,13 +286,13 @@ public class Main {
         // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [246636189820814,269259332384656]; Coords: [-296 19 26, -178 14 219];  World Seed: [-1700538326672817507]
         // 1.7 and below              Dungeon Seed: [41813458706666,190214760258714]; Coords: [544 49 -229, 774 54 -129]; World Seed: [-6812128122949736898]
         switch (version) {
-            case v1_16: System.out.println(new VersionCrack(version, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.DESERT).run().toString());                break;
-            //case v1_16: System.out.println(new VersionCrack(version, -6799, 61, -1473, "011010011111011111011110011100111011110111011110001011110111011111000011111101011", Biomes.DESERT).run().toString());                break;
-            case v1_15: System.out.println(new VersionCrack(version, 161, 16, -716, "1111111101101110111110111011101111111101101100101").run().toString());                break;
-            case v1_13: System.out.println(new VersionCrack(version, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").run().toString());                break;
+            case v1_16: System.out.println(new VersionCrack(version, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.DESERT).run().toString()); break;
+            //case v1_16: System.out.println(new VersionCrack(version, -6799, 61, -1473, "011010011111011111011110011100111011110111011110001011110111011111000011111101011", Biomes.DESERT).run().toString()); break;
+            case v1_15: System.out.println(new VersionCrack(version, 161, 16, -716, "1111111101101110111110111011101111111101101100101").run().toString()); break;
+            case v1_13: System.out.println(new VersionCrack(version, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").run().toString()); break;
             //case v1_13: System.out.println(new VersionCrack(version, 693, 30, -74, "111011100101011111011011001111110110111011101111111011101111011011111110111111110").run().toString()); break;
-            case v1_8: System.out.println(new VersionCrack(version, 544, 49, -229, "0110110110011001111111011111001110111011111111101", 774, 54, -129, "100110111101111011100101101110101101111111111100010111110111110101011100101111100").run().toString());                break;
-            case vLegacy: System.out.println(new VersionCrack(version, -296, 19, 261, "010111111111011110001110011110120111111111101110011101111111011", -178, 14, 219, "010111110110110100101101100111101111111101111110111101111011110").run().toString());                break;
+            case v1_8: System.out.println(new VersionCrack(version, 544, 49, -229, "0110110110011001111111011111001110111011111111101", 774, 54, -129, "100110111101111011100101101110101101111111111100010111110111110101011100101111100").run().toString()); break;
+            case vLegacy: System.out.println(new VersionCrack(version, -296, 19, 261, "010111111111011110001110011110120111111111101110011101111111011", -178, 14, 219, "010111110110110100101101100111101111111101111110111101111011110").run().toString()); break;
         }
     }*/
 }

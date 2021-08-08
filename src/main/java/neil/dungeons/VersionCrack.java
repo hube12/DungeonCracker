@@ -616,7 +616,8 @@ public class VersionCrack {
         for (long decoratorSeed : decoratorSeeds) {
             LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
             for (int i = 0; i < 8; i++) {
-                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - fossilBiomeSalt(), pos1X & -16, pos1Z & -16));
+                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 2, pos1X & -16, pos1Z & -16));
+                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 3, pos1X & -16, pos1Z & -16));
                 decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
             }
         }
