@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static neil.gui.DungeonCracker.generate;
+import static neil.gui.MCVersion.v1_13;
 
 
 public class Bruteforce extends Stage {
@@ -136,7 +137,8 @@ public class Bruteforce extends Stage {
 		@Override
 		public void run() {
 			VersionCrack versionCrack = new VersionCrack(version, x, y, z, sequence);
-			result = versionCrack.run();
+			//result = versionCrack.run();
+            new VersionCrack(version, x, y, z, sequence).runTest();
 		}
 
 		public Result getResult() {
