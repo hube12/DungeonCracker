@@ -211,7 +211,7 @@ public class PopReversal2TheHalvening {
 			//System.out.println(c);
 			long target = (c ^ f) & mask16; //now that we've guessed 16 bits of worldseed we can undo the mask
 			//We need to handle the four different cases of the effect the two |1s have on the seed
-			long magic = x * ((m2 * ((c ^ m1) & mask16) + addend2) >>> 16) + z * ((m4 * ((c ^ m1) & mask16) + addend4) >>> 16);
+			long magic = x * ((m2 * ((c ^ m1) & mask16) + addend2) >>> 16) + z * ((m4 *((c ^ m1) & mask16) + addend4) >>> 16);
 
 			//TODO Many of these checks can be unneeded if there is collision among the firstAddend values. For example if 2x+z = x+2z you only need to check one of them.
 			//TODO Investigate possibility algorithm may return same seed multiple times. Think it shouldn't occur if you avoid collision as above, but perhaps rarely?

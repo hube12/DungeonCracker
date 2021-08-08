@@ -380,14 +380,16 @@ public class VersionCrack {
         //Result result = new Result();
         pos1X -= 8; //different from 1.7+
         pos1Z -= 8; //different from 1.7+
-        //int offsetX = pos1X & 15;
-        //int offsetZ = pos1Z & 15;
+        int offsetX = pos1X & 15; //unused
+        int offsetZ = pos1Z & 15; //unused
         Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
         ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
+        device.addCall(NextInt.consume(16, 1)); //Skip size. //different from 1.7+
+        device.addCall(NextInt.withValue(16, offsetX)); //unused
         device.addCall(NextInt.withValue(128, pos1Y));
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
+        device.addCall(NextInt.withValue(16, offsetZ)); //unused
+        device.addCall(NextInt.consume(16, 1)); //Skip size. //different from 1.7+
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
         for (Integer integer : pattern) {
@@ -404,7 +406,7 @@ public class VersionCrack {
         if (Main.PARTIAL_OVERRIDE) {
             decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
@@ -439,9 +441,9 @@ public class VersionCrack {
 
         Set<Long> decoratorSeeds;
         if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
@@ -473,9 +475,9 @@ public class VersionCrack {
 
         Set<Long> decoratorSeeds;
         if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
@@ -508,9 +510,9 @@ public class VersionCrack {
 
         Set<Long> decoratorSeeds;
         if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
@@ -543,9 +545,9 @@ public class VersionCrack {
 
         Set<Long> decoratorSeeds;
         if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
@@ -562,8 +564,9 @@ public class VersionCrack {
         //System.out.print("Debug 2\nRunning Legacy and 1.8-1.12 code..\n");
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
+
             for (int i = 0; i < 2000; i++) {
-                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(structureSeeds::add);
+                structureSeeds.addAll(PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4));
                 decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
             }
         }
@@ -582,7 +585,6 @@ public class VersionCrack {
 
             for (int i = 0; i < 8; i++) {
                 structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, pos1X & -16, pos1Z & -16));
-
                 decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
             }
         }
@@ -590,18 +592,7 @@ public class VersionCrack {
     }
 
     public ArrayList<Long> getStructureSeeds15(ArrayList<Long> decoratorSeeds) {
-        ArrayList<Long> structureSeeds = new ArrayList<>();
-        //System.out.print("Debug 4\nRunning 1.15 code..\n");
-        for (long decoratorSeed : decoratorSeeds) {
-            LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-            for (int i = 0; i < 8; i++) {
-                structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, pos1X & -16, pos1Z & -16));
-
-                decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-            }
-        }
-        return structureSeeds;
+        return getStructureSeeds1314(decoratorSeeds);
     }
 
     public ArrayList<Long> getStructureSeeds1617(ArrayList<Long> decoratorSeeds) {
@@ -609,6 +600,7 @@ public class VersionCrack {
         //System.out.print("Debug 5\nRunning 1.16 code..\n");
         for (long decoratorSeed : decoratorSeeds) {
             LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
+
             for (int i = 0; i < 8; i++) {
                 structureSeeds.addAll(PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - fossilBiomeSalt(), pos1X & -16, pos1Z & -16));
                 decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
@@ -645,12 +637,12 @@ public class VersionCrack {
 
     public void getSeedTest(MCVersion version) {
         switch (version) {
-            case v1_16: System.out.println("1.16/1.17"); getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617())); break;
-            case v1_15: System.out.println("1.15"); getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15())); break;
-            case v1_13: System.out.println("1.13/1.14"); getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314())); break;
-            case v1_8: System.out.println("1.8-1.12"); getWorldSeedsUniversal(getStructureSeeds812(getDungeonSeeds812())); break;
-            case vLegacy: System.out.println("Legacy"); getWorldSeedsUniversal(getStructureSeedsLegacy(getDungeonSeedsLegacy())); break;
-            case vUnknown: System.out.println("Oh Lawd"); getWorldSeedUnknown(); break;
+            case v1_16: System.out.println("Debug: 1.16/1.17"); getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617())); break;
+            case v1_15: System.out.println("Debug: 1.15"); getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15())); break;
+            case v1_13: System.out.println("Debug: 1.13/1.14"); getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314())); break;
+            case v1_8: System.out.println("Debug: 1.8-1.12"); getWorldSeedsUniversal(getStructureSeeds812(getDungeonSeeds812())); break;
+            case vLegacy: System.out.println("Debug: Legacy"); getWorldSeedsUniversal(getStructureSeedsLegacy(getDungeonSeedsLegacy())); break;
+            case vUnknown: System.out.println("Debug: Oh Lawd"); getWorldSeedUnknown(); break;
         }
     }
 

@@ -2,14 +2,9 @@ package neil;
 
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
-import neil.dungeons.Result;
 import neil.dungeons.VersionCrack;
-import neil.gui.MCVersion;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 import static neil.gui.MCVersion.*;
 
@@ -19,7 +14,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
         Boolean validVersion = false;
-        Boolean enoughSpaners = false;
         int version = 0;
         Biome dungeonBiome = Biomes.DESERT;
         int dungeon1x, dungeon1y, dungeon1z;
@@ -28,26 +22,6 @@ public class Main {
         int dungeon2y = 0;
         int dungeon2z = 0;
         String dungeon2Sequence = "";
-//        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222221110022011112211111221111022101112211001221111122222222").run();
-//        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222222211111012211011112210111112210111102211110102222222222").run();
-//        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222221111122100112211101220111122111112211110220011122222222").run();
-//        Result r=new VersionCrack(MCVersion.vLegacy, 1067 ,29, -306,  "222222222201101112201111012211111012211110112210111112222222222").run();
-//        String stringPattern="0222222211111221111122111112211111221111122222222";
-//        Integer[] pattern = stringPattern.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-//        ReverserDevice device = new ReverserDevice();
-//        for (Integer integer : pattern) {
-//            if (integer == 0) {
-//                device.addCall(NextInt.withValue(4, 0));
-//            } else if (integer == 1) {
-//                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-//            } else {
-//                device.addCall(NextInt.consume(4, 1));
-//            }
-//        }
-//        device.streamSeeds().parallel().forEach(System.out::println);
-		/*Result r = new VersionCrack(MCVersion.v1_16, -121, 20, 64, "100100101011100010111111101011000110101110111011111101101111110").run();
-		System.out.println(r);*/
-        //
 
         //Ask the user for the version they want to use
         System.out.print("Please provide the version number the dungeon was created in as listed below:\n16    Release 1.16.x and 1.17.x\n15    Release 1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n7     Releases 1.7.x and earlier\n0     I don't know\nType the corresponding number on the left: ");
@@ -62,7 +36,13 @@ public class Main {
             }
         }
 
-        if(version >= 5){
+        if (version > 5) {
+            dungeon1x = 0;
+            dungeon1y = 0;
+            dungeon1z = 0;
+            dungeon1Sequence = "";
+            dungeonBiome = Biomes.PLAINS;
+        } else if (version == 5) {
             System.out.println("Please input your dungeon data:");
             dungeon1x = getDungeonX(0);
             dungeon1y = getDungeonY(0);
@@ -90,23 +70,34 @@ public class Main {
 
         switch (version) {
             //Unknown
-            case 0: new VersionCrack(vUnknown, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest(); break;
+            case 0: new VersionCrack(vUnknown, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest();
+                break;
             //Legacy(1.0-1.7)
-            case 1: new VersionCrack(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest(); break;
+            case 1: new VersionCrack(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest();
+                break;
             //1.8-1.12
-            case 2: new VersionCrack(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest(); break;
+            case 2: new VersionCrack(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest();
+                break;
             //1.13-1.14
-            case 3: new VersionCrack(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).runTest(); break;
+            case 3: new VersionCrack(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).runTest();
+                break;
             //1.15
-            case 4: new VersionCrack(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).runTest(); break;
+            case 4: new VersionCrack(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).runTest();
+                break;
             //1.16-1.17
-            case 5: new VersionCrack(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeonBiome).runTest(); break;
+            case 5: new VersionCrack(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeonBiome).runTest();
+                break;
             //test cases (testL, test8, test13, test15, test16)
-            case 6: new VersionCrack(vLegacy, -296, 19, 261, "010111111111011110001110011110120111111111101110011101111111011", -178, 14, 219, "010111110110110100101101100111101111111101111110111101111011110").runTest(); break;
-            case 7: new VersionCrack(v1_8, 544, 49, -229, "0110110110011001111111011111001110111011111111101", 774, 54, -129, "100110111101111011100101101110101101111111111100010111110111110101011100101111100").runTest(); break;
-            case 8: new VersionCrack(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").runTest(); break;
-            case 9: new VersionCrack(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").runTest(); break;
-            case 10: new VersionCrack(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.PLAINS).runTest(); break;
+            case 6: new VersionCrack(vLegacy, -296, 19, 261, "010111111111011110001110011110120111111111101110011101111111011", -178, 14, 219, "010111110110110100101101100111101111111101111110111101111011110").runTest();
+                break;
+            case 7: new VersionCrack(v1_8, 544, 49, -229, "0110110110011001111111011111001110111011111111101", 774, 54, -129, "100110111101111011100101101110101101111111111100010111110111110101011100101111100").runTest();
+                break;
+            case 8: new VersionCrack(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").runTest();
+                break;
+            case 9: new VersionCrack(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").runTest();
+                break;
+            case 10: new VersionCrack(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.PLAINS).runTest();
+                break;
             default: System.out.println("Something went wrong..");
         }
     }
@@ -244,18 +235,23 @@ public class Main {
         return input;
     }
 
-    public static Biome getDungeonBiome(){
+    public static Biome getDungeonBiome() {
         System.out.print("Please provide the biome the spawner block is in.\n1     SWAMP\n2     SWAMP_HILLS\n3     DESERT\n4     OTHER\nType the corresponding number on the left: ");
         Scanner userInput = new Scanner(System.in);
         String input = userInput.nextLine();
         Biome biome = Biomes.FOREST;
         while (biome == Biomes.FOREST) {
-            switch(input){
-                case "1": biome = Biomes.SWAMP; break;
-                case "2": biome = Biomes.SWAMP_HILLS; break;
-                case "3": biome = Biomes.DESERT; break;
-                case "4": biome = Biomes.PLAINS; break;
-                default: System.out.print("Please input a number 1-4: "); input = userInput.nextLine();
+            switch (input) {
+                case "1": biome = Biomes.SWAMP;
+                    break;
+                case "2": biome = Biomes.SWAMP_HILLS;
+                    break;
+                case "3": biome = Biomes.DESERT;
+                    break;
+                case "4": biome = Biomes.PLAINS;
+                    break;
+                default: System.out.print("Please input a number 1-4: ");
+                    input = userInput.nextLine();
             }
         }
         return biome;
