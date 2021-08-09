@@ -15,6 +15,7 @@ import randomreverser.call.NextInt;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class VersionCrack {
     private int pos1X;
@@ -28,6 +29,8 @@ public class VersionCrack {
     MCVersion version;
     List<Long> dungeonSeeds = new ArrayList<>();
     List<Long> worldSeeds = new ArrayList<>();
+    Set<Long> worldSeedsSet = new HashSet<>();
+    Set<Long> worldSeedsSet2 = new HashSet<>();
 
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String sequence1, Biome biome) {
         this.pos1X = posX;
@@ -40,6 +43,7 @@ public class VersionCrack {
         this.sequence2 = "";
         this.version = version;
         this.biome = biome;
+        System.out.print("Using the following data - Coords: [" + posX + " " + posY + " " + posZ + "; Sequence: [" + sequence1 + "]; Biome: [" + biome + "]");
     }
 
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String sequence1) {
@@ -66,14 +70,6 @@ public class VersionCrack {
         this.sequence2 = sequence2;
         this.version = version;
         this.biome = Biomes.PLAINS;
-    }
-
-    /*public Result run() {
-        return getSeed(version);
-    }*/
-
-    public void runTest(){
-        getSeedTest(version);
     }
 
     //MCVersion.v1_16 MCVersion.v1_17
@@ -272,7 +268,8 @@ public class VersionCrack {
     }
 
     //MCVersion.v1_7
-    public Result crackBetween1_7To1_12() {
+    public ArrayList<Long> crackBetween1_7To1_12() {
+        System.out.println("Running original 1.8-1.12 code..");
         Result result = new Result();
         pos1X -= 8; //different from 1.13+
         pos1Z -= 8; //different from 1.13+
@@ -282,59 +279,8 @@ public class VersionCrack {
 
         ReverserDevice device = new ReverserDevice();
         device.addCall(NextInt.withValue(16, offsetX));
-        device.addCall(NextInt.withValue(16, offsetZ));
         device.addCall(NextInt.withValue(256, pos1Y));
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-            } else {
-                device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
-        } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
-        }
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            System.out.println("Found Dungeon seed: " + s);
-        });
-        if (!decoratorSeeds.isEmpty()) {
-            System.out.format("Finished dungeon search and looking for world seeds.\n");
-        }
-		/*for (long seed : decoratorSeeds) {
-			long decoratorSeed = seed;
-			for (int i = 0; i < 2000; i++) {
-				PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, posX >> 4, posZ >> 4).forEach(s -> {
-					System.out.println(s);
-					result.addStructureSeed(s);
-				});
-				decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
-			}
-		}*/
-        return result;
-    }
-
-    //MCVersion.vLegacy
-    public Result crackBefore1_7() {
-        Result result = new Result();
-        pos1X -= 8; //different from 1.7+
-        pos1Z -= 8; //different from 1.7+
-        //int offsetX = pos1X & 15;
-        //int offsetZ = pos1Z & 15;
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-        device.addCall(NextInt.withValue(128, pos1Y));
+        device.addCall(NextInt.withValue(16, offsetZ));
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
         for (Integer integer : pattern) {
@@ -351,7 +297,7 @@ public class VersionCrack {
         if (Main.PARTIAL_OVERRIDE) {
             decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
         }
 
         decoratorSeeds.forEach(s -> {
@@ -359,36 +305,118 @@ public class VersionCrack {
             System.out.println("Found Dungeon seed: " + s);
         });
 
+        if (!decoratorSeeds.isEmpty()) {
+            System.out.format("Finished dungeon search and looking for world seeds.\n");
+        }
+
         for (long seed : decoratorSeeds) {
             long decoratorSeed = seed;
             for (int i = 0; i < 2000; i++) {
-                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(s -> {
-                    System.out.println(s);
-                    result.addStructureSeed(s);
-                });
+                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(result::addStructureSeed);
                 decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
             }
         }
-        return result;
+        return (ArrayList<Long>) result.getStructureSeeds();
+    }
+
+    //MCVersion.vLegacy
+    public ArrayList<Long> crackBefore1_7() {
+        System.out.println("Running original pre1.8 code..");
+        Result result = new Result();
+        pos1X -= 8; //different from 1.7+
+        pos1Z -= 8; //different from 1.7+
+        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
+
+        ReverserDevice device = new ReverserDevice();
+        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
+        device.addCall(NextInt.withValue(128, pos1Y));
+        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
+        device.addCall(NextInt.consume(2, 2)); //Skip size.
+
+        for (Integer integer : pattern) {
+            if (integer == 0) {
+                device.addCall(NextInt.withValue(4, 0));
+            } else if (integer == 1) {
+                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
+            } else {
+                device.addCall(NextInt.consume(4, 1));
+            }
+        }
+
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE) {
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
+        } else {
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
+        }
+
+        //System.out.println("Decorator seeds: " + decoratorSeeds);
+        decoratorSeeds.forEach(s -> {
+            result.addDungeonSeed(s);
+            System.out.println("Found Dungeon seed: " + s);
+        });
+
+        if (!decoratorSeeds.isEmpty()) {
+            System.out.format("Finished dungeon search and looking for world seeds.\n");
+        }
+
+        for (long seed : decoratorSeeds) {
+            long decoratorSeed = seed;
+            for (int i = 0; i < 2000; i++) {
+                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(result::addStructureSeed);
+                decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
+            }
+        }
+        return (ArrayList<Long>) result.getStructureSeeds();
     }
 
     /***
      * @return Returns an array list of DungeonSeeds (also known as DecoratorSeeds for this code)
      */
-    public ArrayList<Long> getDungeonSeedsLegacy() {
+    public ArrayList<Long> getDungeonSeedsLegacy_1() {
         ArrayList<Long> dungeonSeeds = new ArrayList<>();
-        //Result result = new Result();
         pos1X -= 8; //different from 1.7+
         pos1Z -= 8; //different from 1.7+
-        int offsetX = pos1X & 15; //unused
-        int offsetZ = pos1Z & 15; //unused
         Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
         ReverserDevice device = new ReverserDevice();
         device.addCall(NextInt.consume(16, 1)); //Skip size. //different from 1.7+
-        device.addCall(NextInt.withValue(16, offsetX)); //unused
         device.addCall(NextInt.withValue(128, pos1Y));
-        device.addCall(NextInt.withValue(16, offsetZ)); //unused
+        device.addCall(NextInt.consume(16, 1)); //Skip size. //different from 1.7+
+        device.addCall(NextInt.consume(2, 2)); //Skip size.
+
+        for (Integer integer : pattern) {
+            if (integer == 0) {
+                device.addCall(NextInt.withValue(4, 0));
+            } else if (integer == 1) {
+                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
+            } else {
+                device.addCall(NextInt.consume(4, 1));
+            }
+        }
+
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE) {
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
+        } else {
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
+        }
+
+
+        dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
+        return dungeonSeeds;
+    }
+
+    public ArrayList<Long> getDungeonSeedsLegacy_2() {
+        ArrayList<Long> dungeonSeeds = new ArrayList<>();
+        pos2X -= 8; //different from 1.7+
+        pos2Z -= 8; //different from 1.7+
+        Integer[] pattern = sequence2.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
+
+        ReverserDevice device = new ReverserDevice();
+        device.addCall(NextInt.consume(16, 1)); //Skip size. //different from 1.7+
+        device.addCall(NextInt.withValue(128, pos2Y));
         device.addCall(NextInt.consume(16, 1)); //Skip size. //different from 1.7+
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
@@ -414,7 +442,7 @@ public class VersionCrack {
         return dungeonSeeds;
     }
 
-    public ArrayList<Long> getDungeonSeeds812() {
+    public ArrayList<Long> getDungeonSeeds812_1() {
         ArrayList<Long> dungeonSeeds = new ArrayList<>();
         //Result result = new Result();
         pos1X -= 8; //different from 1.13+
@@ -425,8 +453,8 @@ public class VersionCrack {
 
         ReverserDevice device = new ReverserDevice();
         device.addCall(NextInt.withValue(16, offsetX));
-        device.addCall(NextInt.withValue(16, offsetZ));
         device.addCall(NextInt.withValue(256, pos1Y));
+        device.addCall(NextInt.withValue(16, offsetZ));
         device.addCall(NextInt.consume(2, 2)); //Skip size.
 
         for (Integer integer : pattern) {
@@ -447,6 +475,44 @@ public class VersionCrack {
         }
 
         dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
+        return dungeonSeeds;
+    }
+
+    public ArrayList<Long> getDungeonSeeds812_2() {
+        ArrayList<Long> dungeonSeeds = new ArrayList<>();
+        //Result result = new Result();
+        pos2X -= 8; //different from 1.13+
+        pos2Z -= 8; //different from 1.13+
+        int offsetX = pos2X & 15;
+        int offsetZ = pos2Z & 15;
+        Integer[] pattern = sequence2.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
+
+        ReverserDevice device = new ReverserDevice();
+        device.addCall(NextInt.withValue(16, offsetX));
+        device.addCall(NextInt.withValue(256, pos2Y));
+        device.addCall(NextInt.withValue(16, offsetZ));
+        device.addCall(NextInt.consume(2, 2)); //Skip size.
+
+        for (Integer integer : pattern) {
+            if (integer == 0) {
+                device.addCall(NextInt.withValue(4, 0));
+            } else if (integer == 1) {
+                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
+            } else {
+                device.addCall(NextInt.consume(4, 1));
+            }
+        }
+
+        Set<Long> decoratorSeeds;
+        if (Main.PARTIAL_OVERRIDE) {
+            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
+        } else {
+            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
+        }
+
+        dungeonSeeds.addAll(decoratorSeeds);
+        this.dungeonSeeds.addAll(dungeonSeeds);
         return dungeonSeeds;
     }
 
@@ -559,7 +625,7 @@ public class VersionCrack {
      * @param decoratorSeeds Pass in a set of decorator seeds
      * @return Returns an array list of structure seeds
      */
-    public ArrayList<Long> getStructureSeedsLegacy(ArrayList<Long> decoratorSeeds) {
+    public ArrayList<Long> getStructureSeedsLegacy_1(ArrayList<Long> decoratorSeeds) {
         ArrayList<Long> structureSeeds = new ArrayList<>();
         //System.out.print("Debug 2\nRunning Legacy and 1.8-1.12 code..\n");
         for (long seed : decoratorSeeds) {
@@ -573,8 +639,26 @@ public class VersionCrack {
         return structureSeeds;
     }
 
-    public ArrayList<Long> getStructureSeeds812(ArrayList<Long> decoratorSeeds) {
-        return getStructureSeedsLegacy(decoratorSeeds);
+    public ArrayList<Long> getStructureSeedsLegacy_2(ArrayList<Long> decoratorSeeds) {
+        ArrayList<Long> structureSeeds = new ArrayList<>();
+        //System.out.print("Debug 2\nRunning Legacy and 1.8-1.12 code..\n");
+        for (long seed : decoratorSeeds) {
+            long decoratorSeed = seed;
+
+            for (int i = 0; i < 2000; i++) {
+                structureSeeds.addAll(PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos2X >> 4, pos2Z >> 4));
+                decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
+            }
+        }
+        return structureSeeds;
+    }
+
+    public ArrayList<Long> getStructureSeeds812_1(ArrayList<Long> decoratorSeeds) {
+        return getStructureSeedsLegacy_1(decoratorSeeds);
+    }
+
+    public ArrayList<Long> getStructureSeeds812_2(ArrayList<Long> decoratorSeeds) {
+        return getStructureSeedsLegacy_1(decoratorSeeds);
     }
 
     public ArrayList<Long> getStructureSeeds1314(ArrayList<Long> decoratorSeeds) {
@@ -616,33 +700,69 @@ public class VersionCrack {
                 if (!RandomSeed.isRandomSeed(worldSeed)) {
                     continue;
                 }
-                worldSeeds.add(worldSeed);
+                worldSeedsSet.add(worldSeed);
             }
         }
-        System.out.println("Your dungeon seed is: " + dungeonSeeds);
-        System.out.println("Your world may be one of these seeds: " + worldSeeds);
     }
 
-    public void getWorldSeedUnknown(){
-
+    public void getWorldSeedsUniversal_2(ArrayList<Long> structureSeeds) {
+        for (long structureSeed : structureSeeds) {
+            for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
+                long worldSeed = (upperBits << 48) | structureSeed;
+                if (!RandomSeed.isRandomSeed(worldSeed)) {
+                    continue;
+                }
+                worldSeedsSet2.add(worldSeed);
+            }
+        }
     }
 
-    public Long fossilBiomeSalt(){
-        if(biome == Biomes.DESERT || biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS){
+    public void findUniqueWorldSeed() {
+        worldSeedsSet.retainAll(worldSeedsSet2);
+    }
+
+    /*
+            System.out.println("Your dungeon seed is: " + dungeonSeeds);
+            System.out.println("Your world may be one of these seeds: " + worldSeeds);
+     */
+
+    public Long fossilBiomeSalt() {
+        if (biome == Biomes.DESERT || biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS) {
             return 30003L;
         } else {
             return 30002L;
         }
     }
 
-    public void getSeedTest(MCVersion version) {
+    public void getSeedBranched() {
         switch (version) {
-            case v1_16: System.out.println("Debug: 1.16/1.17"); getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617())); break;
-            case v1_15: System.out.println("Debug: 1.15"); getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15())); break;
-            case v1_13: System.out.println("Debug: 1.13/1.14"); getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314())); break;
-            case v1_8: System.out.println("Debug: 1.8-1.12"); getWorldSeedsUniversal(getStructureSeeds812(getDungeonSeeds812())); break;
-            case vLegacy: System.out.println("Debug: Legacy"); getWorldSeedsUniversal(getStructureSeedsLegacy(getDungeonSeedsLegacy())); break;
-            case vUnknown: System.out.println("Debug: Oh Lawd"); getWorldSeedUnknown(); break;
+            case v1_16: System.out.println("Debug: 1.16/1.17");
+                getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617()));
+                break;
+            case v1_15: System.out.println("Debug: 1.15");
+                getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15()));
+                break;
+            case v1_13: System.out.println("Debug: 1.13/1.14");
+                getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314()));
+                break;
+            case v1_8: System.out.println("Debug: 1.8-1.12");
+                getWorldSeedsUniversal(getStructureSeeds812_1(getDungeonSeeds812_1()));
+                getWorldSeedsUniversal_2(getStructureSeeds812_2(getDungeonSeeds812_2()));
+                findUniqueWorldSeed();
+                break;
+            case vLegacy: System.out.println("Debug: Legacy");
+                getWorldSeedsUniversal(getStructureSeedsLegacy_1(getDungeonSeedsLegacy_1()));
+                getWorldSeedsUniversal_2(getStructureSeedsLegacy_2(getDungeonSeedsLegacy_2()));
+                findUniqueWorldSeed();
+                break;
+            case vUnknown: System.out.println("Debug: Oh Lawd");
+                break;
+        }
+        if (worldSeedsSet.isEmpty()) {
+            System.out.println("Your data may be wrong, as no unique world seed was found.");
+        } else {
+            System.out.println("Your dungeon(s): " + dungeonSeeds);
+            System.out.println("Your world(s): " + worldSeedsSet);
         }
     }
 

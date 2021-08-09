@@ -138,7 +138,7 @@ public class Bruteforce extends Stage {
 		public void run() {
 			VersionCrack versionCrack = new VersionCrack(version, x, y, z, sequence);
 			//result = versionCrack.run();
-            new VersionCrack(version, x, y, z, sequence).runTest();
+            new VersionCrack(version, x, y, z, sequence).getSeedBranched();
 		}
 
 		public Result getResult() {

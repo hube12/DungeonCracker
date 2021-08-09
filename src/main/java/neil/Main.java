@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
-        Boolean validVersion = false;
+        boolean validVersion = false;
         int version = 0;
         Biome dungeonBiome = Biomes.DESERT;
         int dungeon1x, dungeon1y, dungeon1z;
@@ -55,6 +55,7 @@ public class Main {
             dungeon1y = getDungeonY(0);
             dungeon1z = getDungeonZ(0);
             dungeon1Sequence = getSequence();
+            System.out.print("Using the following data - Coords: [" + dungeon1x + " " + dungeon1y + " " + dungeon1z + "; Sequence: [" + dungeon1Sequence + "]");
         } else {
             System.out.println("Please provide data from two different dungeons:");
             dungeon1x = getDungeonX(1);
@@ -66,51 +67,52 @@ public class Main {
             dungeon2y = getDungeonY(2);
             dungeon2z = getDungeonZ(2);
             dungeon2Sequence = getSequence();
+            System.out.print("Using the following data\nCoords 1: [" + dungeon1x + " " + dungeon1y + " " + dungeon1z + "; Sequence: [" + dungeon1Sequence + "]\nCoords 2: [" + dungeon2x + " " + dungeon2y + " " + dungeon2z + "; Sequence: [" + dungeon2Sequence + "]");
         }
 
         switch (version) {
             //Unknown
-            case 0: new VersionCrack(vUnknown, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest();
+            case 0: new VersionCrack(vUnknown, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).getSeedBranched();
                 break;
             //Legacy(1.0-1.7)
-            case 1: new VersionCrack(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest();
+            case 1: new VersionCrack(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).getSeedBranched();
                 break;
             //1.8-1.12
-            case 2: new VersionCrack(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).runTest();
+            case 2: new VersionCrack(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).getSeedBranched();
                 break;
             //1.13-1.14
-            case 3: new VersionCrack(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).runTest();
+            case 3: new VersionCrack(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).getSeedBranched();
                 break;
             //1.15
-            case 4: new VersionCrack(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).runTest();
+            case 4: new VersionCrack(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).getSeedBranched();
                 break;
             //1.16-1.17
-            case 5: new VersionCrack(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeonBiome).runTest();
+            case 5: new VersionCrack(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeonBiome).getSeedBranched();
                 break;
             //test cases (testL, test8, test13, test15, test16)
-            case 6: new VersionCrack(vLegacy, -296, 19, 261, "010111111111011110001110011110120111111111101110011101111111011", -178, 14, 219, "010111110110110100101101100111101111111101111110111101111011110").runTest();
+            case 6: new VersionCrack(vLegacy, 240, 25, 170, "001101111011110110111111100011101111111101000111110010101101011", 256, 28, 129, "111110110111111111111111111111110111111111101111100101110111011").getSeedBranched();
                 break;
-            case 7: new VersionCrack(v1_8, 544, 49, -229, "0110110110011001111111011111001110111011111111101", 774, 54, -129, "100110111101111011100101101110101101111111111100010111110111110101011100101111100").runTest();
+            case 7: new VersionCrack(v1_8, 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111", 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011").getSeedBranched();
                 break;
-            case 8: new VersionCrack(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").runTest();
+            case 8: new VersionCrack(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").getSeedBranched();
                 break;
-            case 9: new VersionCrack(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").runTest();
+            case 9: new VersionCrack(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").getSeedBranched();
                 break;
-            case 10: new VersionCrack(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.PLAINS).runTest();
+            case 10: new VersionCrack(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.PLAINS).getSeedBranched();
                 break;
             default: System.out.println("Something went wrong..");
         }
     }
-    /*
+    /* Cobble = 0; Moss = 1; Unknown = 2
     // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
     // 1.16                       Dungeon Seed: [66991252199345];  Coords: [-6799 61 -1473]; Sequence: [011010011111011111011110011100111011110111011110001011110111011111000011111101011]; World Seed: [-720350949281663006]; Biome: Desert
     // 1.15                       Dungeon Seed: [54954658892082];  Coords: [161 16 -716];    Sequence: [1111111101101110111110111011101111111101101100101];                                 World Seed: [7298916735143357077]
     // 1.14, 1.13                 Dungeon Seed: [82836126371671];  Coords: [693 30 -74];     Sequence: [111011100101011111011011001111110110111011101111111011101111011011111110111111110]; World Seed: [1724951870366438529]
                                   Dungeon Seed: [19957636759997];  Coords: [280 29 674];     Sequence: [111011111101101111111111101111101111110100111110111101111111110111111101111110011]; World Seed: [1724951870366438529]
-    // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [246636189820814]; Coords: [-296 19 26];     Sequence: [010111111111011110001110011110120111111111101110011101111111011];                   World Seed: [-1700538326672817507]
-                                  Dungeon Seed: [269259332384656]; Coords: [-178 14 219];    Sequence: [010111110110110100101101100111101111111101111110111101111011110];                   World Seed: [-1700538326672817507]
-    // 1.7 and below              Dungeon Seed: [41813458706666];  Coords: [544 49 -229];    Sequence: [0110110110011001111111011111001110111011111111101];                                 World Seed: [-6812128122949736898]
-                                  Dungeon Seed: [190214760258714]; Coords: [774 54 -129];    Sequence: [100110111101111011100101101110101101111111111100010111110111110101011100101111100]; World Seed: [-6812128122949736898]
+    // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
+                                  Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
+    // 1.7 and below              Dungeon Seed: [215824296572061]; Coords: [256 28 129];     Sequence: [111110110111111111111111111111110111111111101111100101110111011];                   World Seed: [4549957071420637180];  Version: [1.4.7]
+                                  Dungeon Seed: [185122040393267]; Coords: [240 25 170];     Sequence: [001101111011110110111111100011101111111101000111110010101101011];                   World Seed: [4549957071420637180];  Version: [1.4.7]
     */
 
     public static int validateUserVersionInput(String input) {
