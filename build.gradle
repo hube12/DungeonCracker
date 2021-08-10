@@ -31,7 +31,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "neil.dungeons.Main8"
+    mainClassName = "neil.Main"
 }
 
 
@@ -54,32 +54,12 @@ test {
     }
 }
 
-
-
-task jar15(type: Jar) {
-    manifest {
-        attributes(
-                "Implementation-Title": project.name,
-                "Implementation-Version": project.version,
-                "Main-Class": "neil.dungeons.Main15"
-        )
-    }
-    outputs.upToDateWhen{false}
-    project.archivesBaseName = "DungeonCracker15"
-    from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    with jar
-}
-
 task jar14(type: Jar) {
     manifest {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
-                "Main-Class": "neil.dungeons.Main14"
+                "Main-Class": "neil.Main"
         )
     }
     outputs.upToDateWhen{false}

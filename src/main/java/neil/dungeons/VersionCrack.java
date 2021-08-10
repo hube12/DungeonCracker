@@ -15,7 +15,6 @@ import randomreverser.call.NextInt;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class VersionCrack {
     private int pos1X;
@@ -32,6 +31,7 @@ public class VersionCrack {
     Set<Long> worldSeedsSet = new HashSet<>();
     Set<Long> worldSeedsSet2 = new HashSet<>();
 
+    //used for 1.16/1.17
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String sequence1, Biome biome) {
         this.pos1X = posX;
         this.pos1Y = posY;
@@ -43,9 +43,14 @@ public class VersionCrack {
         this.sequence2 = "";
         this.version = version;
         this.biome = biome;
-        System.out.print("Using the following data - Coords: [" + posX + " " + posY + " " + posZ + "; Sequence: [" + sequence1 + "]; Biome: [" + biome + "]");
+        if (biome.getName().equals("plains")) {
+            System.out.print("Using the following dungeon data:\nCoords: [" + posX + " " + posY + " " + posZ + "]; Sequence: [" + sequence1 + "]; Biome: other\n");
+        } else {
+            System.out.print("Using the following dungeon data:\nCoords: [" + posX + " " + posY + " " + posZ + "]; Sequence: [" + sequence1 + "]; Biome: [" + biome.getName() + "]\n");
+        }
     }
 
+    //used for 1.13-1.15
     public VersionCrack(MCVersion version, int posX, int posY, int posZ, String sequence1) {
         this.pos1X = posX;
         this.pos1Y = posY;
@@ -57,8 +62,10 @@ public class VersionCrack {
         this.sequence2 = "";
         this.version = version;
         this.biome = Biomes.PLAINS;
+        System.out.print("Using the following dungeon data:\nCoords: [" + posX + " " + posY + " " + posZ + "]; Sequence: [" + sequence1 + "]\n");
     }
 
+    //used for pre1.12
     public VersionCrack(MCVersion version, int pos1X, int pos1Y, int pos1Z, String sequence1, int pos2X, int pos2Y, int pos2Z, String sequence2) {
         this.pos1X = pos1X;
         this.pos1Y = pos1Y;
@@ -70,304 +77,7 @@ public class VersionCrack {
         this.sequence2 = sequence2;
         this.version = version;
         this.biome = Biomes.PLAINS;
-    }
-
-    //MCVersion.v1_16 MCVersion.v1_17
-    public Result crack1_16(Biome biome) {
-        Result result = new Result();
-        int offsetX = pos1X & 15;
-        int offsetZ = pos1Z & 15;
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.withValue(16, offsetX));
-        device.addCall(NextInt.withValue(16, offsetZ));
-        device.addCall(NextInt.withValue(256, pos1Y));
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-            } else {
-                device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
-        } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
-        }
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            System.out.println("Found Dungeon seed: " + s);
-        });
-
-        if (!decoratorSeeds.isEmpty()) {
-            System.out.format("Finished dungeon search and looking for world seeds.\n");
-        }
-
-        for (long decoratorSeed : decoratorSeeds) {
-            LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-            for (int i = 0; i < 8; i++) {
-                // they changed and added lake in the enum so 3 * 10000 + pos in the UNDERGROUND_STRUCTURES so 2 (yeah it changed)
-                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 2, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                    //System.out.format("Structure seed %d... \n", structureSeed);
-                    result.addStructureSeed(structureSeed);
-                    for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                        long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) {
-                            continue;
-                        }
-                        //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                        result.addWorldSeed(worldSeed);
-                    }
-                });
-                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 3, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                    //System.out.format("Structure seed %d... \n", structureSeed);
-                    result.addStructureSeed(structureSeed);
-                    for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                        long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) {
-                            continue;
-                        }
-                        //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                        result.addWorldSeed(worldSeed);
-                    }
-                });
-
-                decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-            }
-        }
-        return result;
-    }
-
-    //MCVersion.1_15
-    public Result crack1_15() {
-        Result result = new Result();
-        int offsetX = pos1X & 15;
-        int offsetZ = pos1Z & 15;
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.withValue(16, offsetX));
-        device.addCall(NextInt.withValue(16, offsetZ));
-        device.addCall(NextInt.withValue(256, pos1Y));
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-            } else {
-                device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
-        } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
-        }
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            System.out.println("Found Dungeon seed: " + s);
-        });
-
-        if (!decoratorSeeds.isEmpty()) {
-            System.out.format("Finished dungeon search and looking for world seeds.\n");
-        }
-
-        for (long decoratorSeed : decoratorSeeds) {
-            LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-            for (int i = 0; i < 8; i++) {
-                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                    //System.out.format("Structure seed %d... \n", structureSeed);
-                    result.addStructureSeed(structureSeed);
-                    for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                        long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) {
-                            continue;
-                        }
-                        //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                    }
-                });
-
-                decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-            }
-        }
-        return result;
-    }
-
-    //MCVersion.v1_13, MCVersion.v1_14
-    public Result crack1_14() {
-        Result result = new Result();
-        int offsetX = pos1X & 15;
-        int offsetZ = pos1Z & 15;
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.withValue(16, offsetX));
-        device.addCall(NextInt.withValue(256, pos1Y));
-        device.addCall(NextInt.withValue(16, offsetZ));
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-            } else {
-                device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().sequential().collect(Collectors.toSet());
-        } else {
-            decoratorSeeds = device.streamSeeds().sequential().limit(1).collect(Collectors.toSet());
-        }
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            System.out.println("Found Dungeon seed: " + s);
-        });
-
-        if (!decoratorSeeds.isEmpty()) {
-            System.out.format("Finished dungeon search and looking for world seeds.\n");
-        }
-
-        for (long decoratorSeed : decoratorSeeds) {
-            LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-            for (int i = 0; i < 8; i++) {
-                PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                    //System.out.format("Structure seed %d... \n", structureSeed);
-                    result.addStructureSeed(structureSeed);
-                    for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                        long worldSeed = (upperBits << 48) | structureSeed;
-                        if (!RandomSeed.isRandomSeed(worldSeed)) {
-                            continue;
-                        }
-                        //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                        result.addWorldSeed(worldSeed);
-                    }
-                });
-
-                decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-            }
-        }
-        return result;
-    }
-
-    //MCVersion.v1_7
-    public ArrayList<Long> crackBetween1_7To1_12() {
-        System.out.println("Running original 1.8-1.12 code..");
-        Result result = new Result();
-        pos1X -= 8; //different from 1.13+
-        pos1Z -= 8; //different from 1.13+
-        int offsetX = pos1X & 15;
-        int offsetZ = pos1Z & 15;
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.withValue(16, offsetX));
-        device.addCall(NextInt.withValue(256, pos1Y));
-        device.addCall(NextInt.withValue(16, offsetZ));
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-            } else {
-                device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
-        } else {
-            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
-        }
-
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            System.out.println("Found Dungeon seed: " + s);
-        });
-
-        if (!decoratorSeeds.isEmpty()) {
-            System.out.format("Finished dungeon search and looking for world seeds.\n");
-        }
-
-        for (long seed : decoratorSeeds) {
-            long decoratorSeed = seed;
-            for (int i = 0; i < 2000; i++) {
-                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(result::addStructureSeed);
-                decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
-            }
-        }
-        return (ArrayList<Long>) result.getStructureSeeds();
-    }
-
-    //MCVersion.vLegacy
-    public ArrayList<Long> crackBefore1_7() {
-        System.out.println("Running original pre1.8 code..");
-        Result result = new Result();
-        pos1X -= 8; //different from 1.7+
-        pos1Z -= 8; //different from 1.7+
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-        device.addCall(NextInt.withValue(128, pos1Y));
-        device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
-            } else {
-                device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
-        } else {
-            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
-        }
-
-        //System.out.println("Decorator seeds: " + decoratorSeeds);
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            System.out.println("Found Dungeon seed: " + s);
-        });
-
-        if (!decoratorSeeds.isEmpty()) {
-            System.out.format("Finished dungeon search and looking for world seeds.\n");
-        }
-
-        for (long seed : decoratorSeeds) {
-            long decoratorSeed = seed;
-            for (int i = 0; i < 2000; i++) {
-                PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(result::addStructureSeed);
-                decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
-            }
-        }
-        return (ArrayList<Long>) result.getStructureSeeds();
+        System.out.print("Using the following dungeon data:\nCoords 1: [" + pos1X + " " + pos1Y + " " + pos1Z + "]; Sequence: [" + sequence1 + "]\nCoords 2: [" + pos2X + " " + pos2Y + " " + pos2Z + "]; Sequence: [" + sequence2 + "]\n");
     }
 
     /***
@@ -481,7 +191,6 @@ public class VersionCrack {
 
     public ArrayList<Long> getDungeonSeeds812_2() {
         ArrayList<Long> dungeonSeeds = new ArrayList<>();
-        //Result result = new Result();
         pos2X -= 8; //different from 1.13+
         pos2Z -= 8; //different from 1.13+
         int offsetX = pos2X & 15;
@@ -658,7 +367,7 @@ public class VersionCrack {
     }
 
     public ArrayList<Long> getStructureSeeds812_2(ArrayList<Long> decoratorSeeds) {
-        return getStructureSeedsLegacy_1(decoratorSeeds);
+        return getStructureSeedsLegacy_2(decoratorSeeds);
     }
 
     public ArrayList<Long> getStructureSeeds1314(ArrayList<Long> decoratorSeeds) {
@@ -717,15 +426,6 @@ public class VersionCrack {
         }
     }
 
-    public void findUniqueWorldSeed() {
-        worldSeedsSet.retainAll(worldSeedsSet2);
-    }
-
-    /*
-            System.out.println("Your dungeon seed is: " + dungeonSeeds);
-            System.out.println("Your world may be one of these seeds: " + worldSeeds);
-     */
-
     public Long fossilBiomeSalt() {
         if (biome == Biomes.DESERT || biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS) {
             return 30003L;
@@ -736,262 +436,44 @@ public class VersionCrack {
 
     public void getSeedBranched() {
         switch (version) {
-            case v1_16: System.out.println("Debug: 1.16/1.17");
+            case v1_16: //System.out.println("Debug: 1.16/1.17");
                 getWorldSeedsUniversal(getStructureSeeds1617(getDungeonSeeds1617()));
                 break;
-            case v1_15: System.out.println("Debug: 1.15");
+            case v1_15: //System.out.println("Debug: 1.15");
                 getWorldSeedsUniversal(getStructureSeeds15(getDungeonSeeds15()));
                 break;
-            case v1_13: System.out.println("Debug: 1.13/1.14");
+            case v1_13: //System.out.println("Debug: 1.13/1.14");
                 getWorldSeedsUniversal(getStructureSeeds1314(getDungeonSeeds1314()));
                 break;
-            case v1_8: System.out.println("Debug: 1.8-1.12");
+            case v1_8: //System.out.println("Debug: 1.8-1.12");
                 getWorldSeedsUniversal(getStructureSeeds812_1(getDungeonSeeds812_1()));
                 getWorldSeedsUniversal_2(getStructureSeeds812_2(getDungeonSeeds812_2()));
-                findUniqueWorldSeed();
+                worldSeedsSet.retainAll(worldSeedsSet2);
                 break;
-            case vLegacy: System.out.println("Debug: Legacy");
+            case vLegacy: //System.out.println("Debug: Legacy");
                 getWorldSeedsUniversal(getStructureSeedsLegacy_1(getDungeonSeedsLegacy_1()));
                 getWorldSeedsUniversal_2(getStructureSeedsLegacy_2(getDungeonSeedsLegacy_2()));
-                findUniqueWorldSeed();
+                worldSeedsSet.retainAll(worldSeedsSet2);
                 break;
-            case vUnknown: System.out.println("Debug: Oh Lawd");
+            case vUnknown: //System.out.println("Debug: Oh Lawd");
                 break;
         }
-        if (worldSeedsSet.isEmpty()) {
-            System.out.println("Your data may be wrong, as no unique world seed was found.");
-        } else {
-            System.out.println("Your dungeon(s): " + dungeonSeeds);
-            System.out.println("Your world(s): " + worldSeedsSet);
-        }
-    }
-
-    public Result getSeed(MCVersion version) {
-        Result result = new Result();
-        if (version == MCVersion.v1_8 || version == MCVersion.vLegacy) {
-            pos1X -= 8; //different from 1.13+
-            pos1Z -= 8; //different from 1.13+
-        }
-        int offsetX = pos1X & 15;
-        int offsetZ = pos1Z & 15;
-        Integer[] pattern = sequence1.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
-
-        ReverserDevice device = new ReverserDevice();
-        if (version == MCVersion.vLegacy) {
-            device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-            device.addCall(NextInt.consume(16, 1)); //different from 1.7+
-            device.addCall(NextInt.withValue(128, pos1Y));
-        } else if (version == MCVersion.v1_13) {
-            //13 and 14
-            device.addCall(NextInt.withValue(16, offsetX));
-            device.addCall(NextInt.withValue(256, pos1Y));
-            device.addCall(NextInt.withValue(16, offsetZ));
-        } else {
-            //15 and 16
-            device.addCall(NextInt.withValue(16, offsetX));
-            device.addCall(NextInt.withValue(16, offsetZ));
-            device.addCall(NextInt.withValue(256, pos1Y));
-        }
-        device.addCall(NextInt.consume(2, 2)); //Skip size.
-
-        for (Integer integer : pattern) {
-            if (integer == 0) {
-                device.addCall(NextInt.withValue(4, 0));
-            } else if (integer == 1) {
-                device.addCall(FilteredSkip.filter(r -> r.nextInt(4) != 0));
+        if (version.isNewerThan(MCVersion.v1_12)) {
+            if (worldSeedsSet.isEmpty()) {
+                System.out.println("Your data may be wrong, as no unique world seed was found with the data you provided.");
+                System.out.println("Your dungeon seed: " + dungeonSeeds);
             } else {
-                device.addCall(NextInt.consume(4, 1));
+                System.out.println("Your dungeon seed: " + dungeonSeeds);
+                System.out.println("Your would may be one of these seeds: " + worldSeedsSet);
             }
-        }
-
-        Set<Long> decoratorSeeds;
-        if (Main.PARTIAL_OVERRIDE) {
-            decoratorSeeds = device.streamSeeds().parallel().collect(Collectors.toSet());
         } else {
-            decoratorSeeds = device.streamSeeds().parallel().limit(1).collect(Collectors.toSet());
+            if (worldSeedsSet.isEmpty()) {
+                System.out.println("Your data may be wrong, as no unique world seed was found with the data you provided.");
+                System.out.println("Your dungeon seeds: " + dungeonSeeds);
+            } else {
+                System.out.println("Your dungeons: " + dungeonSeeds);
+                System.out.println("Your world seed: " + worldSeedsSet);
+            }
         }
-        decoratorSeeds.forEach(s -> {
-            result.addDungeonSeed(s);
-            dungeonSeeds.add(s);
-            //System.out.println("Found Dungeon seed: " + s);
-        });
-        //System.out.print("Debug 1\nDungeon seeds after finished searching: " + dungeonSeeds + "\n");
-
-        //Begin testing for world seeds
-        if (version == MCVersion.vLegacy || version == MCVersion.v1_8) {
-            //System.out.print("Debug 2\nRunning Legacy and 1.8-1.12 code..\n");
-            for (long seed : decoratorSeeds) {
-                long decoratorSeed = seed;
-                for (int i = 0; i < 2000; i++) {
-                    PopReversal2TheHalvening.getSeedFromChunkseedPre13(decoratorSeed ^ Rand.JAVA_LCG.multiplier, pos1X >> 4, pos1Z >> 4).forEach(s -> {
-                        //System.out.println(s);
-                        result.addStructureSeed(s);
-                    });
-                    decoratorSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decoratorSeed);
-                }
-            }
-        } else if (version == MCVersion.v1_13) {
-            //System.out.print("Debug 3\nRunning 1.13 and 1.14 code..\n");
-            for (long decoratorSeed : decoratorSeeds) {
-                LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-                for (int i = 0; i < 8; i++) {
-                    PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                        //System.out.format("Structure seed %d... \n", structureSeed);
-                        result.addStructureSeed(structureSeed);
-                        for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                            long worldSeed = (upperBits << 48) | structureSeed;
-                            if (!RandomSeed.isRandomSeed(worldSeed)) {
-                                continue;
-                            }
-                            //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                            result.addWorldSeed(worldSeed);
-                        }
-                    });
-
-                    decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-                }
-            }
-        } else if (version == MCVersion.v1_15) {
-            //System.out.print("Debug 4\nRunning 1.15 code..\n");
-            for (long decoratorSeed : decoratorSeeds) {
-                LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-                for (int i = 0; i < 8; i++) {
-                    PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 20003L, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                        //System.out.format("Structure seed %d... \n", structureSeed);
-                        result.addStructureSeed(structureSeed);
-                        for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                            long worldSeed = (upperBits << 48) | structureSeed;
-                            if (!RandomSeed.isRandomSeed(worldSeed)) {
-                                continue;
-                            }
-                            //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                            result.addWorldSeed(worldSeed);
-                        }
-                    });
-
-                    decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-                }
-            }
-        } else if (version == MCVersion.v1_16) {
-            //System.out.print("Debug 5\nRunning 1.16 code..\n");
-            for (long decoratorSeed : decoratorSeeds) {
-                LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
-
-                for (int i = 0; i < 8; i++) {
-                    // they changed and added lake in the enum so 3 * 10000 + pos in the UNDERGROUND_STRUCTURES so 2 (yeah it changed)
-                    PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 2, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                        //System.out.format("Structure seed %d... \n", structureSeed);
-                        result.addStructureSeed(structureSeed);
-                        for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                            long worldSeed = (upperBits << 48) | structureSeed;
-                            if (!RandomSeed.isRandomSeed(worldSeed)) {
-                                continue;
-                            }
-                            //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                            result.addWorldSeed(worldSeed);
-                        }
-                    });
-                    PopulationReversal.getWorldSeeds((decoratorSeed ^ Rand.JAVA_LCG.multiplier) - 30000L - 3, pos1X & -16, pos1Z & -16).forEach(structureSeed -> {
-                        //System.out.format("Structure seed %d... \n", structureSeed);
-                        result.addStructureSeed(structureSeed);
-                        for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                            long worldSeed = (upperBits << 48) | structureSeed;
-                            if (!RandomSeed.isRandomSeed(worldSeed)) {
-                                continue;
-                            }
-                            //System.out.format("\t With nextLong() equivalent %d.\n", worldSeed);
-                            result.addWorldSeed(worldSeed);
-                        }
-                    });
-
-                    decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-                }
-            }
-        } else if (version == MCVersion.vUnknown) {
-            //System.out.print("Debug 6\nRunning unholy code..\n");
-            //place the unholy amalgam of all version code squashed together here
-        } else {
-            //placeholder for 1.17 (lol)
-        }
-        return result;
     }
-
-    //From SeedCandy/Dungeon.java, you will need to research this and use it for reference *not code theft :)*
-/*
-    public static final Set<Biome> FOSSIL_BIOMES = Set.of(Biomes.DESERT, Biomes.SWAMP, Biomes.SWAMP_HILLS);
-
-    public static List<Long> crack(String dungeonString, int posX, int posY, int posZ, MCVersion version, Biome biome) {
-        if(!dungeonString.matches("[0-2]+")) return Collections.emptyList();
-
-        LCG failedDungeon = LCG.JAVA.combine(-5);
-        JavaRandomDevice device = getDungeonRand(posX, posY, posZ, version);
-
-        for(char c : dungeonString.toCharArray()) {
-            switch(c) {
-                case '0' -> device.addCall(NextInt.withValue(4, 0));
-                case '1' -> device.addCall(FilteredSkip.filter(LCG.JAVA, r ->
-                        r.nextInt(4) != 0, 1));
-                case '2' -> device.addCall(NextInt.consume(4, 1));
-            }
-        }
-
-        return device.streamSeeds(LCGReverserDevice.Process.EVERYTHING)
-                .parallel()
-                .mapToObj(decoratorSeed -> {
-                    List<Long> structureSeeds = new ArrayList<>();
-                    for(int i = 0; i < 8; i++) {
-                        structureSeeds.addAll(ChunkRandomReverser.reversePopulationSeed(
-                                (decoratorSeed ^ LCG.JAVA.multiplier) - getDungeonSalt(version, biome),
-                                posX & -16, posZ & -16, version));
-                        decoratorSeed = failedDungeon.nextSeed(decoratorSeed);
-                    }
-                    return structureSeeds;
-                })
-                .flatMap(List::stream)
-                .toList();
-    }
-
-    private static JavaRandomDevice getDungeonRand(int posX, int posY, int posZ, MCVersion version) {
-        JavaRandomDevice device = new JavaRandomDevice();
-        device.addCall(NextInt.withValue(16, posX & 15));
-        if(version.isNewerOrEqualTo(MCVersion.v1_15)) {
-            device.addCall(NextInt.withValue(16, posZ & 15));
-            device.addCall(NextInt.withValue(256, posY));
-        } else {
-            device.addCall(NextInt.withValue(256, posY));
-            device.addCall(NextInt.withValue(16, posZ & 15));
-        }
-        device.addCall(NextInt.consume(2, 2));
-        return device;
-    }
-
-    private static long getDungeonSalt(MCVersion version, Biome biome) {
-        return switch(version) {
-            case v1_17, v1_16 -> FOSSIL_BIOMES.contains(biome) ? 30003L : 30002L;
-            case v1_15, v1_14, v1_13 -> 20003L;
-            default -> throw new IllegalArgumentException();
-        };
-    }
-
-    public enum Size {
-        _9x9(9, 9),
-        _9x7(9, 7),
-        _7x9(7, 9),
-        _7x7(7, 7);
-
-        public final int x, y;
-
-        Size(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public String toString() {
-            return this.x + "x" + this.y;
-        }
-    }*/
-
 }

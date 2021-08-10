@@ -25,6 +25,7 @@ public class Main {
 
         //Ask the user for the version they want to use
         System.out.print("Please provide the version number the dungeon was created in as listed below:\n16    Release 1.16.x and 1.17.x\n15    Release 1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n7     Releases 1.7.x and earlier\n0     I don't know\nType the corresponding number on the left: ");
+        //valid version starts off false and is inverted, then set to true to after a valid input is received
         while (!validVersion) {
             String input = userInput.nextLine();
             version = validateUserVersionInput(input);
@@ -34,6 +35,13 @@ public class Main {
             } else {
                 validVersion = true;
             }
+        }
+
+        //Remove this after you get "unknown version" figured out
+        if(version == 0){
+            System.out.print("Unknown version not yet support, sorry.\nPress enter to exit.");
+            String input = userInput.nextLine();
+            System.exit(0);
         }
 
         if (version > 5) {
@@ -55,7 +63,6 @@ public class Main {
             dungeon1y = getDungeonY(0);
             dungeon1z = getDungeonZ(0);
             dungeon1Sequence = getSequence();
-            System.out.print("Using the following data - Coords: [" + dungeon1x + " " + dungeon1y + " " + dungeon1z + "; Sequence: [" + dungeon1Sequence + "]");
         } else {
             System.out.println("Please provide data from two different dungeons:");
             dungeon1x = getDungeonX(1);
@@ -67,7 +74,6 @@ public class Main {
             dungeon2y = getDungeonY(2);
             dungeon2z = getDungeonZ(2);
             dungeon2Sequence = getSequence();
-            System.out.print("Using the following data\nCoords 1: [" + dungeon1x + " " + dungeon1y + " " + dungeon1z + "; Sequence: [" + dungeon1Sequence + "]\nCoords 2: [" + dungeon2x + " " + dungeon2y + " " + dungeon2z + "; Sequence: [" + dungeon2Sequence + "]");
         }
 
         switch (version) {
@@ -92,7 +98,7 @@ public class Main {
             //test cases (testL, test8, test13, test15, test16)
             case 6: new VersionCrack(vLegacy, 240, 25, 170, "001101111011110110111111100011101111111101000111110010101101011", 256, 28, 129, "111110110111111111111111111111110111111111101111100101110111011").getSeedBranched();
                 break;
-            case 7: new VersionCrack(v1_8, 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111", 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011").getSeedBranched();
+            case 7: new VersionCrack(v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011", 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111").getSeedBranched();
                 break;
             case 8: new VersionCrack(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").getSeedBranched();
                 break;

@@ -34,8 +34,8 @@ public class FindStructureSeedFromDungeons {
 
 	public static void main(String[] args) {
 		List<Data> dataList = new ArrayList<>();
-		dataList.add(new Data(37913390166981L, 1091, -285));
-		dataList.add(new Data(251966589995722L, 1067, -307));
+		dataList.add(new Data(37913390166981L, 1091, -285));  //test data
+		dataList.add(new Data(251966589995722L, 1067, -307)); //test data
 		//dataList.add( new Data());
 
 		List<Long> res = crack(dataList);
