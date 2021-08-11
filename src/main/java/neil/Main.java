@@ -2,11 +2,9 @@ package neil;
 
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
-import neil.dungeons.VersionCrack;
+import neil.gui.MCVersion;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static neil.gui.MCVersion.*;
 
@@ -14,163 +12,368 @@ public class Main {
     public static final boolean PARTIAL_OVERRIDE = true;
 
     public static void main(String[] args) {
+        //Program data
         Scanner userInput = new Scanner(System.in);
-        boolean validVersion = false;
-        int version = 0;
-        Biome dungeonBiome = Biomes.DESERT;
-        int dungeon1x, dungeon1y, dungeon1z;
+        String input;
+        boolean validInput = false;
+        boolean dungeonSeedMode = false;
+        boolean doubleSpawnerMode = false;
+        MCVersion version = vUnknown;
+
+        //Dungeon data
+        long dungeon1Seed = 0L;
+        int dungeon1x = 0;
+        int dungeon1y = 0;
+        int dungeon1z = 0;
         String dungeon1Sequence = "";
+        Biome dungeon1Biome = Biomes.THE_VOID;
+
+        long dungeon2Seed = 0L;
         int dungeon2x = 0;
         int dungeon2y = 0;
         int dungeon2z = 0;
         String dungeon2Sequence = "";
-
-        //theWorldIsCursedAndGodHasForsakenUs();
+        Biome dungeon2Biome = Biomes.THE_VOID;
+        ;
 
         //testing methods
-        if (true)
+        if (false) {
             test16_17();
-        if (true)
+        }
+        if (false) {
             test15();
-        if (true)
+        }
+        if (false) {
             test13_14();
-        if (true)
+        }
+        if (false) {
             test8_12();
-        if (true)
+        }
+        if (false) {
             testLegacy();
+        }
+        if (false) {
+            crackSingleDungeon(v1_16, -6799, -1473, Biomes.DESERT, 66991252199345L);
+        }
+        if (false) {
+            crackDoubleDungeon(vLegacy, 140, -35, Biomes.THE_VOID, 240428811966007L, 171, -34, Biomes.THE_VOID, 82449899703950L);
+        }
 
-        System.exit(0);
-
-        //Ask the user for the version they want to use
-        System.out.print("Please provide the version number the dungeon was created in as listed below:\n16    Release 1.16.x and 1.17.x\n15    Release 1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n7     Releases 1.7.x and earlier\n0     I don't know\nType the corresponding number on the left: ");
+        //Ask the user for the MCVersion they want to use
+        System.out.print("Please provide the version number that the dungeon was created in, as listed below:\n16    Releases 1.16.x and 1.17.x\n15    Release  1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n1     Releases 1.7.x and earlier; including beta, alpha, and infdev\nType the corresponding number on the left: ");
         //valid version starts off false and is inverted, then set to true to after a valid input is received
-        while (!validVersion) {
-            String input = userInput.nextLine();
-            version = validateUserVersionInput(input);
-            if (version == -1) {
-                System.out.println("Please provide a supported version number like \"16\". If you do not know the version, put 0");
+        while (!validInput) {
+            input = userInput.nextLine();
+            if (getIntFromInputString(input) == -1) {
+                System.out.println("Please provide a supported version number like \"16\".");
                 System.out.print("Version number: ");
             } else {
-                validVersion = true;
+                version = getMCVersionFromInt(getIntFromInputString(input));
+                validInput = true;
+            }
+        }
+        validInput = false;
+
+        //Ask the user if they are using 1 or 2 spawners
+        System.out.print("\nDo you have 1 spawner or 2: ");
+        while (!validInput) {
+            input = userInput.nextLine();
+            if (getIntFromInputString(input) == 1) {
+                System.out.println("Using 1 spawner..\n");
+                doubleSpawnerMode = false;
+                validInput = true;
+            } else if (getIntFromInputString(input) == 2) {
+                System.out.println("Using 2 spawners..\n");
+                doubleSpawnerMode = true;
+                validInput = true;
+            } else {
+                System.out.println("Please enter a valid system mode by typing 1 or 2.\nApplication mode: ");
+            }
+        }
+        validInput = false;
+
+        if (version.isOlderThan(v1_13) && !doubleSpawnerMode) {
+            //Ask the user if they want to input dungeon data or seeds
+            System.out.println("Since you only have 1 dungeon and have selected a version older than 1.13, Dungeon Data mode has automatically been selected.");
+            System.out.println("Entering Dungeon Data mode..\n");
+            dungeonSeedMode = false;
+        } else {
+            //Ask the user if they want to input dungeon data or seeds
+            System.out.print("Do you have dungeon data or do you already have dungeon seeds?\n1     Dungeon Data  (Co-ords, Floor Pattern, etc)\n2     Dungeon Seeds (137229083672372L)\nType the corresponding number on the left: ");
+            while (!validInput) {
+                input = userInput.nextLine();
+                if (getIntFromInputString(input) == 1) {
+                    System.out.println("Entering Dungeon Data mode..\n");
+                    dungeonSeedMode = false;
+                    validInput = true;
+                } else if (getIntFromInputString(input) == 2) {
+                    System.out.println("Entering Dungeon Seed only mode..\n");
+                    dungeonSeedMode = true;
+                    validInput = true;
+                } else {
+                    System.out.println("Please enter a valid system mode by typing 1 or 2.\nApplication mode: ");
+                }
+            }
+        }
+        validInput = false;
+
+        //If we are running in Dungeon Data mode we will need to gather more input data
+        if (!dungeonSeedMode) {
+            if (!doubleSpawnerMode) {
+                System.out.println("Please input your dungeon data:");
+                dungeon1x = getDungeonX(0);
+                dungeon1y = getDungeonY(0);
+                dungeon1z = getDungeonZ(0);
+                dungeon1Sequence = getSequence();
+                dungeon1Biome = getDungeonBiome();
+            } else {
+                System.out.println("Please provide data for the first dungeon:");
+                dungeon1x = getDungeonX(1);
+                dungeon1y = getDungeonY(1);
+                dungeon1z = getDungeonZ(1);
+                dungeon1Sequence = getSequence();
+                dungeon1Biome = getDungeonBiome();
+                System.out.println("\nNow enter the data for the second dungeon:");
+                dungeon2x = getDungeonX(2);
+                dungeon2y = getDungeonY(2);
+                dungeon2z = getDungeonZ(2);
+                dungeon2Sequence = getSequence();
+                dungeon2Biome = getDungeonBiome();
+            }
+        } else {
+            if (!doubleSpawnerMode) {
+                System.out.println("Please input your dungeon data:");
+                dungeon1x = getDungeonX(0);
+                dungeon1z = getDungeonZ(0);
+                dungeon1Seed = getDungeonSeed(0);
+                dungeon1Biome = getDungeonBiome();
+            } else {
+                System.out.println("Please provide data for the first dungeon:");
+                dungeon1x = getDungeonX(1);
+                dungeon1z = getDungeonZ(1);
+                dungeon1Seed = getDungeonSeed(1);
+                dungeon1Biome = getDungeonBiome();
+                System.out.println("\nNow enter the data for the second dungeon:");
+                dungeon2x = getDungeonX(2);
+                dungeon2z = getDungeonZ(2);
+                dungeon2Seed = getDungeonSeed(2);
+                dungeon2Biome = getDungeonBiome();
             }
         }
 
-        //Remove this after you get "unknown version" figured out
-        if (version == 0) {
-            System.out.print("Unknown version not yet support, sorry.\nPress enter to exit.");
-            String input = userInput.nextLine();
-            System.exit(0);
-        }
 
-        if (version > 5) {
-            dungeon1x = 0;
-            dungeon1y = 0;
-            dungeon1z = 0;
-            dungeon1Sequence = "";
-            dungeonBiome = Biomes.PLAINS;
-        } else if (version == 5) {
-            System.out.println("Please input your dungeon data:");
-            dungeon1x = getDungeonX(0);
-            dungeon1y = getDungeonY(0);
-            dungeon1z = getDungeonZ(0);
-            dungeon1Sequence = getSequence();
-            dungeonBiome = getDungeonBiome();
-        } else if (version >= 3) {
-            System.out.println("Please input your dungeon data:");
-            dungeon1x = getDungeonX(0);
-            dungeon1y = getDungeonY(0);
-            dungeon1z = getDungeonZ(0);
-            dungeon1Sequence = getSequence();
+        if (!dungeonSeedMode) {
+            if (!doubleSpawnerMode) {
+                //Dungeon Data mode with 1 spawner
+                switch (version) {
+                    case v1_17:
+                    case v1_16: System.out.println("\nRunning Single Dungeon Data mode for 1.16 and 1.17..");
+                        crackSingle(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                        break;
+                    case v1_15: System.out.println("\nRunning Single Dungeon Data mode for 1.15..");
+                        crackSingle(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                        break;
+                    case v1_14:
+                    case v1_13: System.out.println("\nRunning Single Dungeon Data mode for 1.13 and 1.14..");
+                        crackSingle(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                        break;
+                    case v1_12:
+                    case v1_11:
+                    case v1_10:
+                    case v1_9:
+                    case v1_8: System.out.println("\nRunning Single Dungeon Data mode for 1.8 through 1.12..");
+                        crackSingle(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                        break;
+                    case vLegacy: System.out.println("\nRunning Single Dungeon Data mode for 1.7 and older..");
+                        crackSingle(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                        break;
+                    case vUnknown:
+                        System.out.println("Unknown supported version error..");
+                        System.exit(0);
+                }
+            } else {
+                //Dungeon Data mode with 2 spawners
+                switch (version) {
+                    case v1_17:
+                    case v1_16: System.out.println("\nRunning Double Dungeon Data mode for 1.16 and 1.17..");
+                        crackDouble(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                        break;
+                    case v1_15: System.out.println("\nRunning Double Dungeon Data mode for 1.15..");
+                        crackDouble(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                        break;
+                    case v1_14:
+                    case v1_13: System.out.println("\nRunning Double Dungeon Data mode for 1.13 and 1.14..");
+                        crackDouble(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                        break;
+                    case v1_12:
+                    case v1_11:
+                    case v1_10:
+                    case v1_9:
+                    case v1_8: System.out.println("\nRunning Double Dungeon Data mode for 1.8 through 1.12..");
+                        crackDouble(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                        break;
+                    case vLegacy: System.out.println("\nRunning Double Dungeon Data mode for 1.7 and older..");
+                        crackDouble(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                        break;
+                    case vUnknown:
+                        System.out.println("Unknown supported version error..");
+                        System.exit(0);
+                }
+            }
         } else {
-            System.out.println("Please provide data from two different dungeons:");
-            dungeon1x = getDungeonX(1);
-            dungeon1y = getDungeonY(1);
-            dungeon1z = getDungeonZ(1);
-            dungeon1Sequence = getSequence();
-            System.out.println("Now enter the data for the second dungeon:");
-            dungeon2x = getDungeonX(2);
-            dungeon2y = getDungeonY(2);
-            dungeon2z = getDungeonZ(2);
-            dungeon2Sequence = getSequence();
+            //Dungeon Seed mode with 1 spawner
+            if (!doubleSpawnerMode) {
+                switch (version) {
+                    case v1_17:
+                    case v1_16: System.out.println("\nRunning Single Dungeon seed mode for 1.16 and 1.17..");
+                        crackSingleDungeon(v1_16, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
+                        break;
+                    case v1_15: System.out.println("\nRunning Single Dungeon seed mode for 1.15..");
+                        crackSingleDungeon(v1_15, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
+                        break;
+                    case v1_14:
+                    case v1_13: System.out.println("\nRunning Single Dungeon seed mode for 1.13 and 1.14..");
+                        crackSingleDungeon(v1_13, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
+                        break;
+                    case v1_12:
+                    case v1_11:
+                    case v1_10:
+                    case v1_9:
+                    case v1_8:
+                    case vLegacy: System.out.println("You can't run Dungeon Seed mode with only 1 spawner on versions below 1.13!");
+                        break;
+                    case vUnknown:
+                        System.out.println("Unknown supported version error..");
+                        System.exit(0);
+                }
+            } else {
+                //Dungeon Seed mode with 2 spawners
+                switch (version) {
+                    case v1_17:
+                    case v1_16: System.out.println("\nRunning Double Dungeon seed mode for 1.16 and 1.17..");
+                        crackDoubleDungeon(v1_16, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                        break;
+                    case v1_15: System.out.println("\nRunning Double Dungeon seed mode for 1.15..");
+                        crackDoubleDungeon(v1_15, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                        break;
+                    case v1_14:
+                    case v1_13: System.out.println("\nRunning Double Dungeon seed mode for 1.13 and 1.14..");
+                        crackDoubleDungeon(v1_13, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                        break;
+                    case v1_12:
+                    case v1_11:
+                    case v1_10:
+                    case v1_9:
+                    case v1_8: System.out.println("\nRunning Double Dungeon mode seed for 1.8 through 1.12..");
+                        crackDoubleDungeon(v1_8, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                        break;
+                    case vLegacy: System.out.println("\nRunning Double Dungeon seed mode for 1.7 and older..");
+                        crackDoubleDungeon(vLegacy, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                        break;
+                    case vUnknown:
+                        System.out.println("Unknown supported version error..");
+                        System.exit(0);
+                }
+            }
         }
 
-        switch (version) {
-            //Unknown
-            case 0: new VersionCrack(vUnknown, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).getSeedBranched();
-                break;
-            //Legacy(1.0-1.7)
-            case 1: new VersionCrack(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).getSeedBranched();
-                break;
-            //1.8-1.12
-            case 2: new VersionCrack(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence).getSeedBranched();
-                break;
-            //1.13-1.14
-            case 3: new VersionCrack(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).getSeedBranched();
-                break;
-            //1.15
-            case 4: new VersionCrack(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence).getSeedBranched();
-                break;
-            //1.16-1.17
-            case 5: new VersionCrack(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeonBiome).getSeedBranched();
-                break;
-            //test cases (testL, test8, test13, test15, test16)
-            case 6: new VersionCrack(vLegacy, 240, 25, 170, "001101111011110110111111100011101111111101000111110010101101011", 256, 28, 129, "111110110111111111111111111111110111111111101111100101110111011").getSeedBranched();
-                break;
-            case 7: new VersionCrack(v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011", 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111").getSeedBranched();
-                break;
-            case 8: new VersionCrack(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").getSeedBranched();
-                break;
-            case 9: new VersionCrack(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").getSeedBranched();
-                break;
-            case 10: new VersionCrack(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111", Biomes.PLAINS).getSeedBranched();
-                break;
-            default: System.out.println("Something went wrong..");
+    }
+
+    private static void crackSingle(MCVersion v, int x, int y, int z, String seq, Biome b) {
+        if (v.isOlderThan(v1_13)) {
+            Set<Long> DungeonSeed = new DungeonDataProcessor(v, x, y, z, seq).dungeonDataToDecoratorSeed();
+            System.out.print("Your dungeon seed is:\n" + DungeonSeed + "\n");
+        } else {
+
+            Set<Long> WorldSeeds = new StructureSeedProcessor(new DecoratorSeedProcessor(v, x, z, b, new DungeonDataProcessor(v, x, y, z, seq).dungeonDataToDecoratorSeed()).decoratorSeedsToStructureSeeds()).getWorldSeedsFromStructureSeeds();
+            if (WorldSeeds.isEmpty()) {
+                System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no dungeon seed found.");
+            } else {
+                System.out.println("If the data you entered was valid, your world will be one of these seeds. To Narrow this down, use 2 dungeons:\n" + WorldSeeds + "\n");
+            }
         }
     }
-    /* Cobble = 0; Moss = 1; Unknown = 2
-    // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
-    // 1.16                       Dungeon Seed: [66991252199345];  Coords: [-6799 61 -1473]; Sequence: [011010011111011111011110011100111011110111011110001011110111011111000011111101011]; World Seed: [-720350949281663006]; Biome: Desert
-    // 1.15                       Dungeon Seed: [54954658892082];  Coords: [161 16 -716];    Sequence: [1111111101101110111110111011101111111101101100101];                                 World Seed: [7298916735143357077]
-    // 1.14, 1.13                 Dungeon Seed: [82836126371671];  Coords: [693 30 -74];     Sequence: [111011100101011111011011001111110110111011101111111011101111011011111110111111110]; World Seed: [1724951870366438529]
-                                  Dungeon Seed: [19957636759997];  Coords: [280 29 674];     Sequence: [111011111101101111111111101111101111110100111110111101111111110111111101111110011]; World Seed: [1724951870366438529]
-    // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
-                                  Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
-    // 1.7 and below              Dungeon Seed: [215824296572061]; Coords: [256 28 129];     Sequence: [111110110111111111111111111111110111111111101111100101110111011];                   World Seed: [4549957071420637180];  Version: [1.4.7]
-                                  Dungeon Seed: [185122040393267]; Coords: [240 25 170];     Sequence: [001101111011110110111111100011101111111101000111110010101101011];                   World Seed: [4549957071420637180];  Version: [1.4.7]
-    // alpha testing              Dungeon Seed: [240428811966007]; Coords: [140 81 -35];     Sequence: [001011101111111111001111111011011101110111111110000110110111111];                   World Seed: [3257840388504953787];  Version: [a1.2.2]
-    //                            Dungeon Seed: [82449899703950];  Coords: [171 13 -34];     Sequence: [101111111111110111011101111100011111111100101011111011001111010];                   World Seed: [3257840388504953787];  Version: [a1.2.2]
-    */
 
-    public static int validateUserVersionInput(String input) {
+    private static void crackDouble(MCVersion v, int x1, int y1, int z1, String seq1, Biome b1, int x2, int y2, int z2, String seq2, Biome b2) {
+        Set<Long> StructureSeeds1 = new DecoratorSeedProcessor(v, x1, z1, b1, new DungeonDataProcessor(v, x1, y1, z1, seq1).dungeonDataToDecoratorSeed()).decoratorSeedsToStructureSeeds();
+        Set<Long> StructureSeeds2 = new DecoratorSeedProcessor(v, x2, z2, b2, new DungeonDataProcessor(v, x2, y2, z2, seq2).dungeonDataToDecoratorSeed()).decoratorSeedsToStructureSeeds();
+
+        StructureSeeds1.retainAll(StructureSeeds2);
+        if (StructureSeeds1.isEmpty()) {
+            System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no world seeds were found.");
+        } else {
+            System.out.println("If the data you entered was valid, your world seed is: " + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
+        }
+    }
+
+    private static void crackSingleDungeon(MCVersion v, int x, int z, Biome b, long dSeed) {
+        Set<Long> WorldSeeds = new StructureSeedProcessor(new DecoratorSeedProcessor(v, x, z, b, Collections.singleton(dSeed)).decoratorSeedsToStructureSeeds()).getWorldSeedsFromStructureSeeds();
+
+        if (WorldSeeds.isEmpty()) {
+            System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no dungeon seed found.");
+        } else {
+            System.out.println("If the data you entered was valid, your world will be one of these seeds. To Narrow this down, use 2 dungeons:\n" + WorldSeeds + "\n");
+        }
+    }
+
+    private static void crackDoubleDungeon(MCVersion v, int x1, int z1, Biome b1, long dSeed1, int x2, int z2, Biome b2, long dSeed2) {
+        Set<Long> StructureSeeds1 = new DecoratorSeedProcessor(v, x1, z1, b1, Collections.singleton(dSeed1)).decoratorSeedsToStructureSeeds();
+        Set<Long> StructureSeeds2 = new DecoratorSeedProcessor(v, x2, z2, b2, Collections.singleton(dSeed2)).decoratorSeedsToStructureSeeds();
+
+        StructureSeeds1.retainAll(StructureSeeds2);
+        if (StructureSeeds1.isEmpty()) {
+            System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no world seeds were found.");
+        } else {
+            System.out.println("If the data you entered was valid, your world seed is: " + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
+        }
+
+    }
+
+
+    public static MCVersion getMCVersionFromInt(int input) {
         switch (input) {
-            case "17":
-            case "16": System.out.println("Running version for 1.16 and 1.17..");
-                return 5;
-            case "15": System.out.println("Running version for 1.15..");
-                return 4;
-            case "14":
-            case "13": System.out.println("Running version for 1.13 and 1.14..");
-                return 3;
-            case "12":
-            case "11":
-            case "10":
-            case "9":
-            case "8": System.out.println("Running version for 1.8 through 1.12..");
-                return 2;
-            case "7":
-            case "6":
-            case "5":
-            case "4":
-            case "3":
-            case "2":
-            case "1": System.out.println("Running version for 1.7 and older..");
-                return 1;
+            case 17: return v1_17;
+            case 16: return v1_16;
+            case 15: return v1_15;
+            case 14: return v1_14;
+            case 13: return v1_13;
+            case 12: return v1_12;
+            case 11: return v1_11;
+            case 10: return v1_10;
+            case 9: return v1_9;
+            case 8: return v1_8;
+            case 7: return v1_7;
+            case 6:
+            case 5:
+            case 4:
+            case 3:
+            case 2:
+            case 1:
+            case 0: return vLegacy;
+            default: return vUnknown;
+        }
+    }
+
+    public static int getIntFromInputString(String input) {
+        switch (input) {
+            case "17": return 17;
+            case "16": return 16;
+            case "15": return 15;
+            case "14": return 14;
+            case "13": return 13;
+            case "12": return 12;
+            case "11": return 11;
+            case "10": return 10;
+            case "9": return 9;
+            case "8": return 8;
+            case "7": return 7;
+            case "6": return 6;
+            case "5": return 5;
+            case "4": return 4;
+            case "3": return 3;
+            case "2": return 2;
+            case "1": return 1;
             case "0": return 0;
-            case "test16": return 10;
-            case "test15": return 9;
-            case "test13": return 8;
-            case "test8": return 7;
-            case "testL": return 6;
             default: return -1;
         }
     }
@@ -179,14 +382,24 @@ public class Main {
         return Integer.parseInt(input.trim());
     }
 
-    public static boolean isInteger(String input) {
+    public static boolean isNotInteger(String input) {
         try {
             Integer.parseInt(input);
         } catch (NumberFormatException | NullPointerException e) {
             System.out.print("Please input a number.\n");
-            return false;
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public static boolean isNotLong(String input) {
+        try {
+            Long.parseLong(input);
+        } catch (NumberFormatException | NullPointerException e) {
+            System.out.print("Please input a dungeon seed.\n");
+            return true;
+        }
+        return false;
     }
 
     public static int getDungeonX(int type) {
@@ -199,7 +412,7 @@ public class Main {
         }
         Scanner userInput = new Scanner(System.in);
         String input = userInput.nextLine();
-        while (!isInteger(input)) {
+        while (isNotInteger(input)) {
             if (type == 0) {
                 System.out.print("Spawner X: ");
             } else if (type == 1) {
@@ -222,7 +435,7 @@ public class Main {
         }
         Scanner userInput = new Scanner(System.in);
         String input = userInput.nextLine();
-        while (!isInteger(input)) {
+        while (isNotInteger(input)) {
             if (type == 0) {
                 System.out.print("Spawner Y: ");
             } else if (type == 1) {
@@ -245,7 +458,7 @@ public class Main {
         }
         Scanner userInput = new Scanner(System.in);
         String input = userInput.nextLine();
-        while (!isInteger(input)) {
+        while (isNotInteger(input)) {
             if (type == 0) {
                 System.out.print("Spawner Z: ");
             } else if (type == 1) {
@@ -256,6 +469,29 @@ public class Main {
             input = userInput.nextLine();
         }
         return getIntFromString(input);
+    }
+
+    public static Long getDungeonSeed(int type) {
+        if (type == 0) {
+            System.out.print("Dungeon Seed: ");
+        } else if (type == 1) {
+            System.out.print("Dungeon 1 Seed: ");
+        } else {
+            System.out.print("Dungeon 2 Seed: ");
+        }
+        Scanner userInput = new Scanner(System.in);
+        String input = userInput.nextLine();
+        while (isNotLong(input)) {
+            if (type == 0) {
+                System.out.print("Dungeon Seed: ");
+            } else if (type == 1) {
+                System.out.print("Dungeon 1 Seed: ");
+            } else {
+                System.out.print("Dungeon 2 Seed: ");
+            }
+            input = userInput.nextLine();
+        }
+        return Long.parseLong(input);
     }
 
     public static String getSequence() {
@@ -275,22 +511,24 @@ public class Main {
     }
 
     public static Biome getDungeonBiome() {
-        System.out.print("Is the EXACT biome that the spawner block in a SWAMP, SWAMP_HILLS, or DESERT? Type \"yes\" or \"no\": ");
+        System.out.print("Is the EXACT name of biome that the spawner block is in called SWAMP, SWAMP_HILLS, or DESERT? Type \"yes\" or \"no\": ");
         Scanner userInput = new Scanner(System.in);
         String input = userInput.nextLine();
         Biome biome = Biomes.FOREST;
         while (biome == Biomes.FOREST) {
             switch (input.toLowerCase()) {
+                case "1":
                 case "y":
                 case "ye":
                 case "yes":
                 case "t":
                 case "true": biome = Biomes.DESERT;
                     break;
+                case "0":
                 case "n":
                 case "no":
                 case "f":
-                case "false": biome = Biomes.PLAINS;
+                case "false": biome = Biomes.THE_VOID;
                     break;
                 default: System.out.print("Please type yes or no: ");
                     input = userInput.nextLine();
@@ -300,11 +538,7 @@ public class Main {
     }
 
     private static boolean isSequenceValidLength(String input) {
-        if (input.length() == 49 || input.length() == 63 || input.length() == 81) {
-            return true;
-        } else {
-            return false;
-        }
+        return input.length() == 49 || input.length() == 63 || input.length() == 81;
     }
 
     private static boolean isSequenceValidChars(String input) {
@@ -316,6 +550,8 @@ public class Main {
         return true;
     }
 
+
+    //Test data, ignore unless you're messing with the code :)
     private static void test16_17() {
         // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
         Set<Long> DungeonData;
@@ -449,4 +685,17 @@ public class Main {
         StructureSeeds2.clear();
         WorldSeeds.clear();
     }
+    /* Cobble = 0; Moss = 1; Unknown = 2
+    // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
+    // 1.16                       Dungeon Seed: [66991252199345];  Coords: [-6799 61 -1473]; Sequence: [011010011111011111011110011100111011110111011110001011110111011111000011111101011]; World Seed: [-720350949281663006]; Biome: Desert
+    // 1.15                       Dungeon Seed: [54954658892082];  Coords: [161 16 -716];    Sequence: [1111111101101110111110111011101111111101101100101];                                 World Seed: [7298916735143357077]
+    // 1.14, 1.13                 Dungeon Seed: [82836126371671];  Coords: [693 30 -74];     Sequence: [111011100101011111011011001111110110111011101111111011101111011011111110111111110]; World Seed: [1724951870366438529]
+                                  Dungeon Seed: [19957636759997];  Coords: [280 29 674];     Sequence: [111011111101101111111111101111101111110100111110111101111111110111111101111110011]; World Seed: [1724951870366438529]
+    // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
+                                  Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
+    // 1.7 and below              Dungeon Seed: [215824296572061]; Coords: [256 28 129];     Sequence: [111110110111111111111111111111110111111111101111100101110111011];                   World Seed: [4549957071420637180];  Version: [1.4.7]
+                                  Dungeon Seed: [185122040393267]; Coords: [240 25 170];     Sequence: [001101111011110110111111100011101111111101000111110010101101011];                   World Seed: [4549957071420637180];  Version: [1.4.7]
+    // alpha testing              Dungeon Seed: [240428811966007]; Coords: [140 81 -35];     Sequence: [001011101111111111001111111011011101110111111110000110110111111];                   World Seed: [3257840388504953787];  Version: [a1.2.2]
+    //                            Dungeon Seed: [82449899703950];  Coords: [171 13 -34];     Sequence: [101111111111110111011101111100011111111100101011111011001111010];                   World Seed: [3257840388504953787];  Version: [a1.2.2]
+    */
 }
