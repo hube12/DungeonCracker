@@ -22,7 +22,7 @@ You will need the following:
 - X, Y, and Z coordinates
 - The Dungeon Sequence (floor pattern)
 - General awareness of the biome the spawner block is in (this really only matters for 1.16+)
-- Minimum 2 dungeons for a seed on versions below 1.13(exclusive), 1 dungeon data set can be provided but you will only get a dungeon seed and not a world seed
+- Minimum 2 dungeons for a seed on versions 1.12 and below, 1 dungeon data set can be provided but you will only get a dungeon seed and not a world seed
 
 ## Dungeon Seed Mode
 You will need the following:
@@ -30,7 +30,7 @@ You will need the following:
 - X and Z coordinates
 - The Dungeon Seed (aka Structure Seed)
 - General awareness of the biome the spawner block is in (this really only matters for 1.16+)
-- Minimum 2 dungeons for a seed on versions below 1.13(exclusive), single-dungeon-seed-mode is compatible with 1.13+
+- Minimum 2 dungeons for a seed on versions 1.12 and below, single-dungeon-seed-mode is compatible with 1.13+
 
 
 # Dungeon Sequences
