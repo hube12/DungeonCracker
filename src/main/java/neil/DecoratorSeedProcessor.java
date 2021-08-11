@@ -28,6 +28,11 @@ public class DecoratorSeedProcessor {
     }
 
     public Set<Long> decoratorSeedsToStructureSeeds() {
+        if(version.isNewerThan(MCVersion.v1_12)){
+            posX -=8;
+            posZ -=8;
+        }
+
         for (long decSeed : decoratorSeeds) {
             if (version.isNewerThan(MCVersion.v1_12)) { //1.13-1.17
                 LCG failedDungeon = Rand.JAVA_LCG.combine(-5);
@@ -37,12 +42,11 @@ public class DecoratorSeedProcessor {
                 }
             } else {                                    //1.12-Legacy
                 for (int i = 0; i < 2000; i++) {
-                    structureSeeds.addAll(PopReversal2TheHalvening.getSeedFromChunkseedPre13(decSeed ^ Rand.JAVA_LCG.multiplier, (posX -=8) >> 4, (posZ -=8) >> 4));
+                    structureSeeds.addAll(PopReversal2TheHalvening.getSeedFromChunkseedPre13(decSeed ^ Rand.JAVA_LCG.multiplier, posX >> 4, posZ >> 4));
                     decSeed = Rand.JAVA_LCG.combine(-1).nextSeed(decSeed);
                 }
             }
         }
-        System.out.println("Pop2: " + structureSeeds);
         return structureSeeds;
     }
 
