@@ -28,15 +28,15 @@ public class Main {
         //theWorldIsCursedAndGodHasForsakenUs();
 
         //testing methods
-        if (false)
+        if (true)
             test16_17();
-        if (false)
+        if (true)
             test15();
-        if (false)
+        if (true)
             test13_14();
         if (true)
             test8_12();
-        if (false)
+        if (true)
             testLegacy();
 
         System.exit(0);

@@ -1,6 +1,5 @@
 package neil;
 
-import kaptainwutax.biomeutils.biome.Biome;
 import neil.gui.MCVersion;
 import randomreverser.ReverserDevice;
 import randomreverser.call.FilteredSkip;

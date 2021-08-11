@@ -3,7 +3,6 @@ package neil;
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
 import neil.dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
-import neil.dungeons.kaptainwutax.magic.PopulationReversal;
 import neil.dungeons.kaptainwutax.util.LCG;
 import neil.dungeons.kaptainwutax.util.Rand;
 import neil.gui.MCVersion;
@@ -28,9 +27,9 @@ public class DecoratorSeedProcessor {
     }
 
     public Set<Long> decoratorSeedsToStructureSeeds() {
-        if(version.isNewerThan(MCVersion.v1_12)){
-            posX -=8;
-            posZ -=8;
+        if (version.isOlderThan(MCVersion.v1_13)) {
+            posX -= 8;
+            posZ -= 8;
         }
 
         for (long decSeed : decoratorSeeds) {
@@ -47,6 +46,7 @@ public class DecoratorSeedProcessor {
                 }
             }
         }
+        //System.out.println("pop2: " + structureSeeds);
         return structureSeeds;
     }
 

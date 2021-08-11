@@ -2,8 +2,6 @@ package neil;
 
 import neil.dungeons.kaptainwutax.magic.RandomSeed;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
