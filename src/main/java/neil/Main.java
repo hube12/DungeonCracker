@@ -183,7 +183,7 @@ public class Main {
         } else {
             //Dungeon Seed mode with 1 dungeon
             if (!doubleSpawnerMode) {
-                if (version.isBetween(vLegacy, v1_13)) {
+                if (version.isNewerThan(v1_13)) {
                     crackSingleDungeon(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
                 } else {
                     System.out.println("You can't run Dungeon Seed mode with only 1 dungeon on versions below 1.13!");
@@ -213,7 +213,7 @@ public class Main {
             if (WorldSeeds.isEmpty()) {
                 System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no dungeon seed found.");
             } else {
-                System.out.println("If the data you entered was valid, your world will be one of these seeds. To Narrow this down, use 2 dungeons:\n" + WorldSeeds + "\n");
+                System.out.println("If the data you entered was valid, your world will be one of these seeds. To narrow this down, use 2 dungeons:\n" + WorldSeeds + "\n");
             }
         }
     }
@@ -236,7 +236,7 @@ public class Main {
         if (WorldSeeds.isEmpty()) {
             System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no dungeon seed found.");
         } else {
-            System.out.println("If the data you entered was valid, your world will be one of these seeds. To Narrow this down, use 2 dungeons:\n" + WorldSeeds + "\n");
+            System.out.println("If the data you entered was valid, your world will be one of these seeds. To narrow this down, use 2 dungeons:\n" + WorldSeeds + "\n");
         }
     }
 
