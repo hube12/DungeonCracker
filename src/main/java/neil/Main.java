@@ -74,16 +74,16 @@ public class Main {
         }
         validInput = false;
 
-        //Ask the user if they are using 1 or 2 spawners
-        System.out.print("\nDo you have 1 spawner or 2: ");
+        //Ask the user if they are using 1 or 2 dungeons
+        System.out.print("\nDo you have 1 dungeon or 2: ");
         while (!validInput) {
             input = userInput.nextLine();
             if (getIntFromInputString(input) == 1) {
-                System.out.println("Using 1 spawner..\n");
+                System.out.println("Using 1 dungeon..\n");
                 doubleSpawnerMode = false;
                 validInput = true;
             } else if (getIntFromInputString(input) == 2) {
-                System.out.println("Using 2 spawners..\n");
+                System.out.println("Using 2 dungeons..\n");
                 doubleSpawnerMode = true;
                 validInput = true;
             } else {
@@ -164,116 +164,40 @@ public class Main {
 
         if (!dungeonSeedMode) {
             if (!doubleSpawnerMode) {
-                //Dungeon Data mode with 1 spawner
-                switch (version) {
-                    case v1_17:
-                    case v1_16: System.out.println("\nRunning Single Dungeon Data mode for 1.16 and 1.17..");
-                        crackSingle(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
-                        break;
-                    case v1_15: System.out.println("\nRunning Single Dungeon Data mode for 1.15..");
-                        crackSingle(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
-                        break;
-                    case v1_14:
-                    case v1_13: System.out.println("\nRunning Single Dungeon Data mode for 1.13 and 1.14..");
-                        crackSingle(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
-                        break;
-                    case v1_12:
-                    case v1_11:
-                    case v1_10:
-                    case v1_9:
-                    case v1_8: System.out.println("\nRunning Single Dungeon Data mode for 1.8 through 1.12..");
-                        crackSingle(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
-                        break;
-                    case vLegacy: System.out.println("\nRunning Single Dungeon Data mode for 1.7 and older..");
-                        crackSingle(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
-                        break;
-                    case vUnknown:
-                        System.out.println("Unknown supported version error..");
-                        System.exit(0);
+                //Dungeon Data mode with 1 dungeon
+                if (version.isBetween(vLegacy, v1_17)) {
+                    crackSingle(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                } else {
+                    System.out.println("Unknown supported version error..");
+                    System.exit(0);
                 }
             } else {
-                //Dungeon Data mode with 2 spawners
-                switch (version) {
-                    case v1_17:
-                    case v1_16: System.out.println("\nRunning Double Dungeon Data mode for 1.16 and 1.17..");
-                        crackDouble(v1_16, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
-                        break;
-                    case v1_15: System.out.println("\nRunning Double Dungeon Data mode for 1.15..");
-                        crackDouble(v1_15, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
-                        break;
-                    case v1_14:
-                    case v1_13: System.out.println("\nRunning Double Dungeon Data mode for 1.13 and 1.14..");
-                        crackDouble(v1_13, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
-                        break;
-                    case v1_12:
-                    case v1_11:
-                    case v1_10:
-                    case v1_9:
-                    case v1_8: System.out.println("\nRunning Double Dungeon Data mode for 1.8 through 1.12..");
-                        crackDouble(v1_8, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
-                        break;
-                    case vLegacy: System.out.println("\nRunning Double Dungeon Data mode for 1.7 and older..");
-                        crackDouble(vLegacy, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
-                        break;
-                    case vUnknown:
-                        System.out.println("Unknown supported version error..");
-                        System.exit(0);
+                //Dungeon Data mode with 2 dungeons
+                if (version.isBetween(vLegacy, v1_17)) {
+                    crackDouble(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                } else {
+                    System.out.println("Unknown supported version error..");
+                    System.exit(0);
                 }
             }
         } else {
-            //Dungeon Seed mode with 1 spawner
+            //Dungeon Seed mode with 1 dungeon
             if (!doubleSpawnerMode) {
-                switch (version) {
-                    case v1_17:
-                    case v1_16: System.out.println("\nRunning Single Dungeon seed mode for 1.16 and 1.17..");
-                        crackSingleDungeon(v1_16, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
-                        break;
-                    case v1_15: System.out.println("\nRunning Single Dungeon seed mode for 1.15..");
-                        crackSingleDungeon(v1_15, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
-                        break;
-                    case v1_14:
-                    case v1_13: System.out.println("\nRunning Single Dungeon seed mode for 1.13 and 1.14..");
-                        crackSingleDungeon(v1_13, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
-                        break;
-                    case v1_12:
-                    case v1_11:
-                    case v1_10:
-                    case v1_9:
-                    case v1_8:
-                    case vLegacy: System.out.println("You can't run Dungeon Seed mode with only 1 spawner on versions below 1.13!");
-                        break;
-                    case vUnknown:
-                        System.out.println("Unknown supported version error..");
-                        System.exit(0);
+                if (version.isBetween(vLegacy, v1_13)) {
+                    crackSingleDungeon(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
+                } else {
+                    System.out.println("You can't run Dungeon Seed mode with only 1 dungeon on versions below 1.13!");
+                    System.exit(0);
                 }
             } else {
-                //Dungeon Seed mode with 2 spawners
-                switch (version) {
-                    case v1_17:
-                    case v1_16: System.out.println("\nRunning Double Dungeon seed mode for 1.16 and 1.17..");
-                        crackDoubleDungeon(v1_16, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
-                        break;
-                    case v1_15: System.out.println("\nRunning Double Dungeon seed mode for 1.15..");
-                        crackDoubleDungeon(v1_15, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
-                        break;
-                    case v1_14:
-                    case v1_13: System.out.println("\nRunning Double Dungeon seed mode for 1.13 and 1.14..");
-                        crackDoubleDungeon(v1_13, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
-                        break;
-                    case v1_12:
-                    case v1_11:
-                    case v1_10:
-                    case v1_9:
-                    case v1_8: System.out.println("\nRunning Double Dungeon mode seed for 1.8 through 1.12..");
-                        crackDoubleDungeon(v1_8, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
-                        break;
-                    case vLegacy: System.out.println("\nRunning Double Dungeon seed mode for 1.7 and older..");
-                        crackDoubleDungeon(vLegacy, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
-                        break;
-                    case vUnknown:
-                        System.out.println("Unknown supported version error..");
-                        System.exit(0);
+                //Dungeon Seed mode with 2 dungeons
+                if (version.isBetween(vLegacy, v1_17)) {
+                    crackDoubleDungeon(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                } else {
+                    System.out.println("Unknown supported version error..");
+                    System.exit(0);
                 }
+
             }
         }
 
