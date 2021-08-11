@@ -94,20 +94,20 @@ public class Main {
 
         if (version.isOlderThan(v1_13) && !doubleSpawnerMode) {
             //Ask the user if they want to input dungeon data or seeds
-            System.out.println("Since you only have 1 dungeon and have selected a version older than 1.13, Dungeon Data mode has automatically been selected.");
-            System.out.println("Entering Dungeon Data mode..\n");
+            System.out.println("Since you only have 1 dungeon and have selected a version older than 1.13, Dungeon Data Mode has automatically been selected.");
+            System.out.println("Entering Dungeon Data Mode..\n");
             dungeonSeedMode = false;
         } else {
             //Ask the user if they want to input dungeon data or seeds
-            System.out.print("Do you have dungeon data or do you already have dungeon seeds?\n1     Dungeon Data  (Co-ords, Floor Pattern, etc)\n2     Dungeon Seeds (137229083672372L)\nType the corresponding number on the left: ");
+            System.out.print("Do you have dungeon data or do you already have a dungeon seed?\n1     Dungeon Data Mode  (Co-ords and Floor Pattern, typical)\n2     Dungeon Seed Mode (Structure seeds, uncommon)\nType the corresponding number on the left: ");
             while (!validInput) {
                 input = userInput.nextLine();
                 if (getIntFromInputString(input) == 1) {
-                    System.out.println("Entering Dungeon Data mode..\n");
+                    System.out.println("Entering Dungeon Data Mode..\n");
                     dungeonSeedMode = false;
                     validInput = true;
                 } else if (getIntFromInputString(input) == 2) {
-                    System.out.println("Entering Dungeon Seed only mode..\n");
+                    System.out.println("Entering Dungeon Seed Mode..\n");
                     dungeonSeedMode = true;
                     validInput = true;
                 } else {
@@ -120,44 +120,45 @@ public class Main {
         //If we are running in Dungeon Data mode we will need to gather more input data
         if (!dungeonSeedMode) {
             if (!doubleSpawnerMode) {
+
                 System.out.println("Please input your dungeon data:");
                 dungeon1x = getDungeonX(0);
                 dungeon1y = getDungeonY(0);
                 dungeon1z = getDungeonZ(0);
                 dungeon1Sequence = getSequence();
-                dungeon1Biome = getDungeonBiome();
+                if(version.isNewerThan(v1_15))dungeon1Biome = getDungeonBiome();
             } else {
                 System.out.println("Please provide data for the first dungeon:");
                 dungeon1x = getDungeonX(1);
                 dungeon1y = getDungeonY(1);
                 dungeon1z = getDungeonZ(1);
                 dungeon1Sequence = getSequence();
-                dungeon1Biome = getDungeonBiome();
+                if(version.isNewerThan(v1_15))dungeon1Biome = getDungeonBiome();
                 System.out.println("\nNow enter the data for the second dungeon:");
                 dungeon2x = getDungeonX(2);
                 dungeon2y = getDungeonY(2);
                 dungeon2z = getDungeonZ(2);
                 dungeon2Sequence = getSequence();
-                dungeon2Biome = getDungeonBiome();
+                if(version.isNewerThan(v1_15))dungeon2Biome = getDungeonBiome();
             }
         } else {
             if (!doubleSpawnerMode) {
-                System.out.println("Please input your dungeon data:");
+                System.out.println("Please input your dungeon info:");
                 dungeon1x = getDungeonX(0);
                 dungeon1z = getDungeonZ(0);
                 dungeon1Seed = getDungeonSeed(0);
-                dungeon1Biome = getDungeonBiome();
+                if(version.isNewerThan(v1_15))dungeon1Biome = getDungeonBiome();
             } else {
-                System.out.println("Please provide data for the first dungeon:");
+                System.out.println("Please provide info for the first dungeon:");
                 dungeon1x = getDungeonX(1);
                 dungeon1z = getDungeonZ(1);
                 dungeon1Seed = getDungeonSeed(1);
-                dungeon1Biome = getDungeonBiome();
-                System.out.println("\nNow enter the data for the second dungeon:");
+                if(version.isNewerThan(v1_15))dungeon1Biome = getDungeonBiome();
+                System.out.println("\nNow enter the info for the second dungeon:");
                 dungeon2x = getDungeonX(2);
                 dungeon2z = getDungeonZ(2);
                 dungeon2Seed = getDungeonSeed(2);
-                dungeon2Biome = getDungeonBiome();
+                if(version.isNewerThan(v1_15))dungeon2Biome = getDungeonBiome();
             }
         }
 
@@ -226,7 +227,7 @@ public class Main {
         if (StructureSeeds1.isEmpty()) {
             System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no world seeds were found.");
         } else {
-            System.out.println("If the data you entered was valid, your world seed is: " + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
+            System.out.println("If the data you entered was valid, your world seed is: \n" + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
         }
     }
 
@@ -248,7 +249,7 @@ public class Main {
         if (StructureSeeds1.isEmpty()) {
             System.out.println("Either the data you entered was invalid, or the dungeon was modified (either by a player or by internal RNG) as unfortunately no world seeds were found.");
         } else {
-            System.out.println("If the data you entered was valid, your world seed is: " + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
+            System.out.println("If the data you entered was valid, your world seed is: \n" + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
         }
 
     }
@@ -435,7 +436,7 @@ public class Main {
     }
 
     public static Biome getDungeonBiome() {
-        System.out.print("Is the EXACT name of biome that the spawner block is in called SWAMP, SWAMP_HILLS, or DESERT? Type \"yes\" or \"no\": ");
+        System.out.print("Is the EXACT name of the biome that the spawner block is in called SWAMP, SWAMP_HILLS, or DESERT? Type \"yes\" or \"no\": ");
         Scanner userInput = new Scanner(System.in);
         String input = userInput.nextLine();
         Biome biome = Biomes.FOREST;
