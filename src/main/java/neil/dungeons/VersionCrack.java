@@ -461,7 +461,6 @@ public class VersionCrack {
         if (version.isNewerThan(MCVersion.v1_12)) {
             if (worldSeedsSet.isEmpty()) {
                 System.out.println("Your data may be wrong, as no unique world seed was found with the data you provided.");
-                System.out.println("Your dungeon seed: " + dungeonSeeds);
             } else {
                 System.out.println("Your dungeon seed: " + dungeonSeeds);
                 System.out.println("Your would may be one of these seeds: " + worldSeedsSet);

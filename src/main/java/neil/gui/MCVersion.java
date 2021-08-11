@@ -37,14 +37,33 @@ public enum MCVersion {
 		return STRING_TO_VERSION.get(name);
 	}
 
+    /***
+     * Compares the provided versions and returns True or False
+     * "Unknown" is the oldest version
+     * @param v MCVersion
+     * @return Exclusive boolean
+     */
 	public boolean isNewerThan(MCVersion v) {
 		return this.compareTo(v) < 0;
 	}
 
+    /***
+     * Compares the provided versions and returns True or False
+     * "Unknown" is the oldest version
+     * @param v MCVersion
+     * @return Exclusive boolean
+     */
 	public boolean isOlderThan(MCVersion v) {
 		return this.compareTo(v) > 0;
 	}
 
+    /***
+     * Compares the provided versions and returns True or False
+     * "Unknown" is the oldest version
+     * @param a MCVersion
+     * @param b MCVersion
+     * @return Inclusive boolean
+     */
 	public boolean isBetween(MCVersion a, MCVersion b) {
 		return this.compareTo(a) <= 0 && this.compareTo(b) >= 0;
 	}
