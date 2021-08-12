@@ -1,12 +1,15 @@
-package neil;
+package kinomora;
 
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
-import neil.gui.MCVersion;
+import kinomora.dungeon.DecoratorSeedProcessor;
+import kinomora.dungeon.DungeonDataProcessor;
+import kinomora.dungeon.StructureSeedProcessor;
+import other.util.MCVersion;
 
 import java.util.*;
 
-import static neil.gui.MCVersion.*;
+import static other.util.MCVersion.*;
 
 public class Main {
     public static final boolean PARTIAL_OVERRIDE = true;

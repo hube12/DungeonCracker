@@ -1,6 +1,6 @@
-package neil;
+package kinomora.dungeon;
 
-import neil.gui.MCVersion;
+import other.util.MCVersion;
 import randomreverser.ReverserDevice;
 import randomreverser.call.FilteredSkip;
 import randomreverser.call.NextInt;

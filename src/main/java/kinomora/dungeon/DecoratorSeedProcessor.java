@@ -1,11 +1,11 @@
-package neil;
+package kinomora.dungeon;
 
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
-import neil.dungeons.kaptainwutax.magic.PopReversal2TheHalvening;
-import neil.dungeons.kaptainwutax.util.LCG;
-import neil.dungeons.kaptainwutax.util.Rand;
-import neil.gui.MCVersion;
+import other.util.PopReversal2TheHalvening;
+import other.util.LCG;
+import other.util.Rand;
+import other.util.MCVersion;
 
 import java.util.HashSet;
 import java.util.Set;

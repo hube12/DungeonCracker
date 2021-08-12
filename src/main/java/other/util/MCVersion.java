@@ -1,4 +1,4 @@
-package neil.gui;
+package other.util;
 
 import java.util.Arrays;
 import java.util.Map;

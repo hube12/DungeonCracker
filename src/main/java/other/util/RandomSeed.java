@@ -1,8 +1,5 @@
-package neil.dungeons.kaptainwutax.magic;
+package other.util;
 
-
-import neil.dungeons.kaptainwutax.util.LCG;
-import neil.dungeons.kaptainwutax.util.Rand;
 
 public class RandomSeed {
 
@@ -13,7 +10,7 @@ public class RandomSeed {
 	 */
 	public static boolean isRandomSeed(long worldSeed) {
 		long upperBits = worldSeed >>> 32;
-		long lowerBits = worldSeed & MagicMath.MASK_32;
+		long lowerBits = worldSeed & 0xFFFF_FFFFL;
 
 		long a = (24667315 * upperBits + 18218081 * lowerBits + 67552711) >> 32;
 		long b = (-4824621 * upperBits + 7847617 * lowerBits + 7847617) >> 32;

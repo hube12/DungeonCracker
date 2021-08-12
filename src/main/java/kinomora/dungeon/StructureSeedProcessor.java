@@ -1,6 +1,6 @@
-package neil;
+package kinomora.dungeon;
 
-import neil.dungeons.kaptainwutax.magic.RandomSeed;
+import other.util.RandomSeed;
 
 import java.util.HashSet;
 import java.util.Set;

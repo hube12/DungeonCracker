@@ -1,4 +1,4 @@
-package neil.dungeons.kaptainwutax.magic;
+package other.util;
 
 import java.util.ArrayList;
 import java.util.HashSet;

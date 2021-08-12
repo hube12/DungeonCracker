@@ -1,4 +1,4 @@
-package neil.dungeons.kaptainwutax.util;
+package other.util;
 
 
 import java.util.Random;

@@ -1,3 +1,3 @@
-Manifest-Version: 1.0
-Main-Class: neil.Main
+Manifest-Version: 1.1
+Main-Class: kinomora.Main
 
