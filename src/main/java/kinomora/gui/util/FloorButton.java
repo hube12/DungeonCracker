@@ -8,9 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class FloorButton extends JButton implements ActionListener, MouseListener {
-    public static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("unknown.png"));
-    public static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("mossy.png"));
-    public static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("cobble.png"));
+    public static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("/cobble.png"));
+    public static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("/mossy.png"));
+    public static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("/unknown.png"));
 
     private boolean hasMouseExited;
 
@@ -56,25 +56,35 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
         if (!hasMouseExited) {
             //Left click pressed, cycle from unknown -> cobble -> mossy ->
             if (e.getButton() == MouseEvent.BUTTON1) {
-                if(this.getIcon().equals(UNKNOWN_TILE)){
+                if (this.getIcon().equals(UNKNOWN_TILE)) {
                     this.setIcon(COBBLE_TILE);
-                } else if (this.getIcon().equals(COBBLE_TILE)){
+                } else if (this.getIcon().equals(COBBLE_TILE)) {
                     this.setIcon(MOSSY_TILE);
                 } else {
                     this.setIcon(UNKNOWN_TILE);
                 }
             }
+        }
+        //Right click pressed, cycle from unknown -> mossy -> cobble ->
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            if (this.getIcon().equals(UNKNOWN_TILE)) {
+                this.setIcon(MOSSY_TILE);
+            } else if (this.getIcon().equals(MOSSY_TILE)) {
+                this.setIcon(COBBLE_TILE);
+            } else {
+                this.setIcon(UNKNOWN_TILE);
+            }
+        }
+    }
 
-            //Right click pressed, cycle from unknown -> mossy -> cobble ->
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                if(this.getIcon().equals(UNKNOWN_TILE)){
-                    this.setIcon(MOSSY_TILE);
-                } else if (this.getIcon().equals(MOSSY_TILE)){
-                    this.setIcon(COBBLE_TILE);
-                } else {
-                    this.setIcon(UNKNOWN_TILE);
-                }
-            }
+    public int getButtonSequenceDigit() {
+        if (this.getIcon().equals(UNKNOWN_TILE)) {
+            return 2;
+        } else if (this.getIcon().equals(COBBLE_TILE)) {
+            return 0;
+        } else {
+            this.setIcon(UNKNOWN_TILE);
+            return 1;
         }
     }
 }

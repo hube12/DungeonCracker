@@ -7,27 +7,26 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class DungeonFloorPanel extends JPanel {
-
     public final DungeonDataTab parent;
 
     public DungeonFloorPanel(DungeonDataTab parent) {
         this.parent = parent;
 
-        this.setLayout(new FlowLayout(FlowLayout.LEADING));
+        this.setLayout(new GridLayout(9,9,0,0));
         this.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 2, true),
+                BorderFactory.createLineBorder(Color.BLACK, 1, true),
                 "Dungeon Floor",
                 TitledBorder.DEFAULT_JUSTIFICATION,
                 TitledBorder.DEFAULT_POSITION
         ));
-
-        this.populateFloor();
+        this.setSize(250,250);
+        this.populatePanel();
     }
 
     /**
      * Adds all the item icons inside this panel
      */
-    private void populateFloor() {
+    private void populatePanel() {
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 9; x++) {
                 FloorButton button = new FloorButton();
