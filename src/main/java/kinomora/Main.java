@@ -17,6 +17,8 @@ public class Main {
     public static void main(String[] args) {
         //Meta data
         String appVersion = "v1.1.1_pre-release";
+        ArrayList<String> argsList = new ArrayList<>();
+        //DungeonCrackerGUI GUI = new DungeonCrackerGUI();
 
         //Program data
         Scanner userInput = new Scanner(System.in);
@@ -42,33 +44,23 @@ public class Main {
         Biome dungeon2Biome = Biomes.THE_VOID;
         ;
 
-        //testing methods
-        if (false) {
-            test16_17();
-        }
-        if (false) {
-            test15();
-        }
-        if (false) {
-            test13_14();
-        }
-        if (false) {
-            test8_12();
-        }
-        if (false) {
-            testLegacy();
-        }
-        if (false) {
-            crackDungeonSeedSingle(v1_16, -6799, -1473, Biomes.DESERT, 66991252199345L);
-        }
-        if (false) {
-            crackDungeonSeedDouble(vLegacy, 140, -35, Biomes.THE_VOID, 240428811966007L, 171, -34, Biomes.THE_VOID, 82449899703950L);
-        }
+        //Check for command line args
+        argsList.addAll(Arrays.asList(args));
 
+
+        //Intro
         System.out.println("===================================================================================");
         System.out.println("Minecraft Dungeon Cracker " + appVersion + " | By Kinomora");
         System.out.println("Available for free at github.com/Kinomora/DungeonCracker");
         System.out.println("===================================================================================");
+
+        //Testing data flag
+        if(argsList.get(0).equals("gui")){
+            //GUI.start();
+        } else {
+            testVersioned(MCVersion.fromString(argsList.get(0)));
+            System.exit(0);
+        }
 
         //Ask the user for the MCVersion they want to use
         System.out.print("Please provide the version number that the dungeon was created in, as listed below:\n16    Releases 1.16.x and 1.17.x\n15    Release  1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n1     Releases 1.7.x and earlier; including beta, alpha, and infdev\nType the corresponding number on the left: ");
@@ -504,138 +496,66 @@ public class Main {
     }
 
     //Test data, ignore unless you're messing with the code :)
-    private static void test16_17() {
-        // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
+    private static void testVersioned(MCVersion v) {
         Set<Long> DungeonData;
         Set<Long> StructureSeeds;
-        Set<Long> WorldSeeds;
-
-        DungeonData = new DungeonDataProcessor(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the 1.16 dungeon data: " + DungeonData + " | Expected data: [137229083672372]");
-        StructureSeeds = new DecoratorSeedProcessor(v1_16, 25, 88, Biomes.PLAINS, DungeonData).decoratorSeedsToStructureSeeds();
-        System.out.println("Here is the 1.16 structure data: " + StructureSeeds + " | Expected data: [258737905361860]");
-        WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
-        System.out.println("Here are the 1.16 world seeds: " + WorldSeeds + " | Expected data: [1488979889728021444]");
-
-        DungeonData.clear();
-        StructureSeeds.clear();
-        WorldSeeds.clear();
-    }
-
-    private static void test15() {
-        // 1.15                       Dungeon Seed: [54954658892082];  Coords: [161 16 -716];    Sequence: [1111111101101110111110111011101111111101101100101];                                 World Seed: [7298916735143357077]
-        Set<Long> DungeonData;
-        Set<Long> StructureSeeds;
-        Set<Long> WorldSeeds;
-
-        DungeonData = new DungeonDataProcessor(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the 1.15 dungeon data: " + DungeonData + " | Expected data: [54954658892082]");
-        StructureSeeds = new DecoratorSeedProcessor(v1_15, 161, -716, Biomes.PLAINS, DungeonData).decoratorSeedsToStructureSeeds();
-        System.out.println("Here is the 1.15 structure data: " + StructureSeeds + " | Expected data: [?]");
-        WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
-        System.out.println("Here are the 1.15 world seeds: " + WorldSeeds + " | Expected data: [7298916735143357077]");
-
-        DungeonData.clear();
-        StructureSeeds.clear();
-        WorldSeeds.clear();
-    }
-
-    private static void test13_14() {
-        // 1.14, 1.13
-        // World Seed: [1724951870366438529]
-        //
-        // Dungeon Seed: [82836126371671];
-        // Coords: [693 30 -74];
-        // Sequence: [111011100101011111011011001111110110111011101111111011101111011011111110111111110];
-        //
-        // Dungeon Seed: [19957636759997];
-        // Coords: [280 29 674];
-        // Sequence: [111011111101101111111111101111101111110100111110111101111111110111111101111110011];
         Set<Long> DungeonData1;
         Set<Long> StructureSeeds1;
         Set<Long> DungeonData2;
         Set<Long> StructureSeeds2;
         Set<Long> WorldSeeds;
-
-        DungeonData1 = new DungeonDataProcessor(v1_13, 693, 30, -74, "111011100101011111011011001111110110111011101111111011101111011011111110111111110").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the 1.13 dungeon1 data: " + DungeonData1 + " | Expected data: [82836126371671]");
-        StructureSeeds1 = new DecoratorSeedProcessor(v1_13, 693, -74, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
-        //System.out.println("Here is the 1.13 structure1 data: " + StructureSeeds1 + " | Expected data: [?]");
-        DungeonData2 = new DungeonDataProcessor(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the 1.13 dungeon2 data: " + DungeonData2 + " | Expected data: [19957636759997]");
-        StructureSeeds2 = new DecoratorSeedProcessor(v1_13, 280, 674, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
-        //System.out.println("Here is the 1.13 structure2 data: " + StructureSeeds2 + " | Expected data: [?]");
-        //System.out.println("Pre-filtered list: " + StructureSeeds1);
-        StructureSeeds1.retainAll(StructureSeeds2);
-        System.out.println("Filtered list: " + StructureSeeds1);
-        WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
-        System.out.println("Here are the 1.13 world seeds: " + WorldSeeds + " | Expected data: [1724951870366438529]");
-
-        DungeonData1.clear();
-        StructureSeeds1.clear();
-        DungeonData2.clear();
-        StructureSeeds2.clear();
-        WorldSeeds.clear();
-    }
-
-    private static void test8_12() {
-        // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
-        //                            Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
-        Set<Long> DungeonData1;
-        Set<Long> StructureSeeds1;
-        Set<Long> DungeonData2;
-        Set<Long> StructureSeeds2;
-        Set<Long> WorldSeeds;
-        //Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
-        DungeonData1 = new DungeonDataProcessor(v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the 1.8 dungeon1 data: " + DungeonData1 + " | Expected data: [14581818956973]");
-        StructureSeeds1 = new DecoratorSeedProcessor(v1_8, 137, -147, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
-        //System.out.println("Here is the 1.8 structure1 data: " + StructureSeeds1 + " | Expected data: [?]");
-        //Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World Seed: [-1700538326672817507]; Version: [1.10.0]
-        DungeonData2 = new DungeonDataProcessor(v1_8, 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the 1.8 dungeon2 data: " + DungeonData2 + " | Expected data: [226023998267313]");
-        StructureSeeds2 = new DecoratorSeedProcessor(v1_8, 61, 668, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
-        //System.out.println("Here is the 1.8 structure2 data: " + StructureSeeds2 + " | Expected data: [?]");
-        //System.out.println("Pre-filtered list: " + StructureSeeds1);
-        StructureSeeds1.retainAll(StructureSeeds2);
-        System.out.println("Filtered list: " + StructureSeeds1);
-        WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
-        System.out.println("Here are the 1.8 world seeds: " + WorldSeeds + " | Expected data: [-1700538326672817507]");
-        DungeonData1.clear();
-        StructureSeeds1.clear();
-        DungeonData2.clear();
-        StructureSeeds2.clear();
-        WorldSeeds.clear();
-    }
-
-    private static void testLegacy() {
-        // alpha testing              Dungeon Seed: [240428811966007]; Coords: [140 81 -35];     Sequence: [001011101111111111001111111011011101110111111110000110110111111];                   World Seed: [3257840388504953787];  Version: [a1.2.2]
-        //                            Dungeon Seed: [82449899703950];  Coords: [171 13 -34];     Sequence: [101111111111110111011101111100011111111100101011111011001111010];                   World Seed: [3257840388504953787];  Version: [a1.2.2]
-        Set<Long> DungeonData1;
-        Set<Long> StructureSeeds1;
-        Set<Long> DungeonData2;
-        Set<Long> StructureSeeds2;
-        Set<Long> WorldSeeds;
-
-        DungeonData1 = new DungeonDataProcessor(vLegacy, 140, 81, -35, "001011101111111111001111111011011101110111111110000110110111111").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the legacy dungeon1 data: " + DungeonData1 + " | Expected data: [240428811966007]");
-        StructureSeeds1 = new DecoratorSeedProcessor(vLegacy, 140, -35, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
-        //System.out.println("Here is the legacy structure1 data: " + StructureSeeds1 + " | Expected data: [?]");
-        DungeonData2 = new DungeonDataProcessor(vLegacy, 171, 13, -34, "101111111111110111011101111100011111111100101011111011001111010").dungeonDataToDecoratorSeed();
-        System.out.println("Here is the legacy dungeon2 data: " + DungeonData2 + " | Expected data: [82449899703950]");
-        StructureSeeds2 = new DecoratorSeedProcessor(vLegacy, 171, -34, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
-        //System.out.println("Here is the legacy structure2 data: " + StructureSeeds2 + " | Expected data: [?]");
-        //System.out.println("Pre-filtered list: " + StructureSeeds1);
-        StructureSeeds1.retainAll(StructureSeeds2);
-        System.out.println("Filtered list: " + StructureSeeds1);
-        WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
-        System.out.println("Here are the legacy world seeds: " + WorldSeeds + " | Expected data: [3257840388504953787]");
-
-        DungeonData1.clear();
-        StructureSeeds1.clear();
-        DungeonData2.clear();
-        StructureSeeds2.clear();
-        WorldSeeds.clear();
+        switch (v) {
+            case v1_16: System.out.println("Running 1.16 test data..");
+                DungeonData = new DungeonDataProcessor(v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111").dungeonDataToDecoratorSeed();
+                StructureSeeds = new DecoratorSeedProcessor(v1_16, 25, 88, Biomes.PLAINS, DungeonData).decoratorSeedsToStructureSeeds();
+                WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
+                System.out.println("Here is the 1.16 dungeon data: " + DungeonData + " | Expected data: [137229083672372]");
+                System.out.println("Here is the 1.16 structure data: " + StructureSeeds + " | Expected data: [258737905361860]");
+                System.out.println("Here are the 1.16 world seeds: " + WorldSeeds + " | Expected data: [1488979889728021444]");
+                break;
+            case v1_15: System.out.println("Running 1.15 test data..");
+                DungeonData = new DungeonDataProcessor(v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101").dungeonDataToDecoratorSeed();
+                StructureSeeds = new DecoratorSeedProcessor(v1_15, 161, -716, Biomes.PLAINS, DungeonData).decoratorSeedsToStructureSeeds();
+                WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
+                System.out.println("1.15 dungeon data: " + DungeonData + " | Expected data: [54954658892082]");
+                System.out.println("1.15 structure data: " + StructureSeeds + " | Expected data: [?]");
+                System.out.println("1.15 world seeds: " + WorldSeeds + " | Expected data: [7298916735143357077]");
+                break;
+            case v1_13: System.out.println("Running 1.13 test data..");
+                DungeonData1 = new DungeonDataProcessor(v1_13, 693, 30, -74, "111011100101011111011011001111110110111011101111111011101111011011111110111111110").dungeonDataToDecoratorSeed();
+                StructureSeeds1 = new DecoratorSeedProcessor(v1_13, 693, -74, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
+                DungeonData2 = new DungeonDataProcessor(v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011").dungeonDataToDecoratorSeed();
+                StructureSeeds2 = new DecoratorSeedProcessor(v1_13, 280, 674, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
+                StructureSeeds1.retainAll(StructureSeeds2);
+                WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
+                System.out.println("1.13 dungeon1 seed: " + DungeonData1 + " | Expected data: [82836126371671]");
+                System.out.println("1.13 dungeon2 seed: " + DungeonData2 + " | Expected data: [19957636759997]");
+                System.out.println("1.13 world seeds: " + WorldSeeds + " | Expected data: [1724951870366438529]");
+                break;
+            case v1_8: System.out.println("Running 1.8 test data..");
+                DungeonData1 = new DungeonDataProcessor(v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011").dungeonDataToDecoratorSeed();
+                ;
+                StructureSeeds1 = new DecoratorSeedProcessor(v1_8, 137, -147, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
+                DungeonData2 = new DungeonDataProcessor(v1_8, 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111").dungeonDataToDecoratorSeed();
+                StructureSeeds2 = new DecoratorSeedProcessor(v1_8, 61, 668, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
+                StructureSeeds1.retainAll(StructureSeeds2);
+                WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
+                System.out.println("1.8 dungeon1 seed: " + DungeonData1 + " | Expected data: [14581818956973]");
+                System.out.println("1.8 dungeon2 seed: " + DungeonData2 + " | Expected data: [226023998267313]");
+                System.out.println("1.8 world seeds: " + WorldSeeds + " | Expected data: [-1700538326672817507]");
+                break;
+            case vLegacy: System.out.println("Running legacy test data..");
+                DungeonData1 = new DungeonDataProcessor(vLegacy, 140, 81, -35, "001011101111111111001111111011011101110111111110000110110111111").dungeonDataToDecoratorSeed();
+                StructureSeeds1 = new DecoratorSeedProcessor(vLegacy, 140, -35, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
+                DungeonData2 = new DungeonDataProcessor(vLegacy, 171, 13, -34, "101111111111110111011101111100011111111100101011111011001111010").dungeonDataToDecoratorSeed();
+                StructureSeeds2 = new DecoratorSeedProcessor(vLegacy, 171, -34, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
+                StructureSeeds1.retainAll(StructureSeeds2);
+                WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
+                System.out.println("Legacy dungeon1 seed: " + DungeonData1 + " | Expected data: [240428811966007]");
+                System.out.println("Legacy dungeon2 seed: " + DungeonData2 + " | Expected data: [82449899703950]");
+                System.out.println("Legacy world seeds: " + WorldSeeds + " | Expected data: [3257840388504953787]");
+                break;
+        }
     }
     /* Cobble = 0; Moss = 1; Unknown = 2
     // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
