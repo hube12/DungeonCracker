@@ -5,20 +5,20 @@ import kaptainwutax.biomeutils.biome.Biomes;
 import kinomora.dungeon.DecoratorSeedProcessor;
 import kinomora.dungeon.DungeonDataProcessor;
 import kinomora.dungeon.StructureSeedProcessor;
+import kinomora.gui.DungeonCrackerGUI;
 import other.util.MCVersion;
 
+import javax.swing.*;
 import java.util.*;
 
 import static other.util.MCVersion.*;
 
 public class Main {
-    public static final boolean PARTIAL_OVERRIDE = true;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         //Meta data
-        String appVersion = "v1.1.1_pre-release";
         ArrayList<String> argsList = new ArrayList<>();
-        //DungeonCrackerGUI GUI = new DungeonCrackerGUI();
+        DungeonCrackerGUI GUI = new DungeonCrackerGUI();
 
         //Program data
         Scanner userInput = new Scanner(System.in);
@@ -50,13 +50,23 @@ public class Main {
 
         //Intro
         System.out.println("===================================================================================");
-        System.out.println("Minecraft Dungeon Cracker " + appVersion + " | By Kinomora");
+        System.out.println("Minecraft Dungeon Cracker " + getAppVersion() + " | By Kinomora");
         System.out.println("Available for free at github.com/Kinomora/DungeonCracker");
         System.out.println("===================================================================================");
 
         //Testing data flag
         if(argsList.get(0).equals("gui")){
-            //GUI.start();
+            //GUI.mainGUI();
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+
+            //Set up the GUI window
+            GUI.pack();
+            GUI.setSize(600,450);
+            GUI.setResizable(false);
+            GUI.setVisible(true);
+
+            JMenuBar menuBar = new JMenuBar();
+
         } else {
             testVersioned(MCVersion.fromString(argsList.get(0)));
             System.exit(0);
@@ -556,6 +566,10 @@ public class Main {
                 System.out.println("Legacy world seeds: " + WorldSeeds + " | Expected data: [3257840388504953787]");
                 break;
         }
+    }
+
+    public static String getAppVersion(){
+        return "v2.0.0_pre-release";
     }
     /* Cobble = 0; Moss = 1; Unknown = 2
     // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga
