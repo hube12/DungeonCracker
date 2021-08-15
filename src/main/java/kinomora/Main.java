@@ -61,7 +61,7 @@ public class Main {
 
             //Set up the GUI window
             GUI.pack();
-            GUI.setSize(600,450);
+            GUI.setSize(610,455);
             GUI.setResizable(false);
             GUI.setVisible(true);
 

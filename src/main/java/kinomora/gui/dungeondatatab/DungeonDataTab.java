@@ -17,10 +17,8 @@ public class DungeonDataTab extends JPanel {
         dungeonFloorPanel = new DungeonFloorPanel(this);
         versionPanel = new VersionPanel(this);
         spawnerDataPanelBig = new SpawnerDataPanelBig(this);
-
-        //dungeonFloorPanel.setSize(320, 320);
-        //versionPanel.setSize(250, 70);
-        spawnerDataPanelBig.setSize(250, 280);
+        //spawnerDataPanelBig.setPreferredSize(new Dimension(220,360));
+        //spawnerDataPanelBig.setSize(350,380);
 
         //Right Panel (dungeon floor) objects
         JButton rotateCounterClockwise = new JButton("CC");
@@ -30,17 +28,16 @@ public class DungeonDataTab extends JPanel {
         JButton rotateClockwise = new JButton("CW");
 
         //Set the layout for the window to be two halves
-        this.setLayout(new GridLayout(1, 2,5,5));
+        this.setLayout(new FlowLayout(FlowLayout.LEADING, 5,0));
 
         //Create panels for each half
-        JPanel leftPanel = new JPanel(new FlowLayout());
-        leftPanel.setSize(350,380);
-        JPanel rightPanel = new JPanel(new GridLayout(2, 1));
-        rightPanel.setSize(250,70);
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        //leftPanel.setSize(350,380);
+        JPanel rightPanel = new JPanel(new GridBagLayout());
+        //rightPanel.setSize(250,300);
 
         //Create subpanels for each section of the Dungeon Floor side
-        JPanel dungeonSubButtonPanel = new JPanel(new GridLayout(1, 5));
-        dungeonSubButtonPanel.setSize(350, 50);
+        JPanel dungeonSubButtonPanel = new JPanel(new FlowLayout());
 
         //Fill in the dungeon subpanels
         dungeonSubButtonPanel.add(rotateCounterClockwise);
@@ -49,15 +46,89 @@ public class DungeonDataTab extends JPanel {
         dungeonSubButtonPanel.add(size9x9);
         dungeonSubButtonPanel.add(rotateClockwise);
 
-        //Add the dungeon subpanels to the right
-        leftPanel.add(dungeonFloorPanel);
-        leftPanel.add(dungeonSubButtonPanel);
+        /***Adding the Dungeon Floor panel and the Dungeon Floor Buttons to the LEFT Panel***/
+        //Add the Dungeon Floor
+        /*c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        //c.ipadx = 5;
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.insets =new Insets(0, 0, 0, 0);
+        //gridx,gridy,gridwidth,gridheight,weightx,weighty,ipadx,ipady,anchor,insets*/
+        leftPanel.add(dungeonFloorPanel, setC(0,0,1,1,0,0,GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
 
-        //Add the Dungeon Data subpanels
-        rightPanel.add(versionPanel);
-        rightPanel.add(spawnerDataPanelBig);
+        //Adding the Floor Buttons
+        /*c.weightx = 0;
+        c.gridx = 0;
+        c.gridy = 1;
+        //c.ipadx = 5;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(0, 0, 0, 0);
+        //gridx,gridy,gridwidth,gridheight,weightx,weighty,ipadx,ipady,anchor,insets*/
+        leftPanel.add(dungeonSubButtonPanel, setC(0,1,1,1,0,0,GridBagConstraints.CENTER,new Insets(0, 0, 0, 0)));
 
-        this.add(leftPanel);
-        //this.add(rightPanel);
+
+        /***Adding the Version Panel and the Dungeon Data Big panel to the RIGHT Panel***/
+        //Add the Version panel
+        /*c.gridx = 0;
+        c.gridy = 0;
+        c.ipadx = 60;
+        c.ipady = 14;
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.insets = new Insets(0, 5, 0, 0);
+        //gridx,gridy,gridwidth,gridheight,weightx,weighty,ipadx,ipady,anchor,insets*/
+
+        rightPanel.add(versionPanel, setC(0,0,1,1,0,0,GridBagConstraints.PAGE_START,new Insets(0, 0, 0, 0)));
+
+        //Adding the Dungeon Data panel
+        /*c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 2;
+        c.ipadx = 70;
+        c.ipady = 20;
+        c.anchor = GridBagConstraints.LINE_START;
+        c.insets = new Insets(5, 5, 0, 0);
+        //gridx,gridy,gridwidth,gridheight,weightx,weighty,ipadx,ipady,anchor,insets*/
+
+        rightPanel.add(spawnerDataPanelBig, setC(0,1,1,1,0,0,GridBagConstraints.LINE_START,new Insets(0, 0, 0, 0)));
+
+
+        /***Adding both panels to the main window***/
+        //Adding the left panel (dungeon floor + buttons) to the main window
+        /*c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.ipadx = 80;
+        c.ipady = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(-40, 0, 0, 0);
+        //gridx,gridy,gridwidth,gridheight,weightx,weighty,ipadx,ipady,anchor,insets*/
+
+        this.add(leftPanel, setC(0,0,1,1,0,0,GridBagConstraints.FIRST_LINE_START,new Insets(0, 0, 0, 0)));
+
+        //Adding the right panel (version and coords) to the main window
+        /*c.weightx = 0;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.ipadx = 20;
+        c.ipady = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(-28, -10, 0, 0);
+        //gridx,gridy,gridwidth,gridheight,weightx,weighty,ipadx,ipady,anchor,insets*/
+
+        this.add(rightPanel, setC(1,0,1,1,0,0,GridBagConstraints.FIRST_LINE_END,new Insets(0, -0, 0, 0)));
+    }
+
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int ipadx, int ipady, int anchor, Insets insets) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = gridx;
+        c.gridy = gridy;
+        c.gridwidth = gridwidth;
+        c.gridheight = gridheight;
+        c.ipadx = ipadx;
+        c.ipady = ipady;
+        c.anchor = anchor;
+        c.insets = insets;
+        return c;
     }
 }

@@ -14,7 +14,6 @@ public class VersionPanel extends JPanel {
 
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
         this.setLayout(new GridBagLayout());
-        this.setSize(250,70);
         GridBagConstraints c = new GridBagConstraints();
 
         this.populatePanel(c);
@@ -22,36 +21,29 @@ public class VersionPanel extends JPanel {
 
     private void populatePanel(GridBagConstraints c) {
         //Left Panel (dungeon data) objects
-        JLabel versionLabel = new JLabel("Version: ");
+        JLabel versionLabel = new JLabel("Version");
         JComboBox<String> versionDropdown = new JComboBox<>(MCVersion.getVersionListAsArray());
-        JLabel dungeonCountLabel = new JLabel("Dungeon Count: ");
-        JLabel dungeonCountLabel1 = new JLabel("1");
-        JRadioButton dungeonCountRadio1 = new JRadioButton();
-        JLabel dungeonCountLabel2 = new JLabel("2");
-        JRadioButton dungeonCountRadio2 = new JRadioButton();
+        JLabel dungeonCountLabel = new JLabel("Dungeon Count");
+        //JLabel dungeonCountLabel1 = new JLabel("1");
+        JRadioButton dungeonCountRadio1 = new JRadioButton("1",true);
+        //JLabel dungeonCountLabel2 = new JLabel("2");
+        JRadioButton dungeonCountRadio2 = new JRadioButton("2",false);
 
-        c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.insets = new Insets(10,0,0,0);
-        this.add(versionLabel, c);
-        c.gridx = 1;
-        c.gridy = 0;
-        this.add(versionDropdown, c);
-        c.gridx = 0;
-        c.gridy = 1;
-        this.add(dungeonCountLabel, c);
-        c.gridx = 1;
-        c.gridy = 1;
-        this.add(dungeonCountLabel1,c);
-        c.gridx = 2;
-        c.gridy = 1;
-        this.add(dungeonCountRadio1, c);
-        c.gridx = 3;
-        c.gridy = 1;
-        this.add(dungeonCountLabel2,c);
-        c.gridx = 4;
-        c.gridy = 1;
-        this.add(dungeonCountRadio2, c);
+        this.add(versionLabel, setC(0,0,1,new Insets(5,-30,0,0)));
+        this.add(versionDropdown, setC(1,0, 2,new Insets(5,0,0,0)));
+
+        this.add(dungeonCountLabel, setC(0,1,1,new Insets(0,-30,0,0)));
+        this.add(dungeonCountRadio1, setC(1,1,1,new Insets(0,0,0,0)));
+        this.add(dungeonCountRadio2, setC(2,1,1,new Insets(0,0,0,0)));
+    }
+
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, Insets insets) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = gridx;
+        c.gridy = gridy;
+        c.gridwidth = gridwidth;
+        c.insets = insets;
+        c.anchor = GridBagConstraints.LINE_START;
+        return c;
     }
 }

@@ -8,13 +8,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class FloorButton extends JButton implements ActionListener, MouseListener {
-    public static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("/cobble.png"));
-    public static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("/mossy.png"));
-    public static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("/unknown.png"));
+    private static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("/cobble.png"));
+    private static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("/mossy.png"));
+    private static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("/unknown.png"));
+
+    private int ID;
 
     private boolean hasMouseExited;
 
-    public FloorButton() {
+    public FloorButton(int ID) {
         //Listeners
         this.addMouseListener(this);
         this.addActionListener(this);
@@ -23,6 +25,25 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
         this.setMargin(new Insets(0, 0, 0, 0));
         this.setIcon(UNKNOWN_TILE);
         this.setEnabled(true);
+        this.ID = ID;
+    }
+
+    public String getButtonValue(){
+        if (this.getIcon().equals(UNKNOWN_TILE)) {
+            return("2");
+        } else if (this.getIcon().equals(COBBLE_TILE)) {
+            return("0");
+        } else {
+            return("1");
+        }
+    }
+
+    public int getID(){
+        return this.ID;
+    }
+
+    public void setID(int ID){
+        this.ID = ID;
     }
 
     //Action Listener events
