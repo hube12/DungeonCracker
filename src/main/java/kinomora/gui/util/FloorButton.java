@@ -1,5 +1,8 @@
 package kinomora.gui.util;
 
+import kinomora.gui.dungeondatatab.DungeonFloorPanel;
+import kinomora.gui.dungeondatatab.SpawnerDataPanelBig;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +19,9 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
 
     private boolean hasMouseExited;
 
-    public FloorButton(int ID) {
+    DungeonFloorPanel parent;
+
+    public FloorButton(int ID, DungeonFloorPanel parent) {
         //Listeners
         this.addMouseListener(this);
         this.addActionListener(this);
@@ -25,24 +30,17 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
         this.setMargin(new Insets(0, 0, 0, 0));
         this.setIcon(UNKNOWN_TILE);
         this.setEnabled(true);
+        this.setFocusPainted(false);
+        this.setFocusable(false);
         this.ID = ID;
+        this.parent = parent;
     }
 
-    public String getButtonValue(){
-        if (this.getIcon().equals(UNKNOWN_TILE)) {
-            return("2");
-        } else if (this.getIcon().equals(COBBLE_TILE)) {
-            return("0");
-        } else {
-            return("1");
-        }
-    }
-
-    public int getID(){
+    public int getID() {
         return this.ID;
     }
 
-    public void setID(int ID){
+    public void setID(int ID) {
         this.ID = ID;
     }
 
@@ -81,7 +79,7 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
                     this.setIcon(COBBLE_TILE);
                 } else if (this.getIcon().equals(COBBLE_TILE)) {
                     this.setIcon(MOSSY_TILE);
-                } else {
+                } else if (this.getIcon().equals(MOSSY_TILE)) {
                     this.setIcon(UNKNOWN_TILE);
                 }
             }
@@ -92,20 +90,34 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
                 this.setIcon(MOSSY_TILE);
             } else if (this.getIcon().equals(MOSSY_TILE)) {
                 this.setIcon(COBBLE_TILE);
-            } else {
+            } else if (this.getIcon().equals(COBBLE_TILE)) {
                 this.setIcon(UNKNOWN_TILE);
             }
         }
+        parent.buttonPressed(this);
     }
 
     public int getButtonSequenceDigit() {
         if (this.getIcon().equals(UNKNOWN_TILE)) {
             return 2;
+        } else if (this.getIcon().equals(MOSSY_TILE)) {
+            return 1;
         } else if (this.getIcon().equals(COBBLE_TILE)) {
             return 0;
         } else {
+            return -1;
+        }
+    }
+
+    public void setButtonStateByDigit(int digit){
+        if(digit == 0){
+            this.setIcon(COBBLE_TILE);
+        } else if (digit == 1){
+            this.setIcon(MOSSY_TILE);
+        } else if (digit == 2){
             this.setIcon(UNKNOWN_TILE);
-            return 1;
+        } else {
+            System.exit(1);
         }
     }
 }

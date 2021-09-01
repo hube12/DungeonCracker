@@ -24,10 +24,12 @@ public class VersionPanel extends JPanel {
         JLabel versionLabel = new JLabel("Version");
         JComboBox<String> versionDropdown = new JComboBox<>(MCVersion.getVersionListAsArray());
         JLabel dungeonCountLabel = new JLabel("Dungeon Count");
-        //JLabel dungeonCountLabel1 = new JLabel("1");
         JRadioButton dungeonCountRadio1 = new JRadioButton("1",true);
-        //JLabel dungeonCountLabel2 = new JLabel("2");
+        dungeonCountRadio1.setFocusPainted(false);
+        dungeonCountRadio1.setFocusable(false);
         JRadioButton dungeonCountRadio2 = new JRadioButton("2",false);
+        dungeonCountRadio2.setFocusPainted(false);
+        dungeonCountRadio2.setFocusable(false);
 
         this.add(versionLabel, setC(0,0,1,new Insets(5,-30,0,0)));
         this.add(versionDropdown, setC(1,0, 2,new Insets(5,0,0,0)));

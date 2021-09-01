@@ -1,5 +1,7 @@
 package kinomora.gui.dungeondatatab;
 
+import kinomora.gui.util.FloorButton;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -19,8 +21,8 @@ public class SpawnerDataPanelBig extends JPanel {
     JComboBox<String> biomeDropdown = new JComboBox<>(new String[]{"OTHER", "DESERT", "SWAMP", "SWAMP_HILLS"});
     JLabel dungeonSequenceLabel = new JLabel("Dungeon Sequence");
     JLabel dungeonSeedLabel = new JLabel("Dungeon Seed");
-    JTextField dungeonSequenceField = new JTextField("1011100010101100", 18);
-    JTextField dungeonSeedField = new JTextField("245244786781278", 18);
+    JTextField dungeonSequenceField = new JTextField("", 18);
+    JTextField dungeonSeedField = new JTextField("", 18);
     JButton crackSeedButton = new JButton("Crack Seed");
     JButton swapDungeonButton = new JButton("Dungeon 2");
 
@@ -30,7 +32,7 @@ public class SpawnerDataPanelBig extends JPanel {
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        ;
+
 
         this.populatePanel(c);
     }
@@ -40,31 +42,39 @@ public class SpawnerDataPanelBig extends JPanel {
         biomeDropdown.setEnabled(true);
         dungeonSequenceField.setEditable(false);
         dungeonSeedField.setEditable(false);
-        swapDungeonButton.setVisible(false);
+        //swapDungeonButton.setVisible(false);
+
+        //disable the dumb highlight and text selection
+        crackSeedButton.setFocusPainted(false);
+        crackSeedButton.setFocusable(false);
+        swapDungeonButton.setFocusPainted(false);
+        swapDungeonButton.setFocusable(false);
 
 
-        this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, new Insets(-5, 5, 0, 0)));
-        this.add(spawnerXField, setC(1, 0, 1, 1, 1, new Insets(-5, -90, 0, 0)));
+        this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, new Insets(-10, 5, 0, 0)));
+        this.add(spawnerXField, setC(1, 0, 1, 1, 1, 0, 0, new Insets(-10, 10, 0, 0)));
 
-        this.add(spawnerYLabel, setC(0, 1, 1, 1, 0, new Insets(0, 5, 0, 0)));
-        this.add(spawnerYField, setC(1, 1, 1, 1, 0, new Insets(0, -90, 0, 0)));
+        this.add(spawnerYLabel, setC(0, 1, 1, 1, 0, 0, 0, new Insets(5, 5, 0, 0)));
+        this.add(spawnerYField, setC(1, 1, 1, 1, 0, 0, 0, new Insets(5, 10, 0, 0)));
 
-        this.add(spawnerZLabel, setC(0, 2, 1, 1, 0, new Insets(0, 5, 0, 0)));
-        this.add(spawnerZField, setC(1, 2, 1, 1, 0, new Insets(0, -90, 0, 0)));
+        this.add(spawnerZLabel, setC(0, 2, 1, 1, 0, 0, 0, new Insets(5, 5, 0, 0)));
+        this.add(spawnerZField, setC(1, 2, 1, 1, 0, 0, 0, new Insets(5, 10, 0, 0)));
 
-        this.add(biomeLabel, setC(0, 3, 1, 1, 0, new Insets(0, -18, 0, 0)));
-        this.add(biomeDropdown, setC(1, 3, 1, 1, 0, new Insets(5, -46, 0, 0)));
+        this.add(biomeLabel, setC(0, 3, 1, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
+        this.add(biomeDropdown, setC(1, 3, 1, 1, 0, 0, 0, new Insets(10, 10, 0, 0)));
 
-        this.add(dungeonSequenceLabel, setC(0, 4, 2, 1, 0, new Insets(5, -92, 0, 0)));
-        this.add(dungeonSequenceField, setC(0, 5, 2, 1, 2, new Insets(5, 2, 0, 0)));
+        this.add(dungeonSequenceLabel, setC(0, 4, 2, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
+        this.add(dungeonSequenceField, setC(0, 5, 2, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
 
-        this.add(dungeonSeedLabel, setC(0, 6, 2, 1, 0, new Insets(5, -120, 0, 0)));
-        this.add(dungeonSeedField, setC(0, 7, 2, 1, 2, new Insets(5, 2, 0, 0)));
+        this.add(dungeonSeedLabel, setC(0, 6, 2, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
+        this.add(dungeonSeedField, setC(0, 7, 2, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
 
-        this.add(crackSeedButton, setC(0, 8, 2, 1, 0, new Insets(5, 0, 0, 0)));
+        this.add(crackSeedButton, setC(0, 8, 2, 1, 0, 0, 0, new Insets(21, 59, 0, 0)));
+        //this.add(crackSeedButton, setC(0, 8, 1, 1, 0, 0 ,0, new Insets(21, 1, 0, 0)));
+        //this.add(swapDungeonButton, setC(1, 8, 1, 1, 0, 0 ,0, new Insets(21, 20, 0, 0)));
     }
 
-    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int weightx, Insets insets) {
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int weightx, int ipadx, int ipady, Insets insets) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = gridx;
         c.gridy = gridy;
@@ -72,24 +82,44 @@ public class SpawnerDataPanelBig extends JPanel {
         c.gridheight = gridheight;
         c.weightx = weightx;
         c.insets = insets;
+        c.ipadx = ipadx;
+        c.ipady = ipady;
         c.anchor = GridBagConstraints.LINE_START;
         return c;
     }
 
-    public void swapButtonMode(){
-        if(isSingleButtonMode) {
+    public void swapButtonMode() {
+        if (isSingleButtonMode) {
             this.remove(crackSeedButton);
             this.remove(swapDungeonButton);
 
-            this.add(crackSeedButton, setC(0, 8, 1, 1, 0, new Insets(5, 0, 0, 0)));
+            this.add(crackSeedButton, setC(0, 8, 1, 1, 0, 0 ,0, new Insets(21, 59, 0, 0)));
 
         } else {
             this.remove(crackSeedButton);
             this.remove(swapDungeonButton);
 
-            this.add(crackSeedButton, setC(0, 8, 1, 1, 0, new Insets(5, 0, 0, 0)));
-            this.add(swapDungeonButton, setC(1, 8, 1, 1, 0, new Insets(5, 0, 0, 0)));
+            this.add(crackSeedButton, setC(0, 8, 1, 1, 0, 0 ,0, new Insets(21, 5, 0, 0)));
+            this.add(swapDungeonButton, setC(1, 8, 1, 1, 0, 0 ,0, new Insets(21, 10, 0, 0)));
         }
         isSingleButtonMode = !isSingleButtonMode;
     }
+
+    public void setDungeonSequence(String sequence) {
+        dungeonSequenceField.setText(sequence);
+        dungeonSequenceField.getCaret().setDot(0);
+    }
+
+    /*
+    this.currentFloorSize = size;
+        int ID = 0;
+        FloorButton button;
+        if (size == 81) {
+            for(boolean visibility : ninebynine){
+                button = buttonIDLookup.get(ID);
+                button.setVisible(visibility);
+                ID++;
+            }
+        }
+     */
 }
