@@ -23,8 +23,10 @@ public class SpawnerDataPanelBig extends JPanel {
     JLabel dungeonSeedLabel = new JLabel("Dungeon Seed");
     JTextField dungeonSequenceField = new JTextField("", 18);
     JTextField dungeonSeedField = new JTextField("", 18);
+
+    JPanel buttonSubPanel = new JPanel(new GridBagLayout());
     JButton crackSeedButton = new JButton("Crack Seed");
-    JButton swapDungeonButton = new JButton("Dungeon 2");
+    JButton swapDungeonButton = new JButton("Swap Floor");
 
     public SpawnerDataPanelBig(DungeonDataTab parent) {
         this.parent = parent;
@@ -51,8 +53,8 @@ public class SpawnerDataPanelBig extends JPanel {
         swapDungeonButton.setFocusable(false);
 
 
-        this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, new Insets(-10, 5, 0, 0)));
-        this.add(spawnerXField, setC(1, 0, 1, 1, 1, 0, 0, new Insets(-10, 10, 0, 0)));
+        this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, new Insets(-5, 5, 0, 0)));
+        this.add(spawnerXField, setC(1, 0, 1, 1, 1, 0, 0, new Insets(-5, 10, 0, 0)));
 
         this.add(spawnerYLabel, setC(0, 1, 1, 1, 0, 0, 0, new Insets(5, 5, 0, 0)));
         this.add(spawnerYField, setC(1, 1, 1, 1, 0, 0, 0, new Insets(5, 10, 0, 0)));
@@ -69,9 +71,10 @@ public class SpawnerDataPanelBig extends JPanel {
         this.add(dungeonSeedLabel, setC(0, 6, 2, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
         this.add(dungeonSeedField, setC(0, 7, 2, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
 
-        this.add(crackSeedButton, setC(0, 8, 2, 1, 0, 0, 0, new Insets(21, 59, 0, 0)));
-        //this.add(crackSeedButton, setC(0, 8, 1, 1, 0, 0 ,0, new Insets(21, 1, 0, 0)));
-        //this.add(swapDungeonButton, setC(1, 8, 1, 1, 0, 0 ,0, new Insets(21, 20, 0, 0)));
+        this.add(buttonSubPanel, setC(0, 8, 2, 2, 0, 0, 0, new Insets(15, 0, 0, 0)));
+        //buttonSubPanel.add(crackSeedButton, setC(0, 8, 2, 1, 0, 0, 0, new Insets(5, 59, 0, 0)));
+        //isSingleButtonMode = !isSingleButtonMode;
+        swapButtonMode();
     }
 
     private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int weightx, int ipadx, int ipady, Insets insets) {
@@ -93,14 +96,14 @@ public class SpawnerDataPanelBig extends JPanel {
             this.remove(crackSeedButton);
             this.remove(swapDungeonButton);
 
-            this.add(crackSeedButton, setC(0, 8, 1, 1, 0, 0 ,0, new Insets(21, 59, 0, 0)));
+            buttonSubPanel.add(crackSeedButton, setC(0, 8, 2, 1, 0, 0, 0, new Insets(5, 59, 0, 0)));
 
         } else {
             this.remove(crackSeedButton);
             this.remove(swapDungeonButton);
 
-            this.add(crackSeedButton, setC(0, 8, 1, 1, 0, 0 ,0, new Insets(21, 5, 0, 0)));
-            this.add(swapDungeonButton, setC(1, 8, 1, 1, 0, 0 ,0, new Insets(21, 10, 0, 0)));
+            buttonSubPanel.add(crackSeedButton, setC(0, 0, 2, 1, 2, 0 ,0, new Insets(5, 7, 0, 0)));
+            buttonSubPanel.add(swapDungeonButton, setC(1, 0, 2, 1, 2, 3 ,0, new Insets(5, 109, 0, 0)));
         }
         isSingleButtonMode = !isSingleButtonMode;
     }
