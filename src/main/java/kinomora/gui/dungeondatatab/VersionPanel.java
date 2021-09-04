@@ -1,7 +1,6 @@
 package kinomora.gui.dungeondatatab;
 
 import kaptainwutax.mcutils.version.MCVersion;
-import kinomora.gui.util.VersionComparison;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -44,9 +43,11 @@ public class VersionPanel extends JPanel implements ActionListener {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 previousVersionSelected = currentVersionSelected;
                 currentVersionSelected = Objects.requireNonNull(versionDropdown.getSelectedItem()).toString();
+                MCVersion previous=MCVersion.fromString(previousVersionSelected);
+                MCVersion current=MCVersion.fromString(currentVersionSelected);
 
-                if(VersionComparison.isVersionOlderOrEqualTo(currentVersionSelected, previousVersionSelected)){ //the current version is older than the previous one
-                    if(VersionComparison.isVersionOlderThan(currentVersionSelected, "1.13")){ //the current version is older than 1.13
+                if(current.isOlderOrEqualTo(previous)){ //the current version is older than the previous one
+                    if(current.isOlderThan(MCVersion.v1_13)){ //the current version is older than 1.13
                         //we need to  require 2 dungeons
                         dungeonCountRadio2.setSelected(true);
                         dungeonCountRadio1.setEnabled(false);
@@ -54,7 +55,7 @@ public class VersionPanel extends JPanel implements ActionListener {
                     }
                     //else-skipped: Since the current version is older than the previous one, but still newer than 1.12 we don't need to do anything
                 } else {//the current version is newer than the previous one
-                    if(VersionComparison.isVersionOlderOrEqualTo(previousVersionSelected, "1.13")){//the current version is newer than 1.12
+                    if(previous.isNewerOrEqualTo(MCVersion.v1_13)){//the current version is newer than 1.12
                         dungeonCountRadio1.setSelected(true);
                         dungeonCountRadio1.setEnabled(true);
                         parent.versionChangedAbove112(currentVersionSelected);
