@@ -1,7 +1,7 @@
 package kinomora.dungeon;
 
+import com.seedfinding.latticg.RandomReverser;
 import kaptainwutax.mcutils.version.MCVersion;
-import randomreverser.RandomReverser;
 
 
 import java.util.Set;
@@ -51,8 +51,8 @@ public class DungeonDataProcessor {
             device.addNextIntCall(256,posY,posY);
         }
         // TODO check those are right order
-        device.addNextIntCall(2,floorSizeX);
-        device.addNextIntCall(2,floorSizeZ);
+        device.addNextIntCall(2,floorSizeX,floorSizeX);
+        device.addNextIntCall(2,floorSizeZ,floorSizeZ);
 
         for (Integer integer : pattern) {
             if (integer == 0) {
@@ -63,7 +63,6 @@ public class DungeonDataProcessor {
                 device.consumeNextIntCalls(1,4);
             }
         }
-
         return device.findAllValidSeeds().parallel().boxed().collect(Collectors.toSet());
     }
 }

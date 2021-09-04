@@ -7,6 +7,10 @@ defaultTasks 'clean', 'run'
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    maven {
+        url "https://maven.latticg.com/"
+    }
+
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -17,6 +21,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.hube12:SEED:b80304e54c'
+    implementation('com.seedfinding:latticg:1.05')
 }
 
 application {
