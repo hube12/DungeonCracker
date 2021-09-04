@@ -1,14 +1,15 @@
 package kinomora.gui.dungeondatatab;
 
+import kaptainwutax.mcutils.version.MCVersion;
 import kinomora.gui.util.VersionComparison;
-import other.util.MCVersion;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class VersionPanel extends JPanel implements ActionListener {
     public final DungeonDataTab parent;
@@ -32,32 +33,35 @@ public class VersionPanel extends JPanel implements ActionListener {
     private void populatePanel(GridBagConstraints c) {
         //Left Panel (dungeon data) objects
         JLabel versionLabel = new JLabel("Version");
-        JComboBox<String> versionDropdown = new JComboBox<>(MCVersion.getVersionListAsArray());
-        versionDropdown.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    previousVersionSelected = currentVersionSelected;
-                    currentVersionSelected = versionDropdown.getSelectedItem().toString();
+        // Use DropDown from javautil or Minemap please
+        MCVersion[] versions=MCVersion.values();
+        String[] versionName=new String[versions.length];
+        for (int i = 0; i < versions.length; i++) {
+            versionName[i]=versions[i].toString();
+        }
+        JComboBox<String> versionDropdown = new JComboBox<>(versionName);
+        versionDropdown.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                previousVersionSelected = currentVersionSelected;
+                currentVersionSelected = Objects.requireNonNull(versionDropdown.getSelectedItem()).toString();
 
-                    if(VersionComparison.isVersionOlderOrEqualTo(currentVersionSelected, previousVersionSelected)){ //the current version is older than the previous one
-                        if(VersionComparison.isVersionOlderThan(currentVersionSelected, "1.13")){ //the current version is older than 1.13
-                            //we need to  require 2 dungeons
-                            dungeonCountRadio2.setSelected(true);
-                            dungeonCountRadio1.setEnabled(false);
-                            parent.versionChangedBelow113(currentVersionSelected);
-                        }
-                        //else-skipped: Since the current version is older than the previous one, but still newer than 1.12 we don't need to do anything
-                    } else {//the current version is newer than the previous one
-                        if(VersionComparison.isVersionOlderOrEqualTo(previousVersionSelected, "1.13")){//the current version is newer than 1.12
-                            dungeonCountRadio1.setSelected(true);
-                            dungeonCountRadio1.setEnabled(true);
-                            parent.versionChangedAbove112(currentVersionSelected);
-                        }
-                        //else-skipped: Since the current version is not newer than 1.13 but still newer than the old version, then we don't need to do anything
-                        //TODO
-                        //You might need to work on this, it seems that it might still not work 100% as intended, but at least all the data saves so that's the most important part
+                if(VersionComparison.isVersionOlderOrEqualTo(currentVersionSelected, previousVersionSelected)){ //the current version is older than the previous one
+                    if(VersionComparison.isVersionOlderThan(currentVersionSelected, "1.13")){ //the current version is older than 1.13
+                        //we need to  require 2 dungeons
+                        dungeonCountRadio2.setSelected(true);
+                        dungeonCountRadio1.setEnabled(false);
+                        parent.versionChangedBelow113(currentVersionSelected);
                     }
+                    //else-skipped: Since the current version is older than the previous one, but still newer than 1.12 we don't need to do anything
+                } else {//the current version is newer than the previous one
+                    if(VersionComparison.isVersionOlderOrEqualTo(previousVersionSelected, "1.13")){//the current version is newer than 1.12
+                        dungeonCountRadio1.setSelected(true);
+                        dungeonCountRadio1.setEnabled(true);
+                        parent.versionChangedAbove112(currentVersionSelected);
+                    }
+                    //else-skipped: Since the current version is not newer than 1.13 but still newer than the old version, then we don't need to do anything
+                    //TODO
+                    //You might need to work on this, it seems that it might still not work 100% as intended, but at least all the data saves so that's the most important part
                 }
             }
         });

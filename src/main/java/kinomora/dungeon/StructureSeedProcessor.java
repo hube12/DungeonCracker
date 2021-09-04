@@ -1,6 +1,7 @@
 package kinomora.dungeon;
 
-import other.util.RandomSeed;
+import kaptainwutax.mcutils.rand.seed.StructureSeed;
+import kaptainwutax.mcutils.rand.seed.WorldSeed;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,13 +16,7 @@ public class StructureSeedProcessor {
 
     public Set<Long> getWorldSeedsFromStructureSeeds() {
         for (long structureSeed : structureSeeds) {
-            for (long upperBits = 0; upperBits < (1L << 16); upperBits++) {
-                long worldSeed = (upperBits << 48) | structureSeed;
-                if (!RandomSeed.isRandomSeed(worldSeed)) {
-                    continue;
-                }
-                worldSeeds.add(worldSeed);
-            }
+            worldSeeds.addAll(StructureSeed.toRandomWorldSeeds(structureSeed));
         }
         return worldSeeds;
     }
