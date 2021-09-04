@@ -250,7 +250,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         saveCurrentDungeonCoords(spawnerDataPanelBig.spawnerXField.getText(), spawnerDataPanelBig.spawnerYField.getText(), spawnerDataPanelBig.spawnerZField.getText());
     }
 
-    public void versionChangedAbove112(String currentVersionSelected) {
+    public void versionChangedAbove112(MCVersion version) {
         getCurrentDungeonCoords();
         currentDungeonFloor = 1;
         doubleSpawnerMode = false;
@@ -259,7 +259,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
     }
 
-    public void versionChangedBelow113(String currentVersionSelected) {
+    public void versionChangedBelow113(MCVersion version) {
         getCurrentDungeonCoords();
         doubleSpawnerMode = true;
         spawnerDataPanelBig.showSwapDungeonButton();
@@ -271,19 +271,19 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
         if (doubleSpawnerMode) {
             //2 spawners
-            dungeon1Seeds = Main.getDungeonSeedsForGUI(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
-            dungeon2Seeds = Main.getDungeonSeedsForGUI(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence,dungeon2fsx,dungeon2fsz);
+            dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
+            dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence,dungeon2fsx,dungeon2fsz);
             if(currentDungeonFloor == 1){
                 spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
             } else {
                 spawnerDataPanelBig.dungeonSeedField.setText(dungeon2Seeds.toString());
             }
-            worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon1Biome), dungeon1Seeds, dungeon2x, dungeon2y, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon2Seeds);
+            worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon1Biome), dungeon1Seeds, dungeon2x, dungeon2y, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon2Seeds);
         } else {
             //1 spawner
-            dungeon1Seeds = Main.getDungeonSeedsForGUI(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
+            dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
             spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
-            worldSeeds = Main.getWorldSeedsForGUISingleDungeon(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon1Seeds);
+            worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon1Seeds);
         }
         populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
         JOptionPane.showMessageDialog(this, worldSeedsTextArea, "World Seeds", JOptionPane.PLAIN_MESSAGE);

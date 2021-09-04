@@ -1,6 +1,8 @@
 package kinomora.gui.dungeondatatab;
 
 import kaptainwutax.mcutils.version.MCVersion;
+import kinomora.gui.util.Dropdown;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,8 +18,8 @@ public class VersionPanel extends JPanel implements ActionListener {
     JRadioButton dungeonCountRadio1;
     JRadioButton dungeonCountRadio2;
 
-    public String currentVersionSelected = "1.17";
-    public String previousVersionSelected = "1.17";
+    public MCVersion currentVersionSelected = MCVersion.latest();
+    public MCVersion previousVersionSelected =  MCVersion.latest();
 
     public VersionPanel(DungeonDataTab parent) {
         this.parent = parent;
@@ -32,22 +34,14 @@ public class VersionPanel extends JPanel implements ActionListener {
     private void populatePanel(GridBagConstraints c) {
         //Left Panel (dungeon data) objects
         JLabel versionLabel = new JLabel("Version");
-        // Use DropDown from javautil or Minemap please
-        MCVersion[] versions=MCVersion.values();
-        String[] versionName=new String[versions.length];
-        for (int i = 0; i < versions.length; i++) {
-            versionName[i]=versions[i].toString();
-        }
-        JComboBox<String> versionDropdown = new JComboBox<>(versionName);
+        Dropdown<MCVersion> versionDropdown = new Dropdown<>(MCVersion.values());
         versionDropdown.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 previousVersionSelected = currentVersionSelected;
-                currentVersionSelected = Objects.requireNonNull(versionDropdown.getSelectedItem()).toString();
-                MCVersion previous=MCVersion.fromString(previousVersionSelected);
-                MCVersion current=MCVersion.fromString(currentVersionSelected);
+                currentVersionSelected = versionDropdown.getSelected();
 
-                if(current.isOlderOrEqualTo(previous)){ //the current version is older than the previous one
-                    if(current.isOlderThan(MCVersion.v1_13)){ //the current version is older than 1.13
+                if(currentVersionSelected.isOlderOrEqualTo(previousVersionSelected)){ //the current version is older than the previous one
+                    if(currentVersionSelected.isOlderThan(MCVersion.v1_13)){ //the current version is older than 1.13
                         //we need to  require 2 dungeons
                         dungeonCountRadio2.setSelected(true);
                         dungeonCountRadio1.setEnabled(false);
@@ -55,7 +49,7 @@ public class VersionPanel extends JPanel implements ActionListener {
                     }
                     //else-skipped: Since the current version is older than the previous one, but still newer than 1.12 we don't need to do anything
                 } else {//the current version is newer than the previous one
-                    if(previous.isNewerOrEqualTo(MCVersion.v1_13)){//the current version is newer than 1.12
+                    if(previousVersionSelected.isNewerOrEqualTo(MCVersion.v1_13)){//the current version is newer than 1.12
                         dungeonCountRadio1.setSelected(true);
                         dungeonCountRadio1.setEnabled(true);
                         parent.versionChangedAbove112(currentVersionSelected);
