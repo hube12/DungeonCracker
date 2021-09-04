@@ -19,6 +19,7 @@ public class Main {
         //Meta data
         ArrayList<String> argsList = new ArrayList<>();
         DungeonCrackerGUI GUI = new DungeonCrackerGUI();
+        boolean isGUImode = true;
 
         //Program data
         Scanner userInput = new Scanner(System.in);
@@ -64,6 +65,7 @@ public class Main {
             GUI.setSize(610, 455);
             GUI.setResizable(false);
             GUI.setVisible(true);
+            GUI.setLocationRelativeTo(null);
 
             JMenuBar menuBar = new JMenuBar();
 
@@ -254,7 +256,7 @@ public class Main {
         return new StructureSeedProcessor(new DecoratorSeedProcessor(v, x, z, b, dungeonSeeds).decoratorSeedsToStructureSeeds()).getWorldSeedsFromStructureSeeds();
     }
 
-    public static Set<Long> getWorldSeedsForGUIDoubleDungeon(MCVersion v, int x1, int y1, int z1, Biome b1, Set<Long> dungeon1Seeds, int x2, int y2, int z2, Biome b2, Set<Long> dungeon2Seeds){
+    public static Set<Long> getWorldSeedsForGUIDoubleDungeon(MCVersion v, int x1, int y1, int z1, Biome b1, Set<Long> dungeon1Seeds, int x2, int y2, int z2, Biome b2, Set<Long> dungeon2Seeds) {
         Set<Long> StructureSeeds1 = new DecoratorSeedProcessor(v, x1, z1, b1, dungeon1Seeds).decoratorSeedsToStructureSeeds();
         Set<Long> StructureSeeds2 = new DecoratorSeedProcessor(v, x2, z2, b2, dungeon2Seeds).decoratorSeedsToStructureSeeds();
 
