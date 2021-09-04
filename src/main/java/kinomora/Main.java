@@ -15,7 +15,7 @@ import static other.util.MCVersion.*;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         //Meta data
         ArrayList<String> argsList = new ArrayList<>();
         DungeonCrackerGUI GUI = new DungeonCrackerGUI();
@@ -42,7 +42,7 @@ public class Main {
         int dungeon2z = 0;
         String dungeon2Sequence = "";
         Biome dungeon2Biome = Biomes.THE_VOID;
-        ;
+
 
         //Check for command line args
         argsList.addAll(Arrays.asList(args));
@@ -55,13 +55,13 @@ public class Main {
         System.out.println("===================================================================================");
 
         //Testing data flag
-        if(argsList.get(0).equals("gui")){
+        if (argsList.get(0).equals("gui")) {
             //GUI.mainGUI();
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
             //Set up the GUI window
             GUI.pack();
-            GUI.setSize(610,455);
+            GUI.setSize(610, 455);
             GUI.setResizable(false);
             GUI.setVisible(true);
 
@@ -246,6 +246,22 @@ public class Main {
         }
     }
 
+    public static Set<Long> getDungeonSeedsForGUI(MCVersion v, int x, int y, int z, String seq) {
+        return new DungeonDataProcessor(v, x, y, z, seq).dungeonDataToDecoratorSeed();
+    }
+
+    public static Set<Long> getWorldSeedsForGUISingleDungeon(MCVersion v, int x, int y, int z, Biome b, Set<Long> dungeonSeeds) {
+        return new StructureSeedProcessor(new DecoratorSeedProcessor(v, x, z, b, dungeonSeeds).decoratorSeedsToStructureSeeds()).getWorldSeedsFromStructureSeeds();
+    }
+
+    public static Set<Long> getWorldSeedsForGUIDoubleDungeon(MCVersion v, int x1, int y1, int z1, Biome b1, Set<Long> dungeon1Seeds, int x2, int y2, int z2, Biome b2, Set<Long> dungeon2Seeds){
+        Set<Long> StructureSeeds1 = new DecoratorSeedProcessor(v, x1, z1, b1, dungeon1Seeds).decoratorSeedsToStructureSeeds();
+        Set<Long> StructureSeeds2 = new DecoratorSeedProcessor(v, x2, z2, b2, dungeon2Seeds).decoratorSeedsToStructureSeeds();
+
+        StructureSeeds1.retainAll(StructureSeeds2);
+        return new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
+    }
+
     private static void crackDungeonDataDouble(MCVersion v, int x1, int y1, int z1, String seq1, Biome b1, int x2, int y2, int z2, String seq2, Biome b2) {
         Set<Long> DungeonSeeds1 = new DungeonDataProcessor(v, x1, y1, z1, seq1).dungeonDataToDecoratorSeed();
         Set<Long> DungeonSeeds2 = new DungeonDataProcessor(v, x2, y2, z2, seq2).dungeonDataToDecoratorSeed();
@@ -259,6 +275,18 @@ public class Main {
         } else {
             System.out.println("If the data you entered was valid, your world seed is: \n" + new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds());
         }
+    }
+
+    public static Set<Long> crackDungeonDataDoubleReturn(MCVersion v, int x1, int y1, int z1, String seq1, Biome b1, int x2, int y2, int z2, String seq2, Biome b2) {
+        Set<Long> DungeonSeeds1 = new DungeonDataProcessor(v, x1, y1, z1, seq1).dungeonDataToDecoratorSeed();
+        Set<Long> DungeonSeeds2 = new DungeonDataProcessor(v, x2, y2, z2, seq2).dungeonDataToDecoratorSeed();
+        Set<Long> StructureSeeds1 = new DecoratorSeedProcessor(v, x1, z1, b1, DungeonSeeds1).decoratorSeedsToStructureSeeds();
+        Set<Long> StructureSeeds2 = new DecoratorSeedProcessor(v, x2, z2, b2, DungeonSeeds2).decoratorSeedsToStructureSeeds();
+
+        StructureSeeds1.retainAll(StructureSeeds2);
+        System.out.println("Your dungeon seeds: 1" + DungeonSeeds1 + ", 2" + DungeonSeeds2 + "\n");
+
+        return new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
     }
 
     private static void crackDungeonSeedSingle(MCVersion v, int x, int z, Biome b, long dSeed) {
@@ -568,7 +596,7 @@ public class Main {
         }
     }
 
-    public static String getAppVersion(){
+    public static String getAppVersion() {
         return "v2.0.0_pre-release";
     }
     /* Cobble = 0; Moss = 1; Unknown = 2

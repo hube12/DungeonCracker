@@ -1,7 +1,6 @@
 package kinomora.gui.util;
 
 import kinomora.gui.dungeondatatab.DungeonFloorPanel;
-import kinomora.gui.dungeondatatab.SpawnerDataPanelBig;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,7 +93,7 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
                 this.setIcon(UNKNOWN_TILE);
             }
         }
-        parent.buttonPressed(this);
+        parent.floorButtonPressed();
     }
 
     public int getButtonSequenceDigit() {
@@ -117,6 +116,7 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
         } else if (digit == 2){
             this.setIcon(UNKNOWN_TILE);
         } else {
+            System.out.println("Critical error in setting a button state..");
             System.exit(1);
         }
     }

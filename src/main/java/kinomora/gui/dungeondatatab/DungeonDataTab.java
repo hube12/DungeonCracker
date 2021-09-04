@@ -1,20 +1,60 @@
 package kinomora.gui.dungeondatatab;
 
+import kinomora.Main;
+import kinomora.gui.util.BiomeNameToBiome;
 import other.util.MCVersion;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.lang.Integer.parseInt;
+import static other.util.MCVersion.vUnknown;
 
 public class DungeonDataTab extends JPanel implements ActionListener, MouseListener {
     public final DungeonFloorPanel dungeonFloorPanel;
     public final VersionPanel versionPanel;
     public final SpawnerDataPanelBig spawnerDataPanelBig;
     private boolean hasMouseExited;
+    public int currentDungeonFloor = 1;
+
+    private static final ImageIcon CLOCKWISE_ICON = new ImageIcon(DungeonDataTab.class.getResource("/CW.png"));
+    private static final ImageIcon COUNTERCLOCKWISE_ICON = new ImageIcon(DungeonDataTab.class.getResource("/CCW.png"));
+
+    JButton rotateCounterClockwise = new JButton(COUNTERCLOCKWISE_ICON);
+    JButton size7x7 = new JButton("7x7");
+    JButton size7x9 = new JButton("7x9");
+    JButton size9x9 = new JButton("9x9");
+    JButton rotateClockwise = new JButton(CLOCKWISE_ICON);
+
+    //---Application data---
+    //Program data
+    boolean validInput;
+    boolean dungeonSeedMode = false;
+    boolean doubleSpawnerMode = false;
+    MCVersion version = vUnknown;
+
+    //Dungeon data
+    Set<Long> dungeon1Seeds = new HashSet<>();
+    int dungeon1x = 0;
+    int dungeon1y = 0;
+    int dungeon1z = 0;
+    int dungeon1FloorSize = 81;
+    String dungeon1Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+    public static int[][] buttonStateArrayDungeon1 = new int[9][9];
+
+    Set<Long> dungeon2Seeds = new HashSet<>();
+    int dungeon2x = 0;
+    int dungeon2y = 0;
+    int dungeon2z = 0;
+    int dungeon2FloorSize = 81;
+    String dungeon2Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+    public static int[][] buttonStateArrayDungeon2 = new int[9][9];
+
+    Set<Long> worldSeeds;
 
     /**
      * Creates and populates the Items(Overview) tab which contains the Inventory, Item Descriptions, Recommended Champions, and Inventory Item Crafting Calculator
@@ -62,6 +102,11 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         //rightPanel.add(spawnerDataPanelBig, setC(0, 1, 1, 3, 10, 42, GridBagConstraints.LINE_START, new Insets(0, 0, 30, 0)));
         rightPanel.add(spawnerDataPanelBig, setC(0, 1, 1, 3, 10, 38, GridBagConstraints.LINE_START, new Insets(0, 0, 30, 0)));
 
+        //Set all the buttonStateArrays to 2 by default
+        for (int i = 0; i < 9; i++) {
+            Arrays.fill(buttonStateArrayDungeon1[i], 2);
+            Arrays.fill(buttonStateArrayDungeon2[i], 2);
+        }
     }
 
     private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int ipadx, int ipady, int anchor, Insets insets) {
@@ -77,37 +122,28 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         return c;
     }
 
-    public void buttonPressed(String floorSequence) {
-        spawnerDataPanelBig.setDungeonSequence(floorSequence);
-    }
-
     private void dungeonFloorSubButtonMess(JPanel dungeonSubButtonPanel) {
         //Create the buttons
-        JButton rotateCounterClockwise = new JButton("CC");
         rotateCounterClockwise.setFocusPainted(false);
         rotateCounterClockwise.setFocusable(false);
         rotateCounterClockwise.addMouseListener(this);
         rotateCounterClockwise.addActionListener(this);
 
-        JButton size7x7 = new JButton("7x7");
         size7x7.setFocusPainted(false);
         size7x7.setFocusable(false);
         size7x7.addMouseListener(this);
         size7x7.addActionListener(this);
 
-        JButton size7x9 = new JButton("7x9");
         size7x9.setFocusPainted(false);
         size7x9.setFocusable(false);
         size7x9.addMouseListener(this);
         size7x9.addActionListener(this);
 
-        JButton size9x9 = new JButton("9x9");
         size9x9.setFocusPainted(false);
         size9x9.setFocusable(false);
         size9x9.addMouseListener(this);
         size9x9.addActionListener(this);
 
-        JButton rotateClockwise = new JButton("CW");
         rotateClockwise.setFocusPainted(false);
         rotateClockwise.setFocusable(false);
         rotateClockwise.addMouseListener(this);
@@ -121,6 +157,145 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         dungeonSubButtonPanel.add(rotateClockwise);
     }
 
+    private int safeIntParse(String text) {
+        int number;
+        try {
+            number = parseInt(text);
+        } catch (NumberFormatException e) {
+            number = 0;
+            validInput = false;
+            System.out.println("bad input text");
+        }
+        return number;
+    }
+
+    private void swapToFloor1() {
+        currentDungeonFloor = 1;
+        dungeonFloorPanel.setDungeonFloorPanelTitle("Dungeon Floor 1  |  Top is in-game North");
+        dungeonFloorPanel.setCurrentFloorSequence(buttonStateArrayDungeon1);
+        dungeonFloorPanel.setDungeonFloorSize(dungeon1FloorSize, 1);
+        spawnerDataPanelBig.setCurrentBiomeDropdownValue(1);
+        spawnerDataPanelBig.setDungeonXYZLabelText(1);
+        spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+        spawnerDataPanelBig.setTextFieldValue(dungeon1x, dungeon1y, dungeon1z);
+        spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
+    }
+
+    private void swapToFloor2() {
+        currentDungeonFloor = 2;
+        dungeonFloorPanel.setDungeonFloorPanelTitle("Dungeon Floor 2  |  Top is in-game North");
+        dungeonFloorPanel.setCurrentFloorSequence(buttonStateArrayDungeon2);
+        dungeonFloorPanel.setDungeonFloorSize(dungeon2FloorSize, 2);
+        spawnerDataPanelBig.setCurrentBiomeDropdownValue(2);
+        spawnerDataPanelBig.setDungeonXYZLabelText(2);
+        spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+        spawnerDataPanelBig.setTextFieldValue(dungeon2x, dungeon2y, dungeon2z);
+        spawnerDataPanelBig.dungeonSeedField.setText(dungeon2Seeds.toString());
+    }
+
+    //Methods with data sent from other classes
+    public void floorButtonPressed(String floorSequence, int[][] buttonStateArrayCurrent, int currentFloorSize) {
+        if (currentDungeonFloor == 2) {
+            buttonStateArrayDungeon2 = Arrays.stream(buttonStateArrayCurrent).map(int[]::clone).toArray(int[][]::new);
+            dungeon2Sequence = dungeonFloorPanel.getCurrentFloorSequence();
+            dungeon2FloorSize = currentFloorSize;
+        } else {
+            buttonStateArrayDungeon1 = Arrays.stream(buttonStateArrayCurrent).map(int[]::clone).toArray(int[][]::new);
+            dungeon1Sequence = dungeonFloorPanel.getCurrentFloorSequence();
+            dungeon1FloorSize = currentFloorSize;
+        }
+        System.out.println("Current floor size: " + currentFloorSize);
+        spawnerDataPanelBig.setDungeonSequenceTextField(floorSequence);
+    }
+
+    public void swapDungeon() {
+        if (doubleSpawnerMode) {
+            if (currentDungeonFloor == 1) {
+                swapToFloor2();
+            } else {
+                swapToFloor1();
+            }
+        }
+    }
+
+    public void radioButtonClicked(JRadioButton button) {
+        if (button == versionPanel.dungeonCountRadio1) {
+            currentDungeonFloor = 1;
+            doubleSpawnerMode = false;
+            spawnerDataPanelBig.hideSwapDungeonButton();
+            swapToFloor1();
+        } else {
+            doubleSpawnerMode = true;
+            spawnerDataPanelBig.showSwapDungeonButton();
+        }
+    }
+
+    public void saveCurrentDungeonCoords(String dungeonX, String dungeonY, String dungeonZ) {
+        if (currentDungeonFloor == 1) {
+            dungeon1x = safeIntParse(dungeonX);
+            dungeon1y = safeIntParse(dungeonY);
+            dungeon1z = safeIntParse(dungeonZ);
+        } else {
+            dungeon2x = safeIntParse(dungeonX);
+            dungeon2y = safeIntParse(dungeonY);
+            dungeon2z = safeIntParse(dungeonZ);
+        }
+        System.out.println("\nDungeon1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + "\nDungeon2: " + dungeon2x + " " + dungeon2y + " " + dungeon2z);
+    }
+
+    private void getCurrentDungeonCoords() {
+        saveCurrentDungeonCoords(spawnerDataPanelBig.spawnerXField.getText(), spawnerDataPanelBig.spawnerYField.getText(), spawnerDataPanelBig.spawnerZField.getText());
+    }
+
+    public void versionChangedAbove112(String currentVersionSelected) {
+        getCurrentDungeonCoords();
+        currentDungeonFloor = 1;
+        doubleSpawnerMode = false;
+        spawnerDataPanelBig.hideSwapDungeonButton();
+        swapToFloor1();
+
+    }
+
+    public void versionChangedBelow113(String currentVersionSelected) {
+        getCurrentDungeonCoords();
+        doubleSpawnerMode = true;
+        spawnerDataPanelBig.showSwapDungeonButton();
+    }
+
+    public void crackSeed() {
+        JTextArea worldSeedsTextArea = new JTextArea();
+        worldSeedsTextArea.setEditable(false);
+
+        if (doubleSpawnerMode) {
+            //2 spawners
+            dungeon1Seeds = Main.getDungeonSeedsForGUI(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence);
+            dungeon2Seeds = Main.getDungeonSeedsForGUI(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence);
+            if(currentDungeonFloor == 1){
+                spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
+            } else {
+                spawnerDataPanelBig.dungeonSeedField.setText(dungeon2Seeds.toString());
+            }
+            worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon1Biome), dungeon1Seeds, dungeon2x, dungeon2y, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon2Seeds);
+        } else {
+            //1 spawner
+            dungeon1Seeds = Main.getDungeonSeedsForGUI(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence);
+            spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
+            worldSeeds = Main.getWorldSeedsForGUISingleDungeon(MCVersion.fromString(versionPanel.currentVersionSelected), dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon1Seeds);
+        }
+        populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
+        JOptionPane.showMessageDialog(this, worldSeedsTextArea, "World Seeds", JOptionPane.PLAIN_MESSAGE);
+
+    }
+
+    private void populateWorldSeedsInTextArea(JTextArea textArea, Set<Long> worldSeeds){
+        StringBuilder textAreaSeeds = new StringBuilder();
+        for(Long seed : worldSeeds){
+            textAreaSeeds.append(seed).append("\n");
+        }
+        textArea.setText(String.valueOf(textAreaSeeds));
+    }
+
+    //Listeners
     //Action Listener events
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -151,33 +326,43 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         JButton button = (JButton) e.getSource();
         //If mouse is inside the button..
         if (!hasMouseExited) {
-            //Left click pressed,
+            //Left mouse button pressed, released, and not exited button..
             if (e.getButton() == MouseEvent.BUTTON1) {
-                switch (button.getText()) {
-                    case "7x7":
-                        dungeonFloorPanel.setCurrentFloorSize(49);
-                        spawnerDataPanelBig.setDungeonSequence(dungeonFloorPanel.getFloorSequence());
-                        break;
-                    case "7x9":
-                        dungeonFloorPanel.setCurrentFloorSize(63);
-                        spawnerDataPanelBig.setDungeonSequence(dungeonFloorPanel.getFloorSequence());
-                        break;
-                    case "9x9":
-                        dungeonFloorPanel.setCurrentFloorSize(81);
-                        spawnerDataPanelBig.setDungeonSequence(dungeonFloorPanel.getFloorSequence());
-                        break;
-                    case "CC":
-                        dungeonFloorPanel.rotateFloorCounterclockwise();
-                        spawnerDataPanelBig.setDungeonSequence(dungeonFloorPanel.getFloorSequence());
-                        break;
-                    case "CW":
-                        dungeonFloorPanel.rotateFloorClockwise();
-                        spawnerDataPanelBig.setDungeonSequence(dungeonFloorPanel.getFloorSequence());
-                        break;
-                    default:
-                        System.out.println("You pressed: " + button.getText());
-                        break;
+                if (size7x7.equals(button)) {
+                    dungeonFloorPanel.setCurrentFloorSize(49);
+                    spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+                    if (currentDungeonFloor == 2) {
+                        dungeon2FloorSize = 49;
+                    } else {
+                        dungeon1FloorSize = 49;
+                    }
+                } else if (size7x9.equals(button)) {
+                    dungeonFloorPanel.setCurrentFloorSize(63);
+                    spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+                    if (currentDungeonFloor == 2) {
+                        dungeon2FloorSize = 63;
+                    } else {
+                        dungeon1FloorSize = 63;
+                    }
+                } else if (size9x9.equals(button)) {
+                    dungeonFloorPanel.setCurrentFloorSize(81);
+                    spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+                    if (currentDungeonFloor == 2) {
+                        dungeon2FloorSize = 81;
+                    } else {
+                        dungeon1FloorSize = 81;
+                    }
+                } else if (rotateCounterClockwise.equals(button)) {
+                    dungeonFloorPanel.rotateFloorCounterclockwise();
+                    spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+                } else if (rotateClockwise.equals(button)) {
+                    dungeonFloorPanel.rotateFloorClockwise();
+                    spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+                } else {
+                    System.out.println("You pressed: " + button.getText());
                 }
+
+
             }
         }
     }

@@ -8,6 +8,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
+
 public class DungeonFloorPanel extends JPanel {
     public final DungeonDataTab parent;
     public static final Map<Integer, FloorButton> buttonIDLookup = new HashMap<>();
@@ -20,7 +22,9 @@ public class DungeonFloorPanel extends JPanel {
     public static boolean[] sevenbynine = new boolean[]{false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false};
     public static boolean[] ninebynine = new boolean[]{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
     public int currentFloorSize = 81;
-    public String floorSequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+    public int dungeon1FloorSize = 81;
+    public int dungeon2FloorSize = 81;
+    public String currentDungeonFloorSequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
 
     public DungeonFloorPanel(DungeonDataTab parent) {
         this.parent = parent;
@@ -28,7 +32,7 @@ public class DungeonFloorPanel extends JPanel {
         this.setLayout(new GridLayout(9, 9, 0, 0));
         this.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 1, true),
-                "Dungeon Floor -  Top is in-game North",
+                "Dungeon Floor 1  |  Top is in-game North",
                 TitledBorder.DEFAULT_JUSTIFICATION,
                 TitledBorder.DEFAULT_POSITION
         ));
@@ -71,24 +75,41 @@ public class DungeonFloorPanel extends JPanel {
                 button.setVisible(visibility);
                 ID++;
             }
+            currentFloorSize = 81;
         } else if (size == 63) {
             for (boolean visibility : sevenbynine) {
                 button = buttonIDLookup.get(ID);
                 button.setVisible(visibility);
                 ID++;
             }
+            currentFloorSize = 63;
         } else if (size == 49) {
             for (boolean visibility : sevenbyseven) {
                 button = buttonIDLookup.get(ID);
                 button.setVisible(visibility);
                 ID++;
             }
+            currentFloorSize = 49;
         } else {
+            System.out.println("Critical error in setting current floor size..");
             System.exit(1);
         }
     }
 
-    public String getFloorSequence() {
+    public int getCurrentFloorSize(){
+        return this.currentFloorSize;
+    }
+
+    public void setDungeonFloorSize(int floorSize, int dungeon){
+        if(dungeon == 1){
+            dungeon1FloorSize = floorSize;
+        } else {
+            dungeon2FloorSize = floorSize;
+        }
+        setCurrentFloorSize(floorSize);
+    }
+
+    public String getCurrentFloorSequence() {
         StringBuilder sequence = new StringBuilder();
         FloorButton button;
 
@@ -111,13 +132,32 @@ public class DungeonFloorPanel extends JPanel {
             }
         }
 
-        this.floorSequence = sequence.toString();
-        return floorSequence;
+        this.currentDungeonFloorSequence = sequence.toString();
+        return currentDungeonFloorSequence;
+    }
+
+    public int[][] getCurrentFloorStateArray() {
+        FloorButton button;
+
+        for (int ID = 0; ID < 81; ID++) {
+            button = buttonIDLookup.get(ID);
+            buttonStateArrayCurrent[ID / 9][ID % 9] = button.getButtonSequenceDigit();
+        }
+
+        return buttonStateArrayCurrent;
+    }
+
+    public void setCurrentFloorSequence(int[][] newSequence) {
+        FloorButton button;
+        for (int i = 0; i < 81; i++) {
+            button = buttonIDLookup.get(i);
+            button.setButtonStateByDigit(newSequence[i / 9][i % 9]);
+        }
     }
 
     public void rotateFloorClockwise() {
         //Import the current state into the array
-        importt();
+        importButtonsDigitsToArray();
 
         //Rotate the array
         for (int i = 0; i < 9; ++i) {
@@ -127,12 +167,12 @@ public class DungeonFloorPanel extends JPanel {
         }
 
         //Export the rotated array state to the button map
-        export();
+        exportArrayToButtons();
     }
 
     public void rotateFloorCounterclockwise() {
         //Import the current state into the array
-        importt();
+        importButtonsDigitsToArray();
 
         //Rotate the array
         for (int i = 0; i < 9; ++i) {
@@ -142,11 +182,11 @@ public class DungeonFloorPanel extends JPanel {
         }
 
         //Export the rotated array state to the button map
-        export();
+        exportArrayToButtons();
     }
 
     //Yes I am just as mad about this method name as you are
-    private void importt() {
+    private void importButtonsDigitsToArray() {
         FloorButton button;
 
         //Import the current state into the array
@@ -156,7 +196,7 @@ public class DungeonFloorPanel extends JPanel {
         }
     }
 
-    private void export() {
+    private void exportArrayToButtons() {
         FloorButton button;
 
         //Export the rotated array state to the button map
@@ -164,11 +204,11 @@ public class DungeonFloorPanel extends JPanel {
             button = buttonIDLookup.get(ID2);
             button.setButtonStateByDigit(buttonStateArrayRotated[ID2 / 9][ID2 % 9]);
         }
-
+        parent.floorButtonPressed(getCurrentFloorSequence(), getCurrentFloorStateArray(), getCurrentFloorSize());
     }
 
-    public void buttonPressed(FloorButton button) {
-        parent.buttonPressed(getFloorSequence());
+    public void floorButtonPressed() {
+        parent.floorButtonPressed(getCurrentFloorSequence(), getCurrentFloorStateArray(), getCurrentFloorSize());
         //System.out.println("Button ID pressed: " + button.getID() + "; State: " + button.getButtonSequenceDigit());
     }
 }
