@@ -26,7 +26,7 @@ public class DungeonCrackerGUI extends JFrame{
 
         //Add the tabs to the main window
         tabs.addTab("Dungeon Data Mode", dungeonDataTab);
-        tabs.addTab("Dungeon Seed Mode", dungeonSeedTab);
+        //tabs.addTab("Dungeon Seed Mode", dungeonSeedTab);
         tabs.addTab("About", aboutTab);
 
         this.setContentPane(tabs);

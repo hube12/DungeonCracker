@@ -8,10 +8,12 @@ repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
 }
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
 repositories {
 }
 
@@ -27,11 +29,10 @@ dependencies {
     implementation('com.github.KaptainWutax:FeatureUtils:61931addbb3a41e92078aef8e3430d22af96e8f6') { transitive = false }
 
     implementation('com.github.KaptainWutax:ChunkRandomReversal:6b76fb5cf2cd438de56e6a46cea2a83985831834') { transitive = false }
-
 }
 
 application {
-    mainClassName = "kinomora.main"
+    mainClassName = "kinomora.Main"
 }
 
 
@@ -39,27 +40,12 @@ compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
-test {
-    useJUnitPlatform {
-        includeEngines("junit-jupiter")
-        maxHeapSize = "1G"
-    }
-    testLogging {
-        events "passed", "skipped", "failed", "standardOut", "standardError"
-        outputs.upToDateWhen { false }
-        showStandardStreams = true
-        showExceptions true
-        showCauses true
-        showStackTraces true
-    }
-}
-
-task jar14(type: Jar) {
+jar {
     manifest {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
-                "Main-Class": "neil.Main"
+                "Main-Class": "kinomora.Main"
         )
     }
     outputs.upToDateWhen{false}
@@ -69,5 +55,4 @@ task jar14(type: Jar) {
             it.isDirectory() ? it : zipTree(it)
         }
     }
-    with jar
 }
