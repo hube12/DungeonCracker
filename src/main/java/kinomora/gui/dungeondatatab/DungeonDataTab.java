@@ -101,7 +101,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
         // Adding the Version Panel and the Dungeon Data Big panel to the RIGHT Panel
         // Add the Version panel
-        rightPanel.add(versionPanel, setC(0, 0, 1, 1, 94, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 10, 0)));
+        rightPanel.add(versionPanel, setC(0, 0, 1, 1, 54, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 10, 0)));
 
         // Adding the Dungeon Data panel
         // rightPanel.add(spawnerDataPanelBig, setC(0, 1, 1, 3, 10, 42, GridBagConstraints.LINE_START, new Insets(0, 0, 30, 0)));
