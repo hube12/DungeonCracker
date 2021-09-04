@@ -31,7 +31,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "neil.Main"
+    mainClassName = "kinomora.main"
 }
 
 
@@ -63,7 +63,7 @@ task jar14(type: Jar) {
         )
     }
     outputs.upToDateWhen{false}
-    project.archivesBaseName = "DungeonCracker14"
+    project.archivesBaseName = "DungeonCrackerUniversal"
     from {
         configurations.runtimeClasspath.collect {
             it.isDirectory() ? it : zipTree(it)

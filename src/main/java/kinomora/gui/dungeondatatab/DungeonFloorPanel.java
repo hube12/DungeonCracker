@@ -5,14 +5,12 @@ import kinomora.gui.util.FloorButton;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
-
-import static java.lang.Integer.parseInt;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DungeonFloorPanel extends JPanel {
     public final DungeonDataTab parent;
-    public static final Map<Integer, FloorButton> buttonIDLookup = new HashMap<>();
+    public static final Map<Integer, FloorButton> buttonIDLookup = new ConcurrentHashMap<>();
     public static int[][] buttonStateArrayCurrent = new int[9][9];
     public static int[][] buttonStateArrayRotated = new int[9][9];
     public static int[][] sequenceHack = new int[9][9];

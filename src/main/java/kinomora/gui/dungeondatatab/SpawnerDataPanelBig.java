@@ -1,7 +1,5 @@
 package kinomora.gui.dungeondatatab;
 
-import kinomora.gui.util.VersionComparison;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

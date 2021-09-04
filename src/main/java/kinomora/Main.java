@@ -19,7 +19,6 @@ public class Main {
         //Meta data
         ArrayList<String> argsList = new ArrayList<>();
         DungeonCrackerGUI GUI = new DungeonCrackerGUI();
-        boolean isGUImode = true;
 
         //Program data
         Scanner userInput = new Scanner(System.in);
@@ -56,7 +55,8 @@ public class Main {
         System.out.println("===================================================================================");
 
         //Testing data flag
-        if (argsList.get(0).equals("gui")) {
+        if (argsList.isEmpty()) {
+
             //GUI.mainGUI();
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
@@ -70,169 +70,168 @@ public class Main {
             JMenuBar menuBar = new JMenuBar();
 
         } else {
-            testVersioned(MCVersion.fromString(argsList.get(0)));
-            System.exit(0);
-        }
+            if (argsList.get(0).contains("nogui")) {
+                //Ask the user for the MCVersion they want to use
+                System.out.print("Please provide the version number that the dungeon was created in, as listed below:\n16    Releases 1.16.x and 1.17.x\n15    Release  1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n1     Releases 1.7.x and earlier; including beta, alpha, and infdev\nType the corresponding number on the left: ");
+                //valid version starts off false and is inverted, then set to true to after a valid input is received
+                while (!validInput) {
+                    input = userInput.nextLine();
+                    if (getIntFromInputString(input) == -1) {
+                        System.out.println("Please provide a supported version number like \"16\".");
+                        System.out.print("Version number: ");
+                    } else {
+                        version = getMCVersionFromInt(getIntFromInputString(input));
+                        validInput = true;
+                    }
+                }
+                validInput = false;
+                System.out.println("===================================================================================");
 
-        //Ask the user for the MCVersion they want to use
-        System.out.print("Please provide the version number that the dungeon was created in, as listed below:\n16    Releases 1.16.x and 1.17.x\n15    Release  1.15.x\n13    Releases 1.13.x and 1.14.x\n8     Releases 1.8.x through 1.12.x\n1     Releases 1.7.x and earlier; including beta, alpha, and infdev\nType the corresponding number on the left: ");
-        //valid version starts off false and is inverted, then set to true to after a valid input is received
-        while (!validInput) {
-            input = userInput.nextLine();
-            if (getIntFromInputString(input) == -1) {
-                System.out.println("Please provide a supported version number like \"16\".");
-                System.out.print("Version number: ");
-            } else {
-                version = getMCVersionFromInt(getIntFromInputString(input));
-                validInput = true;
-            }
-        }
-        validInput = false;
-        System.out.println("===================================================================================");
+                //Ask the user if they are using 1 or 2 dungeons
+                System.out.print("Do you have 1 dungeon or 2: ");
+                while (!validInput) {
+                    input = userInput.nextLine();
+                    if (getIntFromInputString(input) == 1) {
+                        //System.out.println("Using 1 dungeon..\n");
+                        //doubleSpawnerMode = false;
+                        validInput = true;
+                    } else if (getIntFromInputString(input) == 2) {
+                        //System.out.println("Using 2 dungeons..\n");
+                        doubleSpawnerMode = true;
+                        validInput = true;
+                    } else {
+                        System.out.println("Please enter a valid system mode by typing 1 or 2.\nApplication mode: ");
+                    }
+                }
+                validInput = false;
+                System.out.println("===================================================================================");
 
-        //Ask the user if they are using 1 or 2 dungeons
-        System.out.print("Do you have 1 dungeon or 2: ");
-        while (!validInput) {
-            input = userInput.nextLine();
-            if (getIntFromInputString(input) == 1) {
-                //System.out.println("Using 1 dungeon..\n");
-                //doubleSpawnerMode = false;
-                validInput = true;
-            } else if (getIntFromInputString(input) == 2) {
-                //System.out.println("Using 2 dungeons..\n");
-                doubleSpawnerMode = true;
-                validInput = true;
-            } else {
-                System.out.println("Please enter a valid system mode by typing 1 or 2.\nApplication mode: ");
-            }
-        }
-        validInput = false;
-        System.out.println("===================================================================================");
-
-        if (version.isOlderThan(v1_13) && !doubleSpawnerMode) {
-            //Ask the user if they want to input dungeon data or seeds
-            System.out.println("Since you only have 1 dungeon and have selected a version older than 1.13, Dungeon Data Mode has automatically been selected.");
-            //System.out.println("Entering Dungeon Data Mode..\n");
-            dungeonSeedMode = false;
-        } else {
-            //Ask the user if they want to input dungeon data or seeds
-            System.out.print("Do you have dungeon data or do you already have a dungeon seed?\n1     Dungeon Data Mode (Co-ords and Floor Pattern; Typical)\n2     Dungeon Seed Mode (Structure seeds; Uncommon)\nType the corresponding number on the left: ");
-            while (!validInput) {
-                input = userInput.nextLine();
-                if (getIntFromInputString(input) == 1) {
+                if (version.isOlderThan(v1_13) && !doubleSpawnerMode) {
+                    //Ask the user if they want to input dungeon data or seeds
+                    System.out.println("Since you only have 1 dungeon and have selected a version older than 1.13, Dungeon Data Mode has automatically been selected.");
                     //System.out.println("Entering Dungeon Data Mode..\n");
-                    //dungeonSeedMode = false;
-                    validInput = true;
-                } else if (getIntFromInputString(input) == 2) {
-                    //System.out.println("Entering Dungeon Seed Mode..\n");
-                    dungeonSeedMode = true;
-                    validInput = true;
+                    dungeonSeedMode = false;
                 } else {
-                    System.out.println("Please enter a valid system mode by typing 1 or 2.\nApplication mode: ");
+                    //Ask the user if they want to input dungeon data or seeds
+                    System.out.print("Do you have dungeon data or do you already have a dungeon seed?\n1     Dungeon Data Mode (Co-ords and Floor Pattern; Typical)\n2     Dungeon Seed Mode (Structure seeds; Uncommon)\nType the corresponding number on the left: ");
+                    while (!validInput) {
+                        input = userInput.nextLine();
+                        if (getIntFromInputString(input) == 1) {
+                            //System.out.println("Entering Dungeon Data Mode..\n");
+                            //dungeonSeedMode = false;
+                            validInput = true;
+                        } else if (getIntFromInputString(input) == 2) {
+                            //System.out.println("Entering Dungeon Seed Mode..\n");
+                            dungeonSeedMode = true;
+                            validInput = true;
+                        } else {
+                            System.out.println("Please enter a valid system mode by typing 1 or 2.\nApplication mode: ");
+                        }
+                    }
                 }
+                validInput = false;
+                System.out.println("===================================================================================");
+
+                //If we are running in Dungeon Data mode we will need to gather more input data
+                if (!dungeonSeedMode) {
+                    if (!doubleSpawnerMode) {
+                        System.out.println("Please input your dungeon data:");
+                        dungeon1x = getDungeonX(0);
+                        dungeon1y = getDungeonY(0);
+                        dungeon1z = getDungeonZ(0);
+                        dungeon1Sequence = getSequence();
+                        if (version.isNewerThan(v1_15)) {
+                            dungeon1Biome = getDungeonBiome();
+                        }
+                    } else {
+                        System.out.println("Please provide data for the first dungeon:");
+                        dungeon1x = getDungeonX(1);
+                        dungeon1y = getDungeonY(1);
+                        dungeon1z = getDungeonZ(1);
+                        dungeon1Sequence = getSequence();
+                        if (version.isNewerThan(v1_15)) {
+                            dungeon1Biome = getDungeonBiome();
+                        }
+                        System.out.println("Now enter the data for the second dungeon:");
+                        dungeon2x = getDungeonX(2);
+                        dungeon2y = getDungeonY(2);
+                        dungeon2z = getDungeonZ(2);
+                        dungeon2Sequence = getSequence();
+                        if (version.isNewerThan(v1_15)) {
+                            dungeon2Biome = getDungeonBiome();
+                        }
+                    }
+                } else {
+                    if (!doubleSpawnerMode) {
+                        System.out.println("Please input your dungeon info:");
+                        dungeon1x = getDungeonX(0);
+                        dungeon1z = getDungeonZ(0);
+                        dungeon1Seed = getDungeonSeed(0);
+                        if (version.isNewerThan(v1_15)) {
+                            dungeon1Biome = getDungeonBiome();
+                        }
+                    } else {
+                        System.out.println("Please provide info for the first dungeon:");
+                        dungeon1x = getDungeonX(1);
+                        dungeon1z = getDungeonZ(1);
+                        dungeon1Seed = getDungeonSeed(1);
+                        if (version.isNewerThan(v1_15)) {
+                            dungeon1Biome = getDungeonBiome();
+                        }
+                        System.out.println("Now enter the info for the second dungeon:");
+                        dungeon2x = getDungeonX(2);
+                        dungeon2z = getDungeonZ(2);
+                        dungeon2Seed = getDungeonSeed(2);
+                        if (version.isNewerThan(v1_15)) {
+                            dungeon2Biome = getDungeonBiome();
+                        }
+                    }
+                }
+                System.out.println("===================================================================================");
+                System.out.println("Process data... Version: " + version + " | Multi-Dungeon: " + doubleSpawnerMode + " | Dungeon Seed Mode: " + dungeonSeedMode);
+                System.out.println("===================================================================================");
+
+                if (!dungeonSeedMode) {
+                    if (!doubleSpawnerMode) {
+                        //Dungeon Data mode with 1 dungeon
+                        if (version.isBetween(vLegacy, v1_17)) {
+                            crackDungeonDataSingle(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
+                        } else {
+                            System.out.println("Unknown supported version error..");
+                            System.exit(0);
+                        }
+                    } else {
+                        //Dungeon Data mode with 2 dungeons
+                        if (version.isBetween(vLegacy, v1_17)) {
+                            crackDungeonDataDouble(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
+                        } else {
+                            System.out.println("Unknown supported version error..");
+                            System.exit(0);
+                        }
+                    }
+                } else {
+                    //Dungeon Seed mode with 1 dungeon
+                    if (!doubleSpawnerMode) {
+                        if (version.isNewerThan(v1_13)) {
+                            crackDungeonSeedSingle(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
+                        } else {
+                            System.out.println("You can't run Dungeon Seed mode with only 1 dungeon on versions below 1.13!");
+                            System.exit(0);
+                        }
+                    } else {
+                        //Dungeon Seed mode with 2 dungeons
+                        if (version.isBetween(vLegacy, v1_17)) {
+                            crackDungeonSeedDouble(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
+                        } else {
+                            System.out.println("Unknown supported version error..");
+                            System.exit(0);
+                        }
+
+                    }
+                }
+
             }
         }
-        validInput = false;
-        System.out.println("===================================================================================");
-
-        //If we are running in Dungeon Data mode we will need to gather more input data
-        if (!dungeonSeedMode) {
-            if (!doubleSpawnerMode) {
-                System.out.println("Please input your dungeon data:");
-                dungeon1x = getDungeonX(0);
-                dungeon1y = getDungeonY(0);
-                dungeon1z = getDungeonZ(0);
-                dungeon1Sequence = getSequence();
-                if (version.isNewerThan(v1_15)) {
-                    dungeon1Biome = getDungeonBiome();
-                }
-            } else {
-                System.out.println("Please provide data for the first dungeon:");
-                dungeon1x = getDungeonX(1);
-                dungeon1y = getDungeonY(1);
-                dungeon1z = getDungeonZ(1);
-                dungeon1Sequence = getSequence();
-                if (version.isNewerThan(v1_15)) {
-                    dungeon1Biome = getDungeonBiome();
-                }
-                System.out.println("Now enter the data for the second dungeon:");
-                dungeon2x = getDungeonX(2);
-                dungeon2y = getDungeonY(2);
-                dungeon2z = getDungeonZ(2);
-                dungeon2Sequence = getSequence();
-                if (version.isNewerThan(v1_15)) {
-                    dungeon2Biome = getDungeonBiome();
-                }
-            }
-        } else {
-            if (!doubleSpawnerMode) {
-                System.out.println("Please input your dungeon info:");
-                dungeon1x = getDungeonX(0);
-                dungeon1z = getDungeonZ(0);
-                dungeon1Seed = getDungeonSeed(0);
-                if (version.isNewerThan(v1_15)) {
-                    dungeon1Biome = getDungeonBiome();
-                }
-            } else {
-                System.out.println("Please provide info for the first dungeon:");
-                dungeon1x = getDungeonX(1);
-                dungeon1z = getDungeonZ(1);
-                dungeon1Seed = getDungeonSeed(1);
-                if (version.isNewerThan(v1_15)) {
-                    dungeon1Biome = getDungeonBiome();
-                }
-                System.out.println("Now enter the info for the second dungeon:");
-                dungeon2x = getDungeonX(2);
-                dungeon2z = getDungeonZ(2);
-                dungeon2Seed = getDungeonSeed(2);
-                if (version.isNewerThan(v1_15)) {
-                    dungeon2Biome = getDungeonBiome();
-                }
-            }
-        }
-        System.out.println("===================================================================================");
-        System.out.println("Process data... Version: " + version + " | Multi-Dungeon: " + doubleSpawnerMode + " | Dungeon Seed Mode: " + dungeonSeedMode);
-        System.out.println("===================================================================================");
-
-        if (!dungeonSeedMode) {
-            if (!doubleSpawnerMode) {
-                //Dungeon Data mode with 1 dungeon
-                if (version.isBetween(vLegacy, v1_17)) {
-                    crackDungeonDataSingle(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome);
-                } else {
-                    System.out.println("Unknown supported version error..");
-                    System.exit(0);
-                }
-            } else {
-                //Dungeon Data mode with 2 dungeons
-                if (version.isBetween(vLegacy, v1_17)) {
-                    crackDungeonDataDouble(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2Biome);
-                } else {
-                    System.out.println("Unknown supported version error..");
-                    System.exit(0);
-                }
-            }
-        } else {
-            //Dungeon Seed mode with 1 dungeon
-            if (!doubleSpawnerMode) {
-                if (version.isNewerThan(v1_13)) {
-                    crackDungeonSeedSingle(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed);
-                } else {
-                    System.out.println("You can't run Dungeon Seed mode with only 1 dungeon on versions below 1.13!");
-                    System.exit(0);
-                }
-            } else {
-                //Dungeon Seed mode with 2 dungeons
-                if (version.isBetween(vLegacy, v1_17)) {
-                    crackDungeonSeedDouble(version, dungeon1x, dungeon1z, dungeon1Biome, dungeon1Seed, dungeon2x, dungeon2z, dungeon2Biome, dungeon2Seed);
-                } else {
-                    System.out.println("Unknown supported version error..");
-                    System.exit(0);
-                }
-
-            }
-        }
-
     }
 
     private static void crackDungeonDataSingle(MCVersion v, int x, int y, int z, String seq, Biome b) {

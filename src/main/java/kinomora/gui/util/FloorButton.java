@@ -10,14 +10,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class FloorButton extends JButton implements ActionListener, MouseListener {
-    private static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("/cobble.png"));
-    private static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("/mossy.png"));
-    private static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("/unknown.png"));
+
+    private static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("/dungeonFloorIcons/cobble.png"));
+    private static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("/dungeonFloorIcons/mossy.png"));
+    private static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("/dungeonFloorIcons/unknown.png"));
 
     private int ID;
-
     private boolean hasMouseExited;
-
     DungeonFloorPanel parent;
 
     public FloorButton(int ID, DungeonFloorPanel parent) {
@@ -33,14 +32,6 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
         this.setFocusable(false);
         this.ID = ID;
         this.parent = parent;
-    }
-
-    public int getID() {
-        return this.ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     //Action Listener events
@@ -108,12 +99,12 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
         }
     }
 
-    public void setButtonStateByDigit(int digit){
-        if(digit == 0){
+    public void setButtonStateByDigit(int digit) {
+        if (digit == 0) {
             this.setIcon(COBBLE_TILE);
-        } else if (digit == 1){
+        } else if (digit == 1) {
             this.setIcon(MOSSY_TILE);
-        } else if (digit == 2){
+        } else if (digit == 2) {
             this.setIcon(UNKNOWN_TILE);
         } else {
             System.out.println("Critical error in setting a button state..");

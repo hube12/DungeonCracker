@@ -6,13 +6,15 @@ import other.util.MCVersion;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.lang.Integer.parseInt;
-import static other.util.MCVersion.vUnknown;
 
 public class DungeonDataTab extends JPanel implements ActionListener, MouseListener {
     public final DungeonFloorPanel dungeonFloorPanel;
@@ -21,8 +23,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     private boolean hasMouseExited;
     public int currentDungeonFloor = 1;
 
-    private static final ImageIcon CLOCKWISE_ICON = new ImageIcon(DungeonDataTab.class.getResource("/CW.png"));
-    private static final ImageIcon COUNTERCLOCKWISE_ICON = new ImageIcon(DungeonDataTab.class.getResource("/CCW.png"));
+    private static final ImageIcon CLOCKWISE_ICON = new ImageIcon(DungeonDataTab.class.getResource("/rotateIcons/CW.png"));
+    private static final ImageIcon COUNTERCLOCKWISE_ICON = new ImageIcon(DungeonDataTab.class.getResource("/rotateIcons/CCW.png"));
 
     JButton rotateCounterClockwise = new JButton(COUNTERCLOCKWISE_ICON);
     JButton size7x7 = new JButton("7x7");
@@ -33,9 +35,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     //---Application data---
     //Program data
     boolean validInput;
-    boolean dungeonSeedMode = false;
     boolean doubleSpawnerMode = false;
-    MCVersion version = vUnknown;
 
     //Dungeon data
     Set<Long> dungeon1Seeds = new HashSet<>();
@@ -164,7 +164,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         } catch (NumberFormatException e) {
             number = 0;
             validInput = false;
-            System.out.println("bad input text");
+            System.out.println("Input was not a number.. Setting to 0");
         }
         return number;
     }
@@ -204,7 +204,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
             dungeon1Sequence = dungeonFloorPanel.getCurrentFloorSequence();
             dungeon1FloorSize = currentFloorSize;
         }
-        System.out.println("Current floor size: " + currentFloorSize);
         spawnerDataPanelBig.setDungeonSequenceTextField(floorSequence);
     }
 
@@ -240,7 +239,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
             dungeon2y = safeIntParse(dungeonY);
             dungeon2z = safeIntParse(dungeonZ);
         }
-        System.out.println("\nDungeon1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + "\nDungeon2: " + dungeon2x + " " + dungeon2y + " " + dungeon2z);
     }
 
     private void getCurrentDungeonCoords() {
@@ -358,11 +356,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                 } else if (rotateClockwise.equals(button)) {
                     dungeonFloorPanel.rotateFloorClockwise();
                     spawnerDataPanelBig.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
-                } else {
-                    System.out.println("You pressed: " + button.getText());
                 }
-
-
             }
         }
     }
