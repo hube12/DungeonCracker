@@ -74,11 +74,11 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
         //Create panels for each half
         JPanel leftPanel = new JPanel(new GridBagLayout());
-        //leftPanel.setSize(350,380);
         JPanel rightPanel = new JPanel(new GridBagLayout());
-        //rightPanel.setSize(250,300);
+
         //Create subpanels for each section of the Dungeon Floor side
         JPanel dungeonSubButtonPanel = new JPanel(new FlowLayout());
+
         // Right Panel (dungeon floor) objects
         dungeonFloorSubButtonMess(dungeonSubButtonPanel);
 
@@ -104,7 +104,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         rightPanel.add(versionPanel, setC(0, 0, 1, 1, 54, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 10, 0)));
 
         // Adding the Dungeon Data panel
-        // rightPanel.add(spawnerDataPanelBig, setC(0, 1, 1, 3, 10, 42, GridBagConstraints.LINE_START, new Insets(0, 0, 30, 0)));
         rightPanel.add(spawnerDataPanelBig, setC(0, 1, 1, 3, 10, 38, GridBagConstraints.LINE_START, new Insets(0, 0, 30, 0)));
 
         //Set all the buttonStateArrays to 2 by default
@@ -250,7 +249,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         saveCurrentDungeonCoords(spawnerDataPanelBig.spawnerXField.getText(), spawnerDataPanelBig.spawnerYField.getText(), spawnerDataPanelBig.spawnerZField.getText());
     }
 
-    public void versionChangedAbove112(MCVersion version) {
+    public void versionChangedAbove112() {
         getCurrentDungeonCoords();
         currentDungeonFloor = 1;
         doubleSpawnerMode = false;
@@ -259,15 +258,43 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
     }
 
-    public void versionChangedBelow113(MCVersion version) {
+    public void versionChangedBelow113() {
         getCurrentDungeonCoords();
         doubleSpawnerMode = true;
         spawnerDataPanelBig.showSwapDungeonButton();
     }
 
+    public static int getDungeonFloorSizeX(String sequence) {
+        if (sequence.length() == 81) {
+            return 9;
+        } else if (sequence.length() == 63) {
+            return 7;
+        } else {
+            return 7;
+        }
+    }
+
+    public static int getDungeonFloorSizeZ(String sequence) {
+        if (sequence.length() == 81) {
+            return 9;
+        } else if (sequence.length() == 63) {
+            return 9;
+        } else {
+            return 7;
+        }
+    }
+
     public void crackSeed() {
+        System.out.println("\nDungeon 1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + " " + dungeon1Sequence + " " + spawnerDataPanelBig.dungeon1Biome +  "\nDungeon 2: "  + dungeon2x + " " + dungeon2y + " " + dungeon2z + " " + dungeon2Sequence + " " + spawnerDataPanelBig.dungeon2Biome);
+
         JTextArea worldSeedsTextArea = new JTextArea();
         worldSeedsTextArea.setEditable(false);
+        dungeon1fsx = getDungeonFloorSizeX(dungeon1Sequence);
+        dungeon1fsz = getDungeonFloorSizeZ(dungeon1Sequence);
+        dungeon2fsx = getDungeonFloorSizeX(dungeon2Sequence);
+        dungeon2fsz = getDungeonFloorSizeZ(dungeon2Sequence);
+
+        //Probably should add some kind of check where if there are more than 1 dungeon seeds in the dungeon seed set<long> then we don't try to find all matching world seeds because the calculation time might be incredibly long
 
         if (doubleSpawnerMode) {
             //2 spawners
@@ -278,15 +305,15 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
             } else {
                 spawnerDataPanelBig.dungeonSeedField.setText(dungeon2Seeds.toString());
             }
-            worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon1Biome), dungeon1Seeds, dungeon2x, dungeon2y, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon2Seeds);
+            worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon1Biome), dungeon1Seeds, dungeon2x, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon2Seeds);
         } else {
             //1 spawner
             dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
             spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
-            worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon1Seeds);
+            worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon1Seeds);
         }
         populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
-        JOptionPane.showMessageDialog(this, worldSeedsTextArea, "World Seeds", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, worldSeedsTextArea, "Potential World Seeds", JOptionPane.PLAIN_MESSAGE);
 
     }
 

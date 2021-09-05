@@ -52,7 +52,7 @@ public class DecoratorSeedProcessor {
 
 	private Long getSalt() {
 		if (version.isNewerThan(MCVersion.v1_15)) {
-			if (biome == Biomes.DESERT) {
+			if (biome == Biomes.DESERT || biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS) {
 				return 30003L;
 			} else {
 				return 30002L;
