@@ -66,7 +66,6 @@ public class DungeonDataProcessor {
                 device.add(JavaCalls.nextInt(4).betweenII(0,3),false);
             }
         }
-        device.setVerbose(true);
         return device.reverse().parallel().boxed().collect(Collectors.toSet());
     }
 }
