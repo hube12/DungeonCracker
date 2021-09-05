@@ -1,6 +1,5 @@
 package kinomora.gui.dungeondatatab;
 
-import kaptainwutax.mcutils.version.MCVersion;
 import kinomora.Main;
 import kinomora.gui.util.BiomeNameToBiome;
 
@@ -21,23 +20,20 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     public final DungeonFloorPanel dungeonFloorPanel;
     public final VersionPanel versionPanel;
     public final SpawnerDataPanelBig spawnerDataPanelBig;
-    private boolean hasMouseExited;
-    public int currentDungeonFloor = 1;
-
     private static final ImageIcon CLOCKWISE_ICON = new ImageIcon(Objects.requireNonNull(DungeonDataTab.class.getResource("/rotateIcons/CW.png")));
     private static final ImageIcon COUNTERCLOCKWISE_ICON = new ImageIcon(Objects.requireNonNull(DungeonDataTab.class.getResource("/rotateIcons/CCW.png")));
-
+    public int currentDungeonFloor = 1;
+    public static int[][] buttonStateArrayDungeon1 = new int[9][9];
+    public static int[][] buttonStateArrayDungeon2 = new int[9][9];
     JButton rotateCounterClockwise = new JButton(COUNTERCLOCKWISE_ICON);
     JButton size7x7 = new JButton("7x7");
     JButton size7x9 = new JButton("7x9");
     JButton size9x9 = new JButton("9x9");
     JButton rotateClockwise = new JButton(CLOCKWISE_ICON);
-
     //---Application data---
     //Program data
     boolean validInput;
     boolean doubleSpawnerMode = false;
-
     //Dungeon data
     Set<Long> dungeon1Seeds = new HashSet<>();
     int dungeon1x = 0;
@@ -47,8 +43,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     int dungeon1fsz = 0;
     int dungeon1FloorSize = 81;
     String dungeon1Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
-    public static int[][] buttonStateArrayDungeon1 = new int[9][9];
-
     Set<Long> dungeon2Seeds = new HashSet<>();
     int dungeon2x = 0;
     int dungeon2y = 0;
@@ -57,9 +51,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     int dungeon2fsz = 0;
     int dungeon2FloorSize = 81;
     String dungeon2Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
-    public static int[][] buttonStateArrayDungeon2 = new int[9][9];
-
     Set<Long> worldSeeds;
+    private boolean hasMouseExited;
 
     /**
      * Creates and populates the Items(Overview) tab which contains the Inventory, Item Descriptions, Recommended Champions, and Inventory Item Crafting Calculator
@@ -285,7 +278,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     }
 
     public void crackSeed() {
-        System.out.println("\nDungeon 1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + " " + dungeon1Sequence + " " + spawnerDataPanelBig.dungeon1Biome +  "\nDungeon 2: "  + dungeon2x + " " + dungeon2y + " " + dungeon2z + " " + dungeon2Sequence + " " + spawnerDataPanelBig.dungeon2Biome);
+        System.out.println("\nDungeon 1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + " " + dungeon1Sequence + " " + spawnerDataPanelBig.dungeon1Biome + "\nDungeon 2: " + dungeon2x + " " + dungeon2y + " " + dungeon2z + " " + dungeon2Sequence + " " + spawnerDataPanelBig.dungeon2Biome);
 
         JTextArea worldSeedsTextArea = new JTextArea();
         worldSeedsTextArea.setEditable(false);
@@ -298,9 +291,9 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
         if (doubleSpawnerMode) {
             //2 spawners
-            dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
-            dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence,dungeon2fsx,dungeon2fsz);
-            if(currentDungeonFloor == 1){
+            dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1fsx, dungeon1fsz);
+            dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2fsx, dungeon2fsz);
+            if (currentDungeonFloor == 1) {
                 spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
             } else {
                 spawnerDataPanelBig.dungeonSeedField.setText(dungeon2Seeds.toString());
@@ -308,7 +301,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
             worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon1Biome), dungeon1Seeds, dungeon2x, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon2Seeds);
         } else {
             //1 spawner
-            dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,dungeon1fsx,dungeon1fsz);
+            dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1fsx, dungeon1fsz);
             spawnerDataPanelBig.dungeonSeedField.setText(dungeon1Seeds.toString());
             worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanelBig.dungeon2Biome), dungeon1Seeds);
         }
@@ -317,9 +310,9 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
     }
 
-    private void populateWorldSeedsInTextArea(JTextArea textArea, Set<Long> worldSeeds){
+    private void populateWorldSeedsInTextArea(JTextArea textArea, Set<Long> worldSeeds) {
         StringBuilder textAreaSeeds = new StringBuilder();
-        for(Long seed : worldSeeds){
+        for (Long seed : worldSeeds) {
             textAreaSeeds.append(seed).append("\n");
         }
         textArea.setText(String.valueOf(textAreaSeeds));

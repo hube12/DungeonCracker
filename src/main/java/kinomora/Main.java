@@ -9,7 +9,11 @@ import kinomora.dungeon.StructureSeedProcessor;
 import kinomora.gui.DungeonCrackerGUI;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.Set;
 
 
 public class Main {
@@ -79,8 +83,7 @@ public class Main {
 
                 //Ask the user if they are using 1 or 2 dungeons
                 System.out.print("Do you have 1 dungeon or 2: ");
-                do
-                {
+                do {
                     input = userInput.nextLine().trim();
                     if (input.equals("2")) {
                         doubleSpawnerMode = true;
@@ -97,8 +100,7 @@ public class Main {
                     dungeonSeedMode = false;
                 } else {
                     System.out.print("Do you have dungeon data or do you already have a dungeon seed?\n1     Dungeon Data Mode (Co-ords and Floor Pattern; Typical)\n2     Dungeon Seed Mode (Structure seeds; Uncommon)\nType the corresponding number on the left: ");
-                    do
-                    {
+                    do {
                         input = userInput.nextLine();
                         if (input.equals("2")) {
                             dungeonSeedMode = true;
@@ -182,8 +184,8 @@ public class Main {
                     } else {
                         //Dungeon Data mode with 2 dungeons
                         crackDungeonDataDouble(version, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence,
-                                dungeon1fsx, dungeon1fsz, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z,
-                                dungeon2Sequence, dungeon2fsx, dungeon2fsz, dungeon2Biome);
+                            dungeon1fsx, dungeon1fsz, dungeon1Biome, dungeon2x, dungeon2y, dungeon2z,
+                            dungeon2Sequence, dungeon2fsx, dungeon2fsz, dungeon2Biome);
                     }
                 } else {
                     //Dungeon Seed mode with 1 dungeon
@@ -301,14 +303,16 @@ public class Main {
 
     public static int getDungeonCoordGeneric(String name, int type) {
         String input;
-        do
-        {
+        do {
             switch (type) {
-                case 0: System.out.print("Spawner " + name + ": ");
+                case 0:
+                    System.out.print("Spawner " + name + ": ");
                     break;
-                case 1: System.out.print("Spawner 1 " + name + ": ");
+                case 1:
+                    System.out.print("Spawner 1 " + name + ": ");
                     break;
-                default: System.out.print("Spawner 2 " + name + ": ");
+                default:
+                    System.out.print("Spawner 2 " + name + ": ");
             }
             Scanner userInput = new Scanner(System.in);
             input = userInput.nextLine();
@@ -338,14 +342,16 @@ public class Main {
 
     public static Long getDungeonSeed(int type) {
         String input;
-        do
-        {
+        do {
             switch (type) {
-                case 0: System.out.print("Dungeon Seed: ");
+                case 0:
+                    System.out.print("Dungeon Seed: ");
                     break;
-                case 1: System.out.print("Dungeon 1 Seed: ");
+                case 1:
+                    System.out.print("Dungeon 1 Seed: ");
                     break;
-                default: System.out.print("Dungeon 2 Seed: ");
+                default:
+                    System.out.print("Dungeon 2 Seed: ");
             }
             Scanner userInput = new Scanner(System.in);
             input = userInput.nextLine();
@@ -382,15 +388,18 @@ public class Main {
                 case "ys":
                 case "yes":
                 case "t":
-                case "true": biome = Biomes.DESERT;
+                case "true":
+                    biome = Biomes.DESERT;
                     break;
                 case "0":
                 case "n":
                 case "no":
                 case "f":
-                case "false": biome = Biomes.THE_VOID;
+                case "false":
+                    biome = Biomes.THE_VOID;
                     break;
-                default: System.out.print("Please type yes or no: ");
+                default:
+                    System.out.print("Please type yes or no: ");
                     input = userInput.nextLine();
             }
         }
@@ -425,7 +434,8 @@ public class Main {
         Set<Long> WorldSeeds;
         switch (v) {
             case v1_17:
-            case v1_16: System.out.println("Running 1.16 test data..");
+            case v1_16:
+                System.out.println("Running 1.16 test data..");
                 DungeonData = new DungeonDataProcessor(MCVersion.v1_16, 25, 54, 88, "0111010110011110110100010101110110101110111111111", 7, 7).dungeonDataToDecoratorSeed();
                 StructureSeeds = new DecoratorSeedProcessor(MCVersion.v1_16, 25, 88, Biomes.PLAINS, DungeonData).decoratorSeedsToStructureSeeds();
                 WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
@@ -433,7 +443,8 @@ public class Main {
                 System.out.println("Here is the 1.16 structure data: " + StructureSeeds + " | Expected data: [258737905361860]");
                 System.out.println("Here are the 1.16 world seeds: " + WorldSeeds + " | Expected data: [1488979889728021444]");
                 break;
-            case v1_15: System.out.println("Running 1.15 test data..");
+            case v1_15:
+                System.out.println("Running 1.15 test data..");
                 DungeonData = new DungeonDataProcessor(MCVersion.v1_15, 161, 16, -716, "1111111101101110111110111011101111111101101100101", 7, 7).dungeonDataToDecoratorSeed();
                 StructureSeeds = new DecoratorSeedProcessor(MCVersion.v1_15, 161, -716, Biomes.PLAINS, DungeonData).decoratorSeedsToStructureSeeds();
                 WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
@@ -442,7 +453,8 @@ public class Main {
                 System.out.println("1.15 world seeds: " + WorldSeeds + " | Expected data: [7298916735143357077]");
                 break;
             case v1_14:
-            case v1_13: System.out.println("Running 1.13 test data..");
+            case v1_13:
+                System.out.println("Running 1.13 test data..");
                 DungeonData1 = new DungeonDataProcessor(MCVersion.v1_13, 693, 30, -74, "111011100101011111011011001111110110111011101111111011101111011011111110111111110", 9, 9).dungeonDataToDecoratorSeed();
                 StructureSeeds1 = new DecoratorSeedProcessor(MCVersion.v1_13, 693, -74, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
                 DungeonData2 = new DungeonDataProcessor(MCVersion.v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011", 9, 9).dungeonDataToDecoratorSeed();
@@ -457,7 +469,8 @@ public class Main {
             case v1_11:
             case v1_10:
             case v1_9:
-            case v1_8: System.out.println("Running 1.8 test data..");
+            case v1_8:
+                System.out.println("Running 1.8 test data..");
                 DungeonData1 = new DungeonDataProcessor(MCVersion.v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011", 9, 9).dungeonDataToDecoratorSeed();
                 StructureSeeds1 = new DecoratorSeedProcessor(MCVersion.v1_8, 137, -147, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
                 DungeonData2 = new DungeonDataProcessor(MCVersion.v1_8, 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111", 9, 9).dungeonDataToDecoratorSeed();
@@ -469,7 +482,8 @@ public class Main {
                 System.out.println("1.8 world seeds: " + WorldSeeds + " | Expected data: [-1700538326672817507]");
                 break;
 
-            case v1_0: System.out.println("Running legacy test data..");
+            case v1_0:
+                System.out.println("Running legacy test data..");
                 DungeonData1 = new DungeonDataProcessor(v, 140, 81, -35, "001011101111111111001111111011011101110111111110000110110111111", 9, 9).dungeonDataToDecoratorSeed();
                 StructureSeeds1 = new DecoratorSeedProcessor(v, 140, -35, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
                 DungeonData2 = new DungeonDataProcessor(v, 171, 13, -34, "101111111111110111011101111100011111111100101011111011001111010", 9, 9).dungeonDataToDecoratorSeed();
@@ -480,7 +494,8 @@ public class Main {
                 System.out.println("Legacy dungeon2 seed: " + DungeonData2 + " | Expected data: [82449899703950]");
                 System.out.println("Legacy world seeds: " + WorldSeeds + " | Expected data: [3257840388504953787]");
                 break;
-            default: System.out.println("Unsupported version. Please enter only major versions between 1.17 and 1.8, or 1.0 for Legacy versions.");
+            default:
+                System.out.println("Unsupported version. Please enter only major versions between 1.17 and 1.8, or 1.0 for Legacy versions.");
         }
     }
 

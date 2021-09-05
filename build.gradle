@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.hube12:SEED:b80304e54c'
-    implementation('com.seedfinding:latticg:1.05')
+    implementation('com.seedfinding:latticg:1.06')
 }
 
 application {

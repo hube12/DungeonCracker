@@ -2,13 +2,18 @@ package kinomora.gui.dungeondatatab;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class SpawnerDataPanelBig extends JPanel implements ActionListener, MouseListener {
     //meta
     public final DungeonDataTab parent;
-    private boolean hasMouseExited;
-
+    public String dungeon1Biome = "OTHER";
+    public String dungeon2Biome = "OTHER";
     JLabel spawnerXLabel = new JLabel("Spawner 1 X");
     JTextField spawnerXField = new JTextField("0", 6);
     JLabel spawnerYLabel = new JLabel("Spawner 1 Y");
@@ -16,20 +21,16 @@ public class SpawnerDataPanelBig extends JPanel implements ActionListener, Mouse
     JLabel spawnerZLabel = new JLabel("Spawner 1 Z");
     JTextField spawnerZField = new JTextField("0", 6);
     JLabel biomeLabel = new JLabel("Biome");
-    JComboBox<String> biomeDropdown = new JComboBox<>(new String[]{"OTHER", "DESERT", "SWAMP", "SWAMP_HILLS"});
+    JComboBox<String> biomeDropdown = new JComboBox<>(new String[] {"OTHER", "DESERT", "SWAMP", "SWAMP_HILLS"});
     JLabel dungeonSequenceLabel = new JLabel("Dungeon Sequence");
     JLabel dungeonSeedLabel = new JLabel("Dungeon Seed");
     JTextField dungeonSequenceField = new JTextField("", 18);
     JTextField dungeonSeedField = new JTextField("", 18);
-
     JPanel buttonSubPanel = new JPanel(new GridBagLayout());
     JButton crackSeedButton = new JButton("Crack Seed");
     JButton swapDungeonButton = new JButton("Swap Floor");
-
     GridBagLayout layout;
-
-    public String dungeon1Biome = "OTHER";
-    public String dungeon2Biome = "OTHER";
+    private boolean hasMouseExited;
 
     public SpawnerDataPanelBig(DungeonDataTab parent) {
         this.parent = parent;
