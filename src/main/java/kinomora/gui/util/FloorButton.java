@@ -14,10 +14,9 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
     private static final ImageIcon COBBLE_TILE = new ImageIcon(FloorButton.class.getResource("/dungeonFloorIcons/cobble.png"));
     private static final ImageIcon MOSSY_TILE = new ImageIcon(FloorButton.class.getResource("/dungeonFloorIcons/mossy.png"));
     private static final ImageIcon UNKNOWN_TILE = new ImageIcon(FloorButton.class.getResource("/dungeonFloorIcons/unknown.png"));
-
-    private int ID;
-    private boolean hasMouseExited;
+    private final int ID;
     DungeonFloorPanel parent;
+    private boolean hasMouseExited;
 
     public FloorButton(int ID, DungeonFloorPanel parent) {
         //Listeners

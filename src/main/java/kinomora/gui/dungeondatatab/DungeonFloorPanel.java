@@ -16,9 +16,9 @@ public class DungeonFloorPanel extends JPanel {
     public static int[][] sequenceHack = new int[9][9];
 
     //Yeah I realize there's probably a better way to do this but I don't care >:C
-    public static boolean[] sevenbyseven = new boolean[]{false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false};
-    public static boolean[] sevenbynine = new boolean[]{false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false};
-    public static boolean[] ninebynine = new boolean[]{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+    public static boolean[] sevenbyseven = new boolean[] {false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false};
+    public static boolean[] sevenbynine = new boolean[] {false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false};
+    public static boolean[] ninebynine = new boolean[] {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
     public int currentFloorSize = 81;
     public int dungeon1FloorSize = 81;
     public int dungeon2FloorSize = 81;
@@ -29,10 +29,10 @@ public class DungeonFloorPanel extends JPanel {
 
         this.setLayout(new GridLayout(9, 9, 0, 0));
         this.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 1, true),
-                "Dungeon Floor 1  |  Top is in-game North",
-                TitledBorder.DEFAULT_JUSTIFICATION,
-                TitledBorder.DEFAULT_POSITION
+            BorderFactory.createLineBorder(Color.BLACK, 1, true),
+            "Dungeon Floor 1  |  Top is in-game North",
+            TitledBorder.DEFAULT_JUSTIFICATION,
+            TitledBorder.DEFAULT_POSITION
         ));
         this.setSize(250, 250);
         this.createButtonMap();
@@ -56,11 +56,15 @@ public class DungeonFloorPanel extends JPanel {
 
     public void setDungeonFloorPanelTitle(String title) {
         this.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 1, true),
-                title,
-                TitledBorder.DEFAULT_JUSTIFICATION,
-                TitledBorder.DEFAULT_POSITION
+            BorderFactory.createLineBorder(Color.BLACK, 1, true),
+            title,
+            TitledBorder.DEFAULT_JUSTIFICATION,
+            TitledBorder.DEFAULT_POSITION
         ));
+    }
+
+    public int getCurrentFloorSize() {
+        return this.currentFloorSize;
     }
 
     public void setCurrentFloorSize(int size) {
@@ -94,12 +98,8 @@ public class DungeonFloorPanel extends JPanel {
         }
     }
 
-    public int getCurrentFloorSize(){
-        return this.currentFloorSize;
-    }
-
-    public void setDungeonFloorSize(int floorSize, int dungeon){
-        if(dungeon == 1){
+    public void setDungeonFloorSize(int floorSize, int dungeon) {
+        if (dungeon == 1) {
             dungeon1FloorSize = floorSize;
         } else {
             dungeon2FloorSize = floorSize;
@@ -134,6 +134,14 @@ public class DungeonFloorPanel extends JPanel {
         return currentDungeonFloorSequence;
     }
 
+    public void setCurrentFloorSequence(int[][] newSequence) {
+        FloorButton button;
+        for (int i = 0; i < 81; i++) {
+            button = buttonIDLookup.get(i);
+            button.setButtonStateByDigit(newSequence[i / 9][i % 9]);
+        }
+    }
+
     public int[][] getCurrentFloorStateArray() {
         FloorButton button;
 
@@ -143,14 +151,6 @@ public class DungeonFloorPanel extends JPanel {
         }
 
         return buttonStateArrayCurrent;
-    }
-
-    public void setCurrentFloorSequence(int[][] newSequence) {
-        FloorButton button;
-        for (int i = 0; i < 81; i++) {
-            button = buttonIDLookup.get(i);
-            button.setButtonStateByDigit(newSequence[i / 9][i % 9]);
-        }
     }
 
     public void rotateFloorClockwise() {

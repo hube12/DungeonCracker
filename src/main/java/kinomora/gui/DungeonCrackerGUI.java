@@ -3,13 +3,12 @@ package kinomora.gui;
 import kinomora.Main;
 import kinomora.gui.abouttab.AboutTab;
 import kinomora.gui.dungeondatatab.DungeonDataTab;
-import kinomora.gui.dungeonseedtab.DungeonSeedTab;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URISyntaxException;
 
-public class DungeonCrackerGUI extends JFrame{
+public class DungeonCrackerGUI extends JFrame {
 
     public DungeonCrackerGUI() throws HeadlessException, URISyntaxException {
         super("Universal Dungeon Cracker - " + Main.getAppVersion());

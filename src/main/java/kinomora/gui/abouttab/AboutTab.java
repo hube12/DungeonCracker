@@ -17,11 +17,10 @@ public class AboutTab extends JPanel implements ActionListener, MouseListener {
     final URI releasesURL = new URI("https://github.com/Kinomora/DungeonCracker/releases");
     final URI issuesURL = new URI("https://github.com/Kinomora/DungeonCracker/issues");
     final URI repoURL = new URI("https://github.com/Kinomora/DungeonCracker");
-    private boolean hasMouseExited;
-
     JButton visitGithub;
     JButton visitIssueTracker;
     JButton visitRepository;
+    private boolean hasMouseExited;
 
     public AboutTab() throws URISyntaxException {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -128,11 +127,11 @@ public class AboutTab extends JPanel implements ActionListener, MouseListener {
         if (!hasMouseExited) {
             //Left mouse button pressed, released, and not exited button..
             if (e.getButton() == MouseEvent.BUTTON1) {
-                if(button.equals(visitGithub)){
+                if (button.equals(visitGithub)) {
                     open(releasesURL);
-                } else if(button.equals(visitIssueTracker)){
+                } else if (button.equals(visitIssueTracker)) {
                     open(issuesURL);
-                } else if(button.equals(visitRepository)){
+                } else if (button.equals(visitRepository)) {
                     open(repoURL);
                 } else {
                     System.out.println("Critical issue with button press on About page..");
