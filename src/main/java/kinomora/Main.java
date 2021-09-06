@@ -459,7 +459,7 @@ public class Main {
             case v1_9:
             case v1_8:
                 System.out.println("Running 1.12-1.8 test data..");
-                DungeonData1 = new DungeonDataProcessor(MCVersion.v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011", 9, 7).dungeonDataToDecoratorSeed();
+                DungeonData1 = new DungeonDataProcessor(MCVersion.v1_8, 137, 27, -147, "111110101111111110110110111110011111111111111111111111101111011", 7, 9).dungeonDataToDecoratorSeed();
                 StructureSeeds1 = new DecoratorSeedProcessor(MCVersion.v1_8, 137, -147, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
                 DungeonData2 = new DungeonDataProcessor(MCVersion.v1_8, 61, 59, 668, "111111110111111111001101101110111111110111111001111111001111111", 9, 7).dungeonDataToDecoratorSeed();
                 StructureSeeds2 = new DecoratorSeedProcessor(MCVersion.v1_8, 61, 668, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
