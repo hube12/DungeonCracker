@@ -11,11 +11,9 @@ import java.awt.event.ItemEvent;
 
 public class VersionPanel extends JPanel implements ActionListener {
     public final DungeonDataTab parent;
-
+    public MCVersion currentVersionSelected = MCVersion.latest();
     JRadioButton dungeonCountRadio1;
     JRadioButton dungeonCountRadio2;
-
-    public MCVersion currentVersionSelected = MCVersion.latest();
 
     public VersionPanel(DungeonDataTab parent) {
         this.parent = parent;

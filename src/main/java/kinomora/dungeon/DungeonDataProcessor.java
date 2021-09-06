@@ -1,8 +1,9 @@
 package kinomora.dungeon;
 
-import com.seedfinding.latticg.RandomReverser;
+import com.seedfinding.latticg.reversal.DynamicProgram;
+import com.seedfinding.latticg.reversal.calltype.java.JavaCalls;
+import com.seedfinding.latticg.util.LCG;
 import kaptainwutax.mcutils.version.MCVersion;
-
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,14 +17,14 @@ public class DungeonDataProcessor {
     private final String sequence;
     private final MCVersion version;
 
-    public DungeonDataProcessor(MCVersion version, int posX, int posY, int posZ, String sequence,int floorSizeX,int floorSizeZ) {
-        this.posX = (version.isOlderThan(MCVersion.v1_13)?posX-8:posX);
+    public DungeonDataProcessor(MCVersion version, int posX, int posY, int posZ, String sequence, int floorSizeX, int floorSizeZ) {
+        this.posX = (version.isOlderThan(MCVersion.v1_13) ? posX - 8 : posX);
         this.posY = posY;
-        this.posZ = (version.isOlderThan(MCVersion.v1_13)?posZ-8:posZ);
+        this.posZ = (version.isOlderThan(MCVersion.v1_13) ? posZ - 8 : posZ);
         this.sequence = sequence;
         this.version = version;
-        this.floorSizeX=(floorSizeX-7)/2;
-        this.floorSizeZ=(floorSizeZ-7)/2;
+        this.floorSizeX = (floorSizeX - 7) / 2;
+        this.floorSizeZ = (floorSizeZ - 7) / 2;
     }
 
     /***
@@ -36,33 +37,32 @@ public class DungeonDataProcessor {
 
         Integer[] pattern = sequence.chars().mapToObj(c -> c == '0' ? 0 : c == '1' ? 1 : 2).toArray(Integer[]::new);
 
-        RandomReverser device = new RandomReverser();
+        DynamicProgram device = DynamicProgram.create(LCG.JAVA);
         if (version.isOlderThan(MCVersion.v1_8)) {                       //Legacy
-            device.addNextIntCall(16,offsetX,offsetX);
-            device.addNextIntCall(128,posY,posY);
-            device.addNextIntCall(16,offsetZ,offsetZ);
+            device.add(JavaCalls.nextInt(16).equalTo(offsetX));
+            device.add(JavaCalls.nextInt(128).equalTo(posY));
+            device.add(JavaCalls.nextInt(16).equalTo(offsetZ));
         } else if (version.isBetween(MCVersion.v1_8, MCVersion.v1_14)) { //1.8 to 1.14
-            device.addNextIntCall(16,offsetX,offsetX);
-            device.addNextIntCall(256,posY,posY);
-            device.addNextIntCall(16,offsetZ,offsetZ);
+            device.add(JavaCalls.nextInt(16).equalTo(offsetX));
+            device.add(JavaCalls.nextInt(256).equalTo(posY));
+            device.add(JavaCalls.nextInt(16).equalTo(offsetZ));
         } else if (version.isNewerThan(MCVersion.v1_14)) {               //1.15+
-            device.addNextIntCall(16,offsetX,offsetX);
-            device.addNextIntCall(16,offsetZ,offsetZ);
-            device.addNextIntCall(256,posY,posY);
+            device.add(JavaCalls.nextInt(16).equalTo(offsetX));
+            device.add(JavaCalls.nextInt(16).equalTo(offsetZ));
+            device.add(JavaCalls.nextInt(256).equalTo(posY));
         }
-        // TODO check those are right order
-        device.addNextIntCall(2,floorSizeX,floorSizeX);
-        device.addNextIntCall(2,floorSizeZ,floorSizeZ);
+        device.add(JavaCalls.nextInt(2).equalTo(floorSizeX));
+        device.add(JavaCalls.nextInt(2).equalTo(floorSizeZ));
 
         for (Integer integer : pattern) {
             if (integer == 0) {
-                device.addNextIntCall(4,0,0);
+                device.add(JavaCalls.nextInt(4).equalTo(0));
             } else if (integer == 1) {
-                device.addNextIntCall(4,1,3);
+                device.filteredSkip(r -> r.nextInt(4) != 0, 1);
             } else {
-                device.consumeNextIntCalls(1,4);
+                device.skip(1);
             }
         }
-        return device.findAllValidSeeds().parallel().boxed().collect(Collectors.toSet());
+        return device.reverse().parallel().boxed().collect(Collectors.toSet());
     }
 }
