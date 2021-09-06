@@ -18,8 +18,7 @@ import java.util.Set;
 
 public class Main {
     // starting from 1.7.2 all dungeon use 256 height
-    public static final MCVersion LEGACY_VERSION = MCVersion.v1_7_2;
-    private static final String APP_VERSION = "v2.0.1_pre-release_2";
+    private static final String APP_VERSION = "v2.0.1_pre-release_1";
 
     public static void main(String[] args) throws Exception {
         //Meta data
@@ -65,7 +64,7 @@ public class Main {
         if (argsList.isEmpty()) {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             GUI.pack();
-            GUI.setSize(700, 475);
+            GUI.setSize(610, 465);
             GUI.setResizable(false);
             GUI.setVisible(true);
             GUI.setLocationRelativeTo(null);

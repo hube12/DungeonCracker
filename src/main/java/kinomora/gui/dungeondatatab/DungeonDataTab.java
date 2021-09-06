@@ -40,8 +40,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     int dungeon1x = 0;
     int dungeon1y = 0;
     int dungeon1z = 0;
-    int dungeon1fsx = 0;
-    int dungeon1fsz = 0;
     int dungeon1FloorSize = 81;
     int[] dungeon1FloorDimensions = {9, 9};
     String dungeon1Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
@@ -49,8 +47,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     int dungeon2x = 0;
     int dungeon2y = 0;
     int dungeon2z = 0;
-    int dungeon2fsx = 0;
-    int dungeon2fsz = 0;
     int dungeon2FloorSize = 81;
     int[] dungeon2FloorDimensions = {9, 9};
     String dungeon2Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
