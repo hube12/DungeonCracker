@@ -21,12 +21,12 @@ public class DungeonCrackerGUI extends JFrame {
 
         //Creating the main overview tabs
         DungeonDataTab dungeonDataTab = new DungeonDataTab();
-        //DungeonSeedTab dungeonSeedTab = new DungeonSeedTab();
+        DungeonSeedTab dungeonSeedTab = new DungeonSeedTab();
         AboutTab aboutTab = new AboutTab();
 
         //Add the tabs to the main window
         tabs.addTab("Dungeon Data Mode", dungeonDataTab);
-        //tabs.addTab("Dungeon Seed Mode", dungeonSeedTab);
+        tabs.addTab("Dungeon Seed Mode", dungeonSeedTab);
         tabs.addTab("About", aboutTab);
 
         this.setContentPane(tabs);

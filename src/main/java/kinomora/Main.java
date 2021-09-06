@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class Main {
     // starting from 1.7.2 all dungeon use 256 height
-    private static final String APP_VERSION = "v2.0.1_pre-release_1";
+    private static final String APP_VERSION = "v2.0.2_pre-release_1";
 
     public static void main(String[] args) throws Exception {
         //Meta data
