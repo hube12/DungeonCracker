@@ -2,6 +2,7 @@ package kinomora;
 
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
+import kaptainwutax.mcutils.util.data.Pair;
 import kaptainwutax.mcutils.version.MCVersion;
 import kinomora.dungeon.DecoratorSeedProcessor;
 import kinomora.dungeon.DungeonDataProcessor;
@@ -9,18 +10,89 @@ import kinomora.dungeon.StructureSeedProcessor;
 import kinomora.gui.DungeonCrackerGUI;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
 
 
 public class Main {
-    // starting from 1.7.2 all dungeon use 256 height
-    private static final String APP_VERSION = "v2.0.2_pre-release_1";
+    public static java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(Main.class.getName());
 
+    // starting from 1.7.2 all dungeon use 256 height
+    public static final String APP_VERSION = "@VERSION@"; //using SemVer
+
+    private static void registerLogger() throws IOException {
+        Files.createDirectories(Paths.get("logs"));
+        FileHandler ch = new FileHandler("logs" + File.separatorChar + "error%u%g.log", 1000000, 10);
+        LOGGER.setUseParentHandlers(false);
+        LOGGER.addHandler(ch);
+        ch.setFormatter(new SimpleFormatter() {
+            private static final String format = "[%1$tF %1$tT] [%2$-7s] %3$s %n";
+
+            @Override
+            public synchronized String format(LogRecord lr) {
+                return String.format(format,
+                    new Date(lr.getMillis()),
+                    lr.getLevel().getLocalizedName(),
+                    lr.getMessage()
+                );
+            }
+        });
+        LOGGER.info(String.format("Dungeon Cracker started on %s",
+            new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z").
+                format(new Date(System.currentTimeMillis()))));
+        RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
+
+        Map<String, String> systemProperties = runtimeBean.getSystemProperties();
+        Set<String> keys = systemProperties.keySet();
+        String username = "";
+        if (keys.contains("user.name")) {
+            username = systemProperties.get("user.name");
+        }
+
+        for (String key : keys) {
+            LOGGER.info(String.format("[%s] = %s.", key, systemProperties.get(key).
+                replace(username, "XANONX").
+                replaceAll("Users\\\\.*?\\\\", "Users\\\\ANONYM\\\\").
+                replace("\r\n", "CRLF").
+                replace("\n", "LF")
+            ));
+        }
+        LOGGER.setUseParentHandlers(false);
+        LOGGER.addHandler(ch);
+    }
+
+    @SuppressWarnings("ConstantConditions")
     public static void main(String[] args) throws Exception {
+        // needs to be the first call !!
+        registerLogger();
+        if (Main.APP_VERSION.startsWith("@VER") && Main.APP_VERSION.endsWith("SION@")) {
+            throw new UnsupportedOperationException("The version was not replaced manually or by gradle");
+        }
+        HashMap<String, Pair<Pair<String, String>, String>> updateInfo = Update.shouldUpdate();
+        boolean noUpdate = Arrays.asList(args).contains("--no-update");
+        boolean update = Arrays.asList(args).contains("--update");
+
+        if (updateInfo != null && !noUpdate) {
+            Update.updateApp(updateInfo, !update);
+        }
+
         //Meta data
         DungeonCrackerGUI GUI = new DungeonCrackerGUI();
 
@@ -61,7 +133,7 @@ public class Main {
 
 
         //If args list is empty we just go straight to the GUI version of the app
-        if (argsList.isEmpty()) {
+        if (!Arrays.asList(args).contains("nogui") && !Arrays.asList(args).contains("test")) {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             GUI.pack();
             GUI.setSize(610, 465);
@@ -69,7 +141,7 @@ public class Main {
             GUI.setVisible(true);
             GUI.setLocationRelativeTo(null);
         } else { //Test if the first argument contains the words nogui, is so we can enter text-only mode
-            if (argsList.get(0).contains("nogui") && argsList.size() == 1) {
+            if ( Arrays.asList(args).contains("nogui")) {
                 //Getting the version the dungeon was generated in
                 System.out.print("Please provide the version number that the dungeon was created in. You can type things like \"1.16\" and \"a1.0.4\": ");
                 version = MCVersion.fromString(userInput.nextLine());
@@ -203,7 +275,7 @@ public class Main {
 
                 System.out.println("Dumping current values:\nDungeon 1:\n" + dungeon1x + "\n" + dungeon1y + "\n" + dungeon1z + "\n" + dungeon1fsx + "\n" + dungeon1fsz + "\n" + dungeon1Sequence + "\n" + dungeon1Biome + "\nDungeon 2:\n" + dungeon2x + "\n" + dungeon2y + "\n" + dungeon2z + "\n" + dungeon2fsx + "\n" + dungeon2fsz + "\n" + dungeon2Sequence + "\n" + dungeon2Biome);
 
-            } else if (argsList.get(1).contains("test")) {
+            } else if (Arrays.asList(args).contains("test")) {
                 //Test changes to the cracking code with this method. Supported versions are all major versions between v1.17 and v1.8, plus v1.0 for "Legacy" code.
                 testVersioned(MCVersion.fromString(argsList.get(2)));
             } else {
