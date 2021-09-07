@@ -4,11 +4,15 @@ import com.seedfinding.latticg.reversal.DynamicProgram;
 import com.seedfinding.latticg.reversal.calltype.java.JavaCalls;
 import com.seedfinding.latticg.util.LCG;
 import kaptainwutax.mcutils.version.MCVersion;
+import one.util.streamex.StreamEx;
 
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 public class DungeonDataProcessor {
+    // TODO modify me in the gui
+    public static final int CORES= Runtime.getRuntime().availableProcessors();
     private final int posX;
     private final int posY;
     private final int posZ;
@@ -63,6 +67,7 @@ public class DungeonDataProcessor {
                 device.skip(1);
             }
         }
-        return device.reverse().parallel().boxed().collect(Collectors.toSet());
+        ForkJoinPool forkJoinPool=new ForkJoinPool(Math.max(CORES - 2, 1));
+        return StreamEx.of(device.reverse().boxed()).parallel(forkJoinPool).collect(Collectors.toSet());
     }
 }

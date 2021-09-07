@@ -44,6 +44,7 @@ dependencies {
     implementation('com.seedfinding:latticg:1.06')
     implementation('one.util:streamex:0.7.3')
     implementation('com.google.code.gson:gson:2.8.6')
+    implementation('com.formdev:flatlaf:0.38')
 }
 
 application {

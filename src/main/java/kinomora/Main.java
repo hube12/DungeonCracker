@@ -1,5 +1,10 @@
 package kinomora;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
 import kaptainwutax.mcutils.util.data.Pair;
@@ -10,6 +15,7 @@ import kinomora.dungeon.StructureSeedProcessor;
 import kinomora.gui.DungeonCrackerGUI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -25,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
@@ -78,10 +85,41 @@ public class Main {
         LOGGER.addHandler(ch);
     }
 
+    public enum LookType {
+        DARK("Dark", FlatDarkLaf::new),
+        LIGHT("Light", FlatLightLaf::new),
+        INTELLIJ("Intellij", FlatIntelliJLaf::new),
+        DARCULA("Darcula", FlatDarculaLaf::new);
+
+        private final String name;
+        private final Supplier<FlatLaf> supplier;
+
+        LookType(String name, Supplier<FlatLaf> supplier) {
+            this.name = name;
+            this.supplier = supplier;
+        }
+
+        public void setLookAndFeel() throws UnsupportedLookAndFeelException {
+            UIManager.setLookAndFeel(supplier.get());
+            for (Window window : JFrame.getWindows()) {
+                SwingUtilities.updateComponentTreeUI(window);
+            }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isDark() {
+            return supplier.get().isDark();
+        }
+    }
+
     @SuppressWarnings("ConstantConditions")
     public static void main(String[] args) throws Exception {
         // needs to be the first call !!
         registerLogger();
+
         if (Main.APP_VERSION.startsWith("@VER") && Main.APP_VERSION.endsWith("SION@")) {
             throw new UnsupportedOperationException("The version was not replaced manually or by gradle");
         }
@@ -134,9 +172,9 @@ public class Main {
 
         //If args list is empty we just go straight to the GUI version of the app
         if (!Arrays.asList(args).contains("nogui") && !Arrays.asList(args).contains("test")) {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            LookType.DARCULA.setLookAndFeel();
             GUI.pack();
-            GUI.setSize(610, 465);
+            GUI.setSize(800, 550);
             GUI.setResizable(false);
             GUI.setVisible(true);
             GUI.setLocationRelativeTo(null);
