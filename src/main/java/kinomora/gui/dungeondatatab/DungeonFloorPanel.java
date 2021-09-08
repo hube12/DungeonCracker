@@ -208,7 +208,7 @@ public class DungeonFloorPanel extends JPanel {
         return currentDungeonFloorSequence;
     }
 
-    public void setCurrentFloorSequence(int[][] newSequence) {
+    public void setCurrentFloorPattern(int[][] newSequence) {
         FloorButton button;
         for (int i = 0; i < 81; i++) {
             button = buttonIDLookup.get(i);
