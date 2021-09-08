@@ -1,3 +1,0 @@
-Manifest-Version: 1.1
-Main-Class: kinomora.Main
-

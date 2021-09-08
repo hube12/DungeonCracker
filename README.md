@@ -5,7 +5,7 @@ Crack a world seed from a single dungeon for worlds generated after 1.13, and ju
 
 Credits to KaptainWutax, Matthew Bolan, Neil, and the good people at MC@Home for putting up with me
 
-# Run 
+# Run
 
 - Go to releases and download the jar
 - Run by executing: `java -jar UniversalDungeonCracker_1.1.0.jar`
@@ -54,3 +54,16 @@ I have many testing dungeon data sets at the bottom of src/main/java/neil/Main.j
 Older versions are less "unique" with dungeons. Using only 1 dungeon would result in thousands of potential world seeds while 2 dungeons allow us to cross-reference this list and find a singular unique worldseed.
 ### I put in my dungeon and I'm sure it's right but the app says "unfortunately no seeds were found"!
 Sometimes other structures like mineshafts, lava lakes, and even other dungeons can alter the way dungeons generate. Unfortunately, that dungeon will not work with this app and you will need to use a different one.
+
+
+# Development
+
+To setup your dev environment run
+```md
+// clean your setup
+./gradlew clean
+// run the app
+./gradlew run
+// create a release (create a {rootProject.name}-{version}.jar and {rootProject.name}-{version}.exe in build/libs)
+./gradlew release
+````
