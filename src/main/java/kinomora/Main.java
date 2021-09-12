@@ -178,7 +178,7 @@ public class Main {
             GUI.setSize(625, 502);
             GUI.setResizable(false);
             GUI.setVisible(true);
-
+            GUI.setLocationRelativeTo(null);
 
         } else { //Test if the first argument contains the words nogui, is so we can enter text-only mode
             if ( Arrays.asList(args).contains("nogui")) {
