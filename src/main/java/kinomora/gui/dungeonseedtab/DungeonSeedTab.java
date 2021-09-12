@@ -61,7 +61,7 @@ public class DungeonSeedTab extends JPanel implements ActionListener, MouseListe
         JPanel dungeonSubButtonPanel = new JPanel(new FlowLayout());
 
         this.add(leftPanel, setC(0, 0, 1, 1, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 0, 0)));
-        this.add(rightPanel, setC(1, 0, 1, 1, 210, 0, GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
+        this.add(rightPanel, setC(1, 0, 1, 1, 0, 0, GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
 
         leftPanel.add(spawner1DataPanel, setC(0, 0, 1, 1, 5, 15, GridBagConstraints.FIRST_LINE_START, new Insets(5, 5, 5, 0)));
         leftPanel.add(spawner2DataPanel, setC(0, 1, 1, 1, 5, 15, GridBagConstraints.PAGE_START, new Insets(5, 5, 5, 0)));

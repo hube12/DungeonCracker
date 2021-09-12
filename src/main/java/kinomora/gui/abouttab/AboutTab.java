@@ -98,12 +98,12 @@ public class AboutTab extends JPanel implements ActionListener, MouseListener {
     //Action Listener events
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.hasMouseExited = false;
     }
 
     //Mouse listener events
     @Override
     public void mouseEntered(MouseEvent e) {
+        this.hasMouseExited = false;
     }
 
     @Override

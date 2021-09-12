@@ -172,12 +172,14 @@ public class Main {
 
         //If args list is empty we just go straight to the GUI version of the app
         if (!Arrays.asList(args).contains("nogui") && !Arrays.asList(args).contains("test")) {
+
             LookType.DARCULA.setLookAndFeel();
             GUI.pack();
-            GUI.setSize(800, 550);
+            GUI.setSize(625, 502);
             GUI.setResizable(false);
             GUI.setVisible(true);
-            GUI.setLocationRelativeTo(null);
+
+
         } else { //Test if the first argument contains the words nogui, is so we can enter text-only mode
             if ( Arrays.asList(args).contains("nogui")) {
                 //Getting the version the dungeon was generated in
