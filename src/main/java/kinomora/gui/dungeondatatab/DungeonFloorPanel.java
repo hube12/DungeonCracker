@@ -30,21 +30,26 @@ public class DungeonFloorPanel extends JPanel {
     public static boolean[] ninebynine = new boolean[]{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true
         , true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
         true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+
     public int currentFloorSize = 81;
     public int dungeon1FloorSize = 81;
     public int dungeon2FloorSize = 81;
-    public int[] currentFloorDimension = {9,9};
-    public int[] dungeon1FloorDimension = {9,9};
-    public int[] dungeon2FloorDimension = {9,9};
+    public int[] currentFloorDimension = {9, 9};
+    public int[] dungeon1FloorDimension = {9, 9};
+    public int[] dungeon2FloorDimension = {9, 9};
     public String currentDungeonFloorSequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+
+    //Compat mode variable
+    public boolean twoButtonMouseCompatMode;
 
     public DungeonFloorPanel(DungeonDataTab parent) {
         this.parent = parent;
+        this.twoButtonMouseCompatMode = parent.twoButtonMouseCompatMode;
 
         this.setLayout(new GridLayout(9, 9, 0, 0));
         this.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.BLACK, 1, true),
-            "Dungeon Floor 1  |  Top is in-game North",
+            "Dungeon 1",
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION
         ));
@@ -227,6 +232,32 @@ public class DungeonFloorPanel extends JPanel {
         return buttonStateArrayCurrent;
     }
 
+    public void resetDungeonData(int reset){
+        currentFloorSize = 81;
+        currentFloorDimension[0] = 9;
+        currentFloorDimension[1] = 9;
+        currentDungeonFloorSequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+
+        if (reset == 1) {
+            dungeon1FloorSize = 81;
+            dungeon1FloorDimension[0] = 9;
+            dungeon1FloorDimension[1] = 9;
+        }
+        if (reset == 2) {
+            dungeon2FloorSize = 81;
+            dungeon2FloorDimension[0] = 9;
+            dungeon2FloorDimension[1] = 9;
+        }
+        if (reset == 3) {
+            dungeon1FloorSize = 81;
+            dungeon1FloorDimension[0] = 9;
+            dungeon1FloorDimension[1] = 9;
+            dungeon2FloorSize = 81;
+            dungeon2FloorDimension[0] = 9;
+            dungeon2FloorDimension[1] = 9;
+        }
+    }
+
     public void rotateFloorClockwise() {
         //Import the current state into the array
         importButtonsDigitsToArray();
@@ -281,6 +312,7 @@ public class DungeonFloorPanel extends JPanel {
 
     public void floorButtonPressed() {
         parent.floorButtonPressed(getCurrentFloorSequence(), getCurrentFloorStateArray(), getCurrentFloorSize(), getCurrentFloorDimension());
+        parent.resetDungeonSeeds(parent.currentDungeonFloor);
         //System.out.println("Button ID pressed: " + button.getID() + "; State: " + button.getButtonSequenceDigit());
     }
 }

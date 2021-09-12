@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 
-public class DungeonDataTab extends JPanel implements ActionListener, MouseListener/*, KeyListener*/ {
+public class DungeonDataTab extends JPanel implements ActionListener, MouseListener {
     public final DungeonFloorPanel dungeonFloorPanel;
     public final VersionPanel versionPanel;
     public final SpawnerDataPanel spawnerDataPanel;
@@ -40,7 +40,9 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     JButton rotateClockwise = new JButton(CLOCKWISE_ICON);
     JButton clearFloorData = new JButton(TRASH_ICON);
     JButton clearProgramData = new JButton(TRASH_ALL_ICON);
+    JButton crackSeedButton = new JButton("Crack Seed");
     public boolean clearAllData;
+    public boolean twoButtonMouseCompatMode = false;
 
     //---Application data---
     //Program data
@@ -76,8 +78,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         this.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 0));
 
         //Create panels for each half
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        JPanel rightPanel = new JPanel(new GridBagLayout());
+        JPanel leftPanel = new JPanel(new GridBagLayout());  //gridx = left and right
+        JPanel rightPanel = new JPanel(new GridBagLayout()); //gridy = up and down
 
         //Create subpanels for each section of the Dungeon Floor side
         JPanel dungeonSubButtonPanel = new JPanel(new GridBagLayout());
@@ -85,29 +87,28 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         // Right Panel (dungeon floor) objects
         dungeonFloorSubButtonMess(dungeonSubButtonPanel);
 
+        // Other Swing Elements
+        JLabel dungeonNorthLabel = new JLabel("Floor relative to North");
+        dungeonNorthLabel.setFont(new Font(dungeonNorthLabel.getName(), Font.PLAIN, 14));
+        crackSeedButton.setFocusPainted(false);
+        crackSeedButton.setFocusable(false);
+        crackSeedButton.addMouseListener(this);
+        crackSeedButton.addActionListener(this);
 
-        // Adding both panels to the main window
-        // Adding the left panel (dungeon floor + buttons) to the main window
-        this.add(leftPanel, setC(0, 0, 1, 1, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 0, 0)));
 
-        // Adding the right panel (version and coords) to the main window
-        this.add(rightPanel, setC(1, 0, 1, 1, 0, 0, GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
+        this.add(leftPanel, setC(0, 0, 1, 1, 0, 0, 1, 1, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 0, 0)));
+        this.add(rightPanel, setC(1, 0, 1, 1, 0, 0, 1, 1, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 0, 0)));
 
 
         // Adding the Dungeon Floor panel and the Dungeon Floor Buttons to the LEFT Panel
-        // Add the Dungeon Floor
-        leftPanel.add(dungeonFloorPanel, setC(0, 0, 1, 1, 0, 0, GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
-
-        //Adding the Floor Buttons
-        leftPanel.add(dungeonSubButtonPanel, setC(0, 1, 1, 1, 0, 0, GridBagConstraints.CENTER, new Insets(0, 0, 0, 0)));
-
+        leftPanel.add(dungeonNorthLabel, setC(0, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.CENTER, new Insets(10, 0, 0, 0)));
+        leftPanel.add(dungeonFloorPanel, setC(0, 1, 1, 1, 0, 0, 0, 0, GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
+        leftPanel.add(dungeonSubButtonPanel, setC(0, 2, 1, 1, 0, 0, 0, 0, GridBagConstraints.PAGE_START, new Insets(0, 0, 0, 0)));
 
         // Adding the Version Panel and the Dungeon Data Big panel to the RIGHT Panel
-        // Add the Version panel
-        rightPanel.add(versionPanel, setC(0, 0, 1, 1, 54, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 0, 10, 0)));
-
-        // Adding the Dungeon Data panel
-        rightPanel.add(spawnerDataPanel, setC(0, 1, 1, 3, 10, 38, GridBagConstraints.LINE_START, new Insets(0, 0, 30, 0)));
+        rightPanel.add(versionPanel, setC(0, 0, 1, 1, 55, 8, 1, 1, GridBagConstraints.FIRST_LINE_START, new Insets(37, 0, 0, 0)));
+        rightPanel.add(spawnerDataPanel, setC(0, 1, 1, 1, 6, 0, 1, 1, GridBagConstraints.FIRST_LINE_START, new Insets(7, 0, 0, 0)));
+        rightPanel.add(crackSeedButton, setC(0, 2, 1, 1, 150, 0, 1, 1, GridBagConstraints.PAGE_START, new Insets(7, -2, 0, 0)));
 
         //Set all the buttonStateArrays to 2 by default
         for (int i = 0; i < 9; i++) {
@@ -117,10 +118,12 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         }
     }
 
-    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int ipadx, int ipady, int anchor, Insets insets) {
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int ipadx, int ipady, int weightx, int weighty, int anchor, Insets insets) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = gridx;
         c.gridy = gridy;
+        c.weightx = weightx;
+        c.weighty = weighty;
         c.gridwidth = gridwidth;
         c.gridheight = gridheight;
         c.ipadx = ipadx;
@@ -181,19 +184,19 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         clearProgramData.setToolTipText("Clear ALL dungeon floor patterns, coordinates, biomes, and sequence");
 
         //Fill in the dungeon subpanels
-        dungeonSubButtonPanel.add(rotateCounterClockwise, setC(0, 0, 1, 1, -19, 5, GridBagConstraints.FIRST_LINE_START, new Insets(5, 0, 0, 0)));
-        dungeonSubButtonPanel.add(size7x7, setC(1, 0, 1, 1, -19, 5, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
-        dungeonSubButtonPanel.add(size7x9, setC(2, 0, 1, 1, -19, 5, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
-        dungeonSubButtonPanel.add(size9x7, setC(3, 0, 1, 1, -19, 5, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
-        dungeonSubButtonPanel.add(size9x9, setC(4, 0, 1, 1, -19, 5, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
-        dungeonSubButtonPanel.add(rotateClockwise, setC(5, 0, 1, 1, -19, 5, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        dungeonSubButtonPanel.add(rotateCounterClockwise, setC(0, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(5, 0, 0, 0)));
+        dungeonSubButtonPanel.add(size7x7, setC(1, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        dungeonSubButtonPanel.add(size7x9, setC(2, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        dungeonSubButtonPanel.add(size9x7, setC(3, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        dungeonSubButtonPanel.add(size9x9, setC(4, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        dungeonSubButtonPanel.add(rotateClockwise, setC(5, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
 
         JLabel separator = new JLabel("|");
         separator.setFont(new Font(separator.getName(), Font.PLAIN, 16));
-        dungeonSubButtonPanel.add(separator, setC(6, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 15, 0, 15)));
+        dungeonSubButtonPanel.add(separator, setC(6, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 15, 0, 15)));
 
-        dungeonSubButtonPanel.add(clearFloorData, setC(7, 0, 1, 1, -17, 5, GridBagConstraints.LINE_START, new Insets(5, 0, 0, 0)));
-        dungeonSubButtonPanel.add(clearProgramData, setC(8, 0, 1, 1, -17, 5, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        dungeonSubButtonPanel.add(clearFloorData, setC(7, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 0, 0, 0)));
+        dungeonSubButtonPanel.add(clearProgramData, setC(8, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
     }
 
     private int safeIntParse(String text) {
@@ -210,7 +213,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
     private void swapToFloor1() {
         currentDungeonFloor = 1;
-        dungeonFloorPanel.setDungeonFloorPanelTitle("Dungeon Floor 1  |  Top is in-game North");
+        dungeonFloorPanel.setDungeonFloorPanelTitle("Dungeon 1");
         dungeonFloorPanel.setCurrentFloorPattern(buttonStateArrayDungeon1);
         dungeonFloorPanel.setDungeonFloorSize(dungeon1FloorSize, 1);
         dungeonFloorPanel.setDungeonFloorDimensions(dungeon1FloorDimensions, 1);
@@ -223,7 +226,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
     public void swapToFloor2() {
         currentDungeonFloor = 2;
-        dungeonFloorPanel.setDungeonFloorPanelTitle("Dungeon Floor 2  |  Top is in-game North");
+        dungeonFloorPanel.setDungeonFloorPanelTitle("Dungeon 2");
         dungeonFloorPanel.setCurrentFloorPattern(buttonStateArrayDungeon2);
         dungeonFloorPanel.setDungeonFloorSize(dungeon2FloorSize, 2);
         dungeonFloorPanel.setDungeonFloorDimensions(dungeon2FloorDimensions, 2);
@@ -263,7 +266,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     }
 
     public void radioButtonClicked(JRadioButton button) {
-        if (button == versionPanel.dungeonCountRadio1) {
+        if (button == versionPanel.dungeonCount1Radio) {
             currentDungeonFloor = 1;
             doubleSpawnerMode = false;
             spawnerDataPanel.hideSwapDungeonButton();
@@ -305,13 +308,62 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         spawnerDataPanel.showSwapDungeonButton();
     }
 
-    public void crackSeed() {
+    public void crackDungeonSeed(int dungeon) {
+        saveCurrentDungeonCoords(spawnerDataPanel.spawnerXField.getText(), spawnerDataPanel.spawnerYField.getText(), spawnerDataPanel.spawnerZField.getText());
+
         System.out.println("\nDungeon 1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + " " + dungeon1Sequence + " " + spawnerDataPanel.dungeon1Biome + "\nDungeon 2: " + dungeon2x + " " + dungeon2y + " " + dungeon2z + " " + dungeon2Sequence + " " + spawnerDataPanel.dungeon2Biome);
+        if (dungeon == 1) {
+            if (isSequenceAll2s(dungeon1Sequence)) {
+                System.out.println("Your dungeon sequence is all 2's, this would cause the app to hang. Enter in your dungeon floor pattern before pressing Dungeon Seed.");
+            } else {
+                dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
+                    dungeon1FloorDimensions[1]);
+            }
+            if (dungeon1Seeds.isEmpty()) {
+                spawnerDataPanel.dungeonSeedField.setText("No results.");
+            } else {
+                spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
+            }
+        }
+        if (dungeon == 2) {
+            if (isSequenceAll2s(dungeon2Sequence)) {
+                System.out.println("Your dungeon sequence is all 2's, this would cause the app to hang. Enter in your dungeon floor pattern before pressing Dungeon Seed.");
+            } else {
+                dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2FloorDimensions[0],
+                    dungeon2FloorDimensions[1]);
+            }
+            if (dungeon2Seeds.isEmpty()) {
+                spawnerDataPanel.dungeonSeedField.setText("No results.");
+            } else {
+                spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
+            }
+        }
+        if (dungeon == 3) {
+            if (isSequenceAll2s(dungeon1Sequence) || isSequenceAll2s(dungeon2Sequence)) {
+                System.out.println("One of your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info or switch to Dungeon 1 mode.");
+            } else {
+                dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
+                    dungeon1FloorDimensions[1]);
+                dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2FloorDimensions[0],
+                    dungeon2FloorDimensions[1]);
+                if (currentDungeonFloor == 1) {
+                    if (dungeon1Seeds.isEmpty()) {
+                        spawnerDataPanel.dungeonSeedField.setText("No results.");
+                    } else {
+                        spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
+                    }
+                } else {
+                    if (dungeon2Seeds.isEmpty()) {
+                        spawnerDataPanel.dungeonSeedField.setText("No results.");
+                    } else {
+                        spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
+                    }
+                }
+            }
+        }/*
 
-        JTextArea worldSeedsTextArea = new JTextArea();
-        worldSeedsTextArea.setEditable(false);
 
-        //Added checking code to stop the app from running if crack seed is pressed without any data put into the floor
+
         if (doubleSpawnerMode) {
             //2 spawners
             if (isSequenceAll2s(dungeon1Sequence) || isSequenceAll2s(dungeon2Sequence)) {
@@ -322,14 +374,18 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                 dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2FloorDimensions[0],
                     dungeon2FloorDimensions[1]);
                 if (currentDungeonFloor == 1) {
-                    spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
+                    if (dungeon1Seeds.isEmpty()) {
+                        spawnerDataPanel.dungeonSeedField.setText("No results.");
+                    } else {
+                        spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
+                    }
                 } else {
-                    spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
+                    if (dungeon2Seeds.isEmpty()) {
+                        spawnerDataPanel.dungeonSeedField.setText("No results.");
+                    } else {
+                        spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
+                    }
                 }
-                worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon1Biome),
-                    dungeon1Seeds, dungeon2x, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon2Biome), dungeon2Seeds);
-                populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
-                JOptionPane.showMessageDialog(this, worldSeedsTextArea, "Potential World Seeds", JOptionPane.PLAIN_MESSAGE);
             }
 
         } else {
@@ -340,10 +396,55 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                 dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
                     dungeon1FloorDimensions[1]);
                 spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
+            }
+        }*/
+    }
+
+    public void crackSeed() {
+        JTextArea worldSeedsTextArea = new JTextArea();
+        worldSeedsTextArea.setEditable(false);
+
+        //Added checking code to stop the app from running if crack seed is pressed without any data put into the floor
+        if (doubleSpawnerMode) {
+            //2 spawners
+            if (isSequenceAll2s(dungeon1Sequence) || isSequenceAll2s(dungeon2Sequence)) {
+                System.out.println("One of your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info or switch to Dungeon 1 mode.");
+            } else {
+                if (dungeon1Seeds.isEmpty() || dungeon2Seeds.isEmpty()) {
+                    crackDungeonSeed(3);
+                }
+                if (currentDungeonFloor == 1) {
+                    spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
+                } else {
+                    spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
+                }
+                worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon1Biome),
+                    dungeon1Seeds, dungeon2x, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon2Biome), dungeon2Seeds);
+                if (worldSeeds.isEmpty()) {
+                    worldSeedsTextArea.setText("No valid results");
+                } else {
+                    populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
+                    JOptionPane.showMessageDialog(this, worldSeedsTextArea, "Potential World Seeds", JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+
+        } else {
+            //1 spawner
+            if (isSequenceAll2s(dungeon1Sequence)) {
+                System.out.println("Your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info before pressing Crack Seed.");
+            } else {
+                if (dungeon1Seeds.isEmpty()) {
+                    crackDungeonSeed(1);
+                }
+                spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
                 worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon2Biome),
                     dungeon1Seeds);
-                populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
-                JOptionPane.showMessageDialog(this, worldSeedsTextArea, "Potential World Seeds", JOptionPane.PLAIN_MESSAGE);
+                if (worldSeeds.isEmpty()) {
+                    worldSeedsTextArea.setText("No valid results");
+                } else {
+                    populateWorldSeedsInTextArea(worldSeedsTextArea, worldSeeds);
+                    JOptionPane.showMessageDialog(this, worldSeedsTextArea, "Potential World Seeds", JOptionPane.PLAIN_MESSAGE);
+                }
             }
         }
     }
@@ -367,37 +468,90 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
     public void resetDungeonData(boolean resetAllData) {
         if (resetAllData) {
-            System.out.println("Both dungeon's floors, size, coords, and sequence have been reset");
+            for (int i = 0; i < 9; i++) {
+                Arrays.fill(buttonStateArrayDungeon1[i], 2);
+                Arrays.fill(buttonStateArrayDungeon2[i], 2);
+            }
+            dungeon1Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+            dungeon1FloorSize = 81;
+            dungeon1FloorDimensions[0] = 9;
+            dungeon1FloorDimensions[1] = 9;
+            dungeon1x = 0;
+            dungeon1y = 0;
+            dungeon1z = 0;
+            dungeon2Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+            dungeon2FloorSize = 81;
+            dungeon2FloorDimensions[0] = 9;
+            dungeon2FloorDimensions[1] = 9;
+            dungeon2x = 0;
+            dungeon2y = 0;
+            dungeon2z = 0;
+            resetDungeonSeeds(3);
+            dungeonFloorPanel.resetDungeonData(3);
+
+            //System.out.println("Both dungeon's floors, size, coords, and sequence have been reset");
         } else {
             if (currentDungeonFloor == 1) {
+                for (int i = 0; i < 9; i++) {
+                    Arrays.fill(buttonStateArrayDungeon1[i], 2);
+                }
+                dungeon1Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
                 dungeon1FloorSize = 81;
                 dungeon1FloorDimensions[0] = 9;
                 dungeon1FloorDimensions[1] = 9;
-                dungeon1Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+                dungeon1x = 0;
+                dungeon1y = 0;
+                dungeon1z = 0;
+                resetDungeonSeeds(1);
+                dungeonFloorPanel.resetDungeonData(1);
             } else {
+                for (int i = 0; i < 9; i++) {
+                    Arrays.fill(buttonStateArrayDungeon2[i], 2);
+                }
+                dungeon2Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
                 dungeon2FloorSize = 81;
                 dungeon2FloorDimensions[0] = 9;
                 dungeon2FloorDimensions[1] = 9;
-                dungeon2Sequence = "222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+                dungeon2x = 0;
+                dungeon2y = 0;
+                dungeon2z = 0;
+                resetDungeonSeeds(2);
+                dungeonFloorPanel.resetDungeonData(2);
             }
-            dungeonFloorPanel.setCurrentFloorPattern(emptyFloorSequence);
-            dungeonFloorPanel.setCurrentFloorSize(81);
-            dungeonFloorPanel.setCurrentFloorDimension(new int[]{9, 9});
-            spawnerDataPanel.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
-            System.out.println("Current dungeon floor pattern reset");
         }
+        dungeonFloorPanel.setCurrentFloorPattern(emptyFloorSequence);
+        dungeonFloorPanel.setCurrentFloorSize(81);
+        dungeonFloorPanel.setCurrentFloorDimension(new int[]{9, 9});
+        spawnerDataPanel.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
+        spawnerDataPanel.setTextFieldValue(0, 0, 0);
+
+        //System.out.println("Current dungeon floor data reset");
+    }
+
+    public void resetDungeonSeeds(int reset) {
+        if (reset == 1) {
+            dungeon1Seeds.clear();
+        }
+        if (reset == 2) {
+            dungeon2Seeds.clear();
+        }
+        if (reset == 3) {
+            dungeon1Seeds.clear();
+            dungeon2Seeds.clear();
+        }
+        spawnerDataPanel.dungeonSeedField.setText("");
     }
 
     //Listeners
     //Action Listener events
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.hasMouseExited = false;
     }
 
     //Mouse listener events
     @Override
     public void mouseEntered(MouseEvent e) {
+        this.hasMouseExited = false;
     }
 
     @Override
@@ -482,7 +636,11 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                 } else if (clearFloorData.equals(button)) {
                     resetDungeonData(false);
                 } else if (clearProgramData.equals(button)) {
-                    resetDungeonData(false);
+                    resetDungeonData(true);
+                } else if (crackSeedButton.equals(button)) {
+                    crackSeed();
+                } else {
+                    System.out.println("Boop.");
                 }
             }
         }

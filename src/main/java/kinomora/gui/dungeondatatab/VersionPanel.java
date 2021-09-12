@@ -15,8 +15,8 @@ public class VersionPanel extends JPanel implements ActionListener {
     public DungeonSeedTab seedParent;
 
     public MCVersion currentVersionSelected = MCVersion.latest();
-    JRadioButton dungeonCountRadio1;
-    JRadioButton dungeonCountRadio2;
+    JRadioButton dungeonCount1Radio;
+    JRadioButton dungeonCount2Radio;
 
     public VersionPanel(DungeonDataTab dataParent) {
         this.dataParent = dataParent;
@@ -44,51 +44,57 @@ public class VersionPanel extends JPanel implements ActionListener {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 currentVersionSelected = versionDropdown.getSelected();
                 if (currentVersionSelected.isNewerOrEqualTo(MCVersion.v1_13)) {
-                    dungeonCountRadio1.setSelected(true);
-                    dungeonCountRadio1.setEnabled(true);
+                    dungeonCount1Radio.setSelected(true);
+                    dungeonCount1Radio.setEnabled(true);
                     dataParent.versionChangedAbove112();
                 } else {
-                    dungeonCountRadio2.setSelected(true);
-                    dungeonCountRadio1.setEnabled(false);
+                    dungeonCount2Radio.setSelected(true);
+                    dungeonCount1Radio.setEnabled(false);
                     dataParent.versionChangedBelow113();
                 }
             }
         });
         JLabel dungeonCountLabel = new JLabel("Dungeon Count");
-        dungeonCountRadio1 = new JRadioButton("1", true);
-        dungeonCountRadio1.setFocusPainted(false);
-        dungeonCountRadio1.setFocusable(false);
-        dungeonCountRadio1.addActionListener(this);
-        dungeonCountRadio2 = new JRadioButton("2", false);
-        dungeonCountRadio2.setFocusPainted(false);
-        dungeonCountRadio2.setFocusable(false);
-        dungeonCountRadio2.addActionListener(this);
+        dungeonCount1Radio = new JRadioButton("1", true);
+        dungeonCount1Radio.setFocusPainted(false);
+        dungeonCount1Radio.setFocusable(false);
+        dungeonCount1Radio.addActionListener(this);
+        dungeonCount2Radio = new JRadioButton("2", false);
+        dungeonCount2Radio.setFocusPainted(false);
+        dungeonCount2Radio.setFocusable(false);
+        dungeonCount2Radio.addActionListener(this);
 
         ButtonGroup dungeonRadioGroup = new ButtonGroup();
-        dungeonRadioGroup.add(dungeonCountRadio1);
-        dungeonRadioGroup.add(dungeonCountRadio2);
+        dungeonRadioGroup.add(dungeonCount1Radio);
+        dungeonRadioGroup.add(dungeonCount2Radio);
 
-        this.add(versionLabel, setC(0, 0, 1, new Insets(5, -21, 0, 0)));
-        this.add(versionDropdown, setC(1, 0, 2, new Insets(5, 10, 0, 0)));
+        this.add(versionLabel, setC(0, 0, 1, 1, 0, 0, 1, 0, GridBagConstraints.LINE_START, new Insets(0, 5, 0, 0)));
+        this.add(versionDropdown, setC(1, 0, 2, 1, 0, 0, 1, 0, GridBagConstraints.LINE_START, new Insets(0, 0, 0, 0)));
 
-        this.add(dungeonCountLabel, setC(0, 1, 1, new Insets(-1, -21, 0, 0)));
-        this.add(dungeonCountRadio1, setC(1, 1, 1, new Insets(0, 6, 0, 0)));
-        this.add(dungeonCountRadio2, setC(2, 1, 1, new Insets(0, 0, 0, 0)));
-        if(!seedMode) {
+        this.add(dungeonCountLabel, setC(0, 1, 1, 1, 0, 0, 1, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+        this.add(dungeonCount1Radio, setC(1, 1, 1, 1, 0, 0, 1, 0, GridBagConstraints.LINE_START, new Insets(5, 0, 0, 0)));
+        this.add(dungeonCount2Radio, setC(2, 1, 1, 1, 0, 0, 1, 0, GridBagConstraints.LINE_START, new Insets(5, -40, 0, 0)));
+        if (!seedMode) {
             //put DungeonSeedMode additional code here
         }
 
     }
 
-    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, Insets insets) {
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int ipadx, int ipady, int weightx, int weighty, int anchor, Insets insets) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = gridx;
         c.gridy = gridy;
+        c.weightx = weightx;
+        c.weighty = weighty;
         c.gridwidth = gridwidth;
+        c.gridheight = gridheight;
+        c.ipadx = ipadx;
+        c.ipady = ipady;
+        c.anchor = anchor;
         c.insets = insets;
-        c.anchor = GridBagConstraints.LINE_START;
         return c;
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

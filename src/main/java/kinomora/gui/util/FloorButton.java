@@ -36,12 +36,12 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
     //Action Listener events
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.hasMouseExited = false;
     }
 
     //Mouse listener events
     @Override
     public void mouseEntered(MouseEvent e) {
+        this.hasMouseExited = false;
     }
 
     @Override
@@ -61,8 +61,20 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
     @Override
     public void mouseReleased(MouseEvent e) {
         //If mouse is inside the button..
-        if (!hasMouseExited) {
-            //Left click pressed, cycle from unknown -> cobble -> mossy ->
+        if (!parent.twoButtonMouseCompatMode) {
+            // Three-mouse button mode just sets the button values based on the mouse clicked
+            if (!hasMouseExited) {
+                if (e.getButton() == MouseEvent.BUTTON1) {        //Left Click
+                    this.setIcon(COBBLE_TILE);
+                } else if (e.getButton() == MouseEvent.BUTTON3) { //Right Click
+                    this.setIcon(MOSSY_TILE);
+                } else if (e.getButton() == MouseEvent.BUTTON2) { //Middle Mouse Button
+                    this.setIcon(UNKNOWN_TILE);
+                }
+            }
+        } else {
+            // Two-button only mouse compat mode cycles blocks
+            // Left click pressed, cycle from unknown -> mossy -> cobble ->
             if (e.getButton() == MouseEvent.BUTTON1) {
                 if (this.getIcon().equals(UNKNOWN_TILE)) {
                     this.setIcon(COBBLE_TILE);
@@ -71,16 +83,15 @@ public class FloorButton extends JButton implements ActionListener, MouseListene
                 } else if (this.getIcon().equals(MOSSY_TILE)) {
                     this.setIcon(UNKNOWN_TILE);
                 }
-            }
-        }
-        //Right click pressed, cycle from unknown -> mossy -> cobble ->
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            if (this.getIcon().equals(UNKNOWN_TILE)) {
-                this.setIcon(MOSSY_TILE);
-            } else if (this.getIcon().equals(MOSSY_TILE)) {
-                this.setIcon(COBBLE_TILE);
-            } else if (this.getIcon().equals(COBBLE_TILE)) {
-                this.setIcon(UNKNOWN_TILE);
+            } else if (e.getButton() == MouseEvent.BUTTON3) {
+                //Right click pressed, cycle from unknown -> mossy -> cobble ->
+                if (this.getIcon().equals(UNKNOWN_TILE)) {
+                    this.setIcon(MOSSY_TILE);
+                } else if (this.getIcon().equals(MOSSY_TILE)) {
+                    this.setIcon(COBBLE_TILE);
+                } else if (this.getIcon().equals(COBBLE_TILE)) {
+                    this.setIcon(UNKNOWN_TILE);
+                }
             }
         }
         parent.floorButtonPressed();

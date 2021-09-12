@@ -24,27 +24,16 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
     JLabel spawnerZLabel = new JLabel("Spawner 1 Z");
     JTextField spawnerZField = new JTextField("0", 6);
     JLabel biomeLabel = new JLabel("Biome");
-    JComboBox<String> biomeDropdown = new JComboBox<>(new String[] {"OTHER", "DESERT", "SWAMP", "SWAMP_HILLS"});
+    JComboBox<String> biomeDropdown = new JComboBox<>(new String[]{"OTHER", "DESERT", "SWAMP", "SWAMP_HILLS"});
     JLabel dungeonSequenceLabel = new JLabel("Dungeon Sequence");
     JLabel dungeonSeedLabel = new JLabel("Dungeon Seed");
-    JTextField dungeonSequenceField = new JTextField("", 18);
-    JTextField dungeonSeedField = new JTextField("", 18);
+    JTextField dungeonSequenceField = new JTextField("", 19);
+    JTextField dungeonSeedField = new JTextField("", 19);
     JPanel buttonSubPanel = new JPanel(new GridBagLayout());
-    JButton crackSeedButton = new JButton("Crack Seed");
-    JButton swapDungeonButton = new JButton("Swap Floor");
+    JButton crackDungeonSeed = new JButton("Dungeon Seed");
+    JButton swapDungeonButton = new JButton("Swap Floors");
     GridBagLayout layout;
     private boolean hasMouseExited;
-
-    //Alternative/Small version of the SpawnerDataPanel
-    private static final ImageIcon SPAWNER_SHAPE_SMALL_ICON = new ImageIcon(Objects.requireNonNull(DungeonDataTab.class.getResource("/spawnerIcons/small.png")));
-    private static final ImageIcon SPAWNER_SHAPE_TALL_ICON = new ImageIcon(Objects.requireNonNull(DungeonDataTab.class.getResource("/spawnerIcons/tall.png")));
-    private static final ImageIcon SPAWNER_SHAPE_LONG_ICON = new ImageIcon(Objects.requireNonNull(DungeonDataTab.class.getResource("/spawnerIcons/long.png")));
-    private static final ImageIcon SPAWNER_SHAPE_BIG_ICON = new ImageIcon(Objects.requireNonNull(DungeonDataTab.class.getResource("/spawnerIcons/big.png")));
-    JLabel spawnerShapeLabel = new JLabel("Spawner 1 Shape");
-    JButton spawnerShapeSmall = new JButton(SPAWNER_SHAPE_SMALL_ICON);
-    JButton spawnerShapeTall = new JButton(SPAWNER_SHAPE_TALL_ICON);
-    JButton spawnerShapeLong = new JButton(SPAWNER_SHAPE_LONG_ICON);
-    JButton spawnerShapeBig = new JButton(SPAWNER_SHAPE_BIG_ICON);
 
     public SpawnerDataPanel(DungeonDataTab dataParent) {
         this.dataParent = dataParent;
@@ -65,53 +54,53 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
     }
 
     private void populatePanel(boolean big) {
-        if(big){
+        if (big) {
             //Spawner data objects
             biomeDropdown.setEnabled(true);
             dungeonSequenceField.setEditable(false);
             dungeonSeedField.setEditable(false);
 
             //disable the dumb highlight and text selection
-            crackSeedButton.setFocusPainted(false);
-            crackSeedButton.setFocusable(false);
+            crackDungeonSeed.setFocusPainted(false);
+            crackDungeonSeed.setFocusable(false);
             swapDungeonButton.setFocusPainted(false);
             swapDungeonButton.setFocusable(false);
 
 
-            this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, new Insets(-5, 5, 0, 0)));
-            this.add(spawnerXField, setC(1, 0, 1, 1, 1, 0, 0, new Insets(-5, 10, 0, 0)));
+            this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+            this.add(spawnerXField, setC(1, 0, 1, 1, 1, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 10, 0, 0)));
 
-            this.add(spawnerYLabel, setC(0, 1, 1, 1, 0, 0, 0, new Insets(5, 5, 0, 0)));
-            this.add(spawnerYField, setC(1, 1, 1, 1, 0, 0, 0, new Insets(5, 10, 0, 0)));
+            this.add(spawnerYLabel, setC(0, 1, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+            this.add(spawnerYField, setC(1, 1, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 10, 0, 0)));
 
-            this.add(spawnerZLabel, setC(0, 2, 1, 1, 0, 0, 0, new Insets(5, 5, 0, 0)));
-            this.add(spawnerZField, setC(1, 2, 1, 1, 0, 0, 0, new Insets(5, 10, 0, 0)));
+            this.add(spawnerZLabel, setC(0, 2, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+            this.add(spawnerZField, setC(1, 2, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 10, 0, 0)));
 
-            this.add(biomeLabel, setC(0, 3, 1, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
-            this.add(biomeDropdown, setC(1, 3, 1, 1, 0, 0, 0, new Insets(10, 10, 0, 0)));
+            this.add(biomeLabel, setC(0, 3, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 5, 0, 0)));
+            this.add(biomeDropdown, setC(1, 3, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 10, 0, 0)));
 
-            this.add(dungeonSequenceLabel, setC(0, 4, 2, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
-            this.add(dungeonSequenceField, setC(0, 5, 2, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
+            this.add(dungeonSequenceLabel, setC(0, 4, 2, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 5, 0, 0)));
+            this.add(dungeonSequenceField, setC(0, 5, 2, 1, 2, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
 
-            this.add(dungeonSeedLabel, setC(0, 6, 2, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
-            this.add(dungeonSeedField, setC(0, 7, 2, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
+            this.add(dungeonSeedLabel, setC(0, 6, 2, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 5, 0, 0)));
+            this.add(dungeonSeedField, setC(0, 7, 2, 1, 2, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
 
-            this.add(buttonSubPanel, setC(0, 8, 2, 2, 0, 0, 0, new Insets(15, 0, 0, 0)));
-            buttonSubPanel.add(crackSeedButton, setC(0, 0, 2, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
-            buttonSubPanel.add(swapDungeonButton, setC(1, 0, 2, 1, 2, 3, 0, new Insets(5, 109, 0, 0)));
+            this.add(buttonSubPanel, setC(0, 8, 2, 2, 0, 0, 0, 14, GridBagConstraints.FIRST_LINE_START, new Insets(2, 0, 0, 0)));
+            buttonSubPanel.add(crackDungeonSeed, setC(0, 0, 2, 1, 1, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(0, 5, 0, 0)));
+            buttonSubPanel.add(swapDungeonButton, setC(1, 0, 2, 1, 1, 0, 14, 0, GridBagConstraints.LINE_START, new Insets(0, 121, 0, 0)));
             swapDungeonButton.setVisible(false);
 
-            crackSeedButton.addMouseListener(this);
-            crackSeedButton.addActionListener(this);
+            crackDungeonSeed.addMouseListener(this);
+            crackDungeonSeed.addActionListener(this);
             swapDungeonButton.addMouseListener(this);
             swapDungeonButton.addActionListener(this);
 
             biomeDropdown.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     if (getCurrentDungeonNumber() == 1) {
-                        dungeon1Biome = biomeDropdown.getSelectedItem().toString();
+                        dungeon1Biome = Objects.requireNonNull(biomeDropdown.getSelectedItem()).toString();
                     } else {
-                        dungeon2Biome = biomeDropdown.getSelectedItem().toString();
+                        dungeon2Biome = Objects.requireNonNull(biomeDropdown.getSelectedItem()).toString();
                     }
                 }
             });
@@ -120,33 +109,17 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
             biomeDropdown.setEnabled(true);
             dungeonSeedField.setEditable(true);
 
-            //disable the dumb highlight and text selection
-            spawnerShapeSmall.setFocusPainted(false);
-            spawnerShapeSmall.setFocusable(false);
-            spawnerShapeTall.setFocusPainted(false);
-            spawnerShapeTall.setFocusable(false);
-            spawnerShapeLong.setFocusPainted(false);
-            spawnerShapeLong.setFocusable(false);
-            spawnerShapeBig.setFocusPainted(false);
-            spawnerShapeBig.setFocusable(false);
+            this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 5, 0, 0)));
+            this.add(spawnerXField, setC(1, 0, 4, 1, 1, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(0, 10, 0, 0)));
 
-            this.add(spawnerXLabel, setC(0, 0, 1, 1, 0, 0, 0, new Insets(0, 5, 0, 0)));
-            this.add(spawnerXField, setC(1, 0, 4, 1, 1, 0, 0, new Insets(0, 10, 0, 0)));
+            this.add(spawnerZLabel, setC(0, 2, 1, 1, 0, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(5, 5, 0, 0)));
+            this.add(spawnerZField, setC(1, 2, 4, 1, 0, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(5, 10, 0, 0)));
 
-            this.add(spawnerZLabel, setC(0, 2, 1, 1, 0, 0, 0, new Insets(5, 5, 0, 0)));
-            this.add(spawnerZField, setC(1, 2, 4, 1, 0, 0, 0, new Insets(5, 10, 0, 0)));
+            this.add(biomeLabel, setC(0, 4, 1, 1, 0, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(10, 6, 0, 0)));
+            this.add(biomeDropdown, setC(1, 4, 4, 1, 0, 0, 0, 0, GridBagConstraints.FIRST_LINE_START, new Insets(10, 10, 0, 0)));
 
-            this.add(spawnerShapeLabel, setC(0, 3, 1, 1, 0, 0, 0, new Insets(10, 5, 0, 0)));
-            this.add(spawnerShapeSmall, setC(1, 3, 1, 1, 0, -24, 0, new Insets(10, 10, 0, 0)));
-            this.add(spawnerShapeTall, setC(2, 3, 1, 1, 0, -24, 0, new Insets(10, 5, 0, 0)));
-            this.add(spawnerShapeLong, setC(3, 3, 1, 1, 0, -24, 0, new Insets(10, 5, 0, 0)));
-            this.add(spawnerShapeBig, setC(4, 3, 1, 1, 0, -24, 0, new Insets(10, -4, 0, 0)));
-
-            this.add(biomeLabel, setC(0, 4, 1, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
-            this.add(biomeDropdown, setC(1, 4, 4, 1, 0, 0, 0, new Insets(10, 10, 0, 0)));
-
-            this.add(dungeonSeedLabel, setC(0, 5, 4, 1, 0, 0, 0, new Insets(10, 6, 0, 0)));
-            this.add(dungeonSeedField, setC(0, 6, 4, 1, 2, 0, 0, new Insets(5, 7, 0, 0)));
+            this.add(dungeonSeedLabel, setC(0, 5, 4, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 6, 0, 0)));
+            this.add(dungeonSeedField, setC(0, 6, 4, 1, 2, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 7, 0, 0)));
         }
     }
 
@@ -158,17 +131,18 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
         }
     }
 
-    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int weightx, int ipadx, int ipady, Insets insets) {
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int weightx, int weighty, int ipadx, int ipady, int anchor, Insets insets) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = gridx;
         c.gridy = gridy;
         c.gridwidth = gridwidth;
         c.gridheight = gridheight;
         c.weightx = weightx;
-        c.insets = insets;
+        c.weighty = weighty;
         c.ipadx = ipadx;
         c.ipady = ipady;
-        c.anchor = GridBagConstraints.LINE_START;
+        c.anchor = anchor;
+        c.insets = insets;
         return c;
     }
 
@@ -196,7 +170,6 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
         spawnerXLabel.setText("Spawner " + dungeon + " X");
         spawnerYLabel.setText("Spawner " + dungeon + " Y");
         spawnerZLabel.setText("Spawner " + dungeon + " Z");
-        spawnerShapeLabel.setText("Spawner " + dungeon + " Shape");
     }
 
     private int getCurrentDungeonNumber() {
@@ -206,12 +179,12 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
     //Action Listener events
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.hasMouseExited = false;
     }
 
     //Mouse listener events
     @Override
     public void mouseEntered(MouseEvent e) {
+        this.hasMouseExited = false;
     }
 
     @Override
@@ -240,9 +213,9 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
                 //swap dungeons
                 if (button == swapDungeonButton) {
                     swapDungeon();
-                } else {
-                    //crack seed
-                    dataParent.crackSeed();
+                } else if (button == crackDungeonSeed) {
+                    //crack dungeon seed
+                    dataParent.crackDungeonSeed(getCurrentDungeonNumber());
                 }
             }
         }
