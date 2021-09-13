@@ -90,12 +90,24 @@ public class DungeonCrackerGUI extends JFrame implements ActionListener, ItemLis
         LookType.DARCULA.setLookAndFeel();
     }
 
-    public String getHelpText(){
+    public String getHelpText() {
         String text;
 
         text = "<html>" +
             "<body>" +
             "<p>" +
+            "<h2>How to use the Dungeon Cracker Tab</h2>" +
+            "<ol>" +
+            "<li>Find an unaltered dungeon</li>" +
+            "<li>Remove the walls and chests, if possible. Determine what direction is North</li>" +
+            "<li>Select the correct dungeon shape at the bottom of the window</li>" +
+            "<li>Begin entering in the dungeon floor pattern on the left side of the app</li>" +
+            "<li>Select the minecraft version that the dungeon was generated in (older versions require 2 dungeons to get the world seed)</li>" +
+            "<li>Select the biome that the spawner block is in (only necessary for dungeons generated in 1.16 and newer)</li>" +
+            "<li>Press the Dungeon Seed button if you only want the structure seed, otherwise press the Crack Seed button</li>" +
+            "<li>After some time you will get a pop-up telling you the valid world seeds for the data you entered, or none if the data was invalid</li>" +
+            "</ol>" +
+            "</p><p>" +
             "Terminology" +
             "<ul>" +
             "<li>World Seed: The seed you can put into the game and recreate any world" +
@@ -162,7 +174,7 @@ public class DungeonCrackerGUI extends JFrame implements ActionListener, ItemLis
     public void actionPerformed(ActionEvent e) {
         Object event = e.getSource();
 
-        if(event.equals(radioMenuLightMode)){
+        if (event.equals(radioMenuLightMode)) {
             try {
                 LookType.INTELLIJ.setLookAndFeel();
                 helpMenuText.setForeground(Color.BLACK);
@@ -176,13 +188,13 @@ public class DungeonCrackerGUI extends JFrame implements ActionListener, ItemLis
             } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
                 unsupportedLookAndFeelException.printStackTrace();
             }
-        } else if (event.equals(twoButtonCompatMode)){
-            if(twoButtonCompatMode.isSelected()) {
+        } else if (event.equals(twoButtonCompatMode)) {
+            if (twoButtonCompatMode.isSelected()) {
                 dungeonDataTab.setTwoButtonMouseCompatMode(true);
             } else {
                 dungeonDataTab.setTwoButtonMouseCompatMode(false);
             }
-        } else if(event.equals(helpMenuItem)){
+        } else if (event.equals(helpMenuItem)) {
             JOptionPane.showMessageDialog(this, helpMenuText, "Help Menu", JOptionPane.PLAIN_MESSAGE);
         }
     }

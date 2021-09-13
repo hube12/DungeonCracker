@@ -318,7 +318,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         System.out.println("\nDungeon 1: " + dungeon1x + " " + dungeon1y + " " + dungeon1z + " " + dungeon1Sequence + " " + spawnerDataPanel.dungeon1Biome + "\nDungeon 2: " + dungeon2x + " " + dungeon2y + " " + dungeon2z + " " + dungeon2Sequence + " " + spawnerDataPanel.dungeon2Biome);
         if (dungeon == 1) {
             if (isSequenceAll2s(dungeon1Sequence)) {
-                System.out.println("Your dungeon sequence is all 2's, this would cause the app to hang. Enter in your dungeon floor pattern before pressing Dungeon Seed.");
+                System.out.println("Your dungeon sequence is empty and continuing would cause the app to hang.\nEnter in your dungeon floor pattern before continuing.");
+                JOptionPane.showMessageDialog(this, "Your dungeon sequence is empty and continuing would cause the app to hang.\nEnter in your dungeon floor pattern before continuing.", "Missing data!", JOptionPane.ERROR_MESSAGE);
             } else {
                 dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
                     dungeon1FloorDimensions[1]);
@@ -331,7 +332,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         }
         if (dungeon == 2) {
             if (isSequenceAll2s(dungeon2Sequence)) {
-                System.out.println("Your dungeon sequence is all 2's, this would cause the app to hang. Enter in your dungeon floor pattern before pressing Dungeon Seed.");
+                System.out.println("Your dungeon sequence is empty and continuing would cause the app to hang.\nEnter in your dungeon floor pattern before continuing.");
+                JOptionPane.showMessageDialog(this, "Your dungeon sequence is empty and continuing would cause the app to hang.\nEnter in your dungeon floor pattern before continuing.", "Missing data!", JOptionPane.ERROR_MESSAGE);
             } else {
                 dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2FloorDimensions[0],
                     dungeon2FloorDimensions[1]);
@@ -344,7 +346,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         }
         if (dungeon == 3) {
             if (isSequenceAll2s(dungeon1Sequence) || isSequenceAll2s(dungeon2Sequence)) {
-                System.out.println("One of your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info or switch to Dungeon 1 mode.");
+                System.out.println("One of your dungeon sequences is empty and continuing would cause the app to hang.\nEnter in your other dungeon info or switch to 1 Dungeon mode.");
+                JOptionPane.showMessageDialog(this, "One of your dungeon sequences is empty and continuing would cause the app to hang.\nEnter in your other dungeon info or switch to 1 Dungeon mode.", "Missing data!", JOptionPane.ERROR_MESSAGE);
             } else {
                 dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
                     dungeon1FloorDimensions[1]);
@@ -375,7 +378,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         if (doubleSpawnerMode) {
             //2 spawners
             if (isSequenceAll2s(dungeon1Sequence) || isSequenceAll2s(dungeon2Sequence)) {
-                System.out.println("One of your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info or switch to Dungeon 1 mode.");
+                System.out.println("One of your dungeon sequences is empty and continuing would cause the app to hang.\nEnter in your other dungeon info or switch to 1 Dungeon mode.");
+                JOptionPane.showMessageDialog(this, "One of your dungeon sequences is empty and continuing would cause the app to hang.\nEnter in your other dungeon info or switch to 1 Dungeon mode.", "Missing data!", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (dungeon1Seeds.isEmpty() || dungeon2Seeds.isEmpty()) {
                     crackDungeonSeed(3);
@@ -398,7 +402,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         } else {
             //1 spawner
             if (isSequenceAll2s(dungeon1Sequence)) {
-                System.out.println("Your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info before pressing Crack Seed.");
+                System.out.println("Your dungeon sequence is empty and continuing would cause the app to hang.\nEnter in your other dungeon info before pressing Crack Seed.");
+                JOptionPane.showMessageDialog(this, "Your dungeon sequence is empty and continuing would cause the app to hang.\nEnter in your other dungeon info before pressing Crack Seed.", "Missing data!", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (dungeon1Seeds.isEmpty()) {
                     crackDungeonSeed(1);
