@@ -41,7 +41,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     JButton clearFloorData = new JButton(TRASH_ICON);
     JButton clearProgramData = new JButton(TRASH_ALL_ICON);
     JButton crackSeedButton = new JButton("Crack Seed");
-    public boolean clearAllData;
     public boolean twoButtonMouseCompatMode = false;
 
     //---Application data---
@@ -197,6 +196,11 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
 
         dungeonSubButtonPanel.add(clearFloorData, setC(7, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 0, 0, 0)));
         dungeonSubButtonPanel.add(clearProgramData, setC(8, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
+    }
+
+    public void setTwoButtonMouseCompatMode(boolean mode){
+        this.twoButtonMouseCompatMode = mode;
+        dungeonFloorPanel.setCompatMode(mode);
     }
 
     private int safeIntParse(String text) {
@@ -360,44 +364,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                     }
                 }
             }
-        }/*
-
-
-
-        if (doubleSpawnerMode) {
-            //2 spawners
-            if (isSequenceAll2s(dungeon1Sequence) || isSequenceAll2s(dungeon2Sequence)) {
-                System.out.println("One of your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info or switch to Dungeon 1 mode.");
-            } else {
-                dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
-                    dungeon1FloorDimensions[1]);
-                dungeon2Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon2x, dungeon2y, dungeon2z, dungeon2Sequence, dungeon2FloorDimensions[0],
-                    dungeon2FloorDimensions[1]);
-                if (currentDungeonFloor == 1) {
-                    if (dungeon1Seeds.isEmpty()) {
-                        spawnerDataPanel.dungeonSeedField.setText("No results.");
-                    } else {
-                        spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
-                    }
-                } else {
-                    if (dungeon2Seeds.isEmpty()) {
-                        spawnerDataPanel.dungeonSeedField.setText("No results.");
-                    } else {
-                        spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
-                    }
-                }
-            }
-
-        } else {
-            //1 spawner
-            if (isSequenceAll2s(dungeon1Sequence)) {
-                System.out.println("Your dungeon sequences is all 2's, this would cause the app to hang. Enter in your other dungeon info before pressing Crack Seed.");
-            } else {
-                dungeon1Seeds = Main.getDungeonSeedsForGUI(versionPanel.currentVersionSelected, dungeon1x, dungeon1y, dungeon1z, dungeon1Sequence, dungeon1FloorDimensions[0],
-                    dungeon1FloorDimensions[1]);
-                spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
-            }
-        }*/
+        }
     }
 
     public void crackSeed() {

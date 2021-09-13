@@ -67,6 +67,10 @@ public class DungeonFloorPanel extends JPanel {
         }
     }
 
+    public void setCompatMode(boolean mode){
+        this.twoButtonMouseCompatMode = mode;
+    }
+
     private void createButtonMap() {
         for (int ID = 0; ID < 81; ID++) {
             buttonIDLookup.put(ID, new FloorButton(ID, this));

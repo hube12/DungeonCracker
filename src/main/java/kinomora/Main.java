@@ -85,36 +85,6 @@ public class Main {
         LOGGER.addHandler(ch);
     }
 
-    public enum LookType {
-        DARK("Dark", FlatDarkLaf::new),
-        LIGHT("Light", FlatLightLaf::new),
-        INTELLIJ("Intellij", FlatIntelliJLaf::new),
-        DARCULA("Darcula", FlatDarculaLaf::new);
-
-        private final String name;
-        private final Supplier<FlatLaf> supplier;
-
-        LookType(String name, Supplier<FlatLaf> supplier) {
-            this.name = name;
-            this.supplier = supplier;
-        }
-
-        public void setLookAndFeel() throws UnsupportedLookAndFeelException {
-            UIManager.setLookAndFeel(supplier.get());
-            for (Window window : JFrame.getWindows()) {
-                SwingUtilities.updateComponentTreeUI(window);
-            }
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isDark() {
-            return supplier.get().isDark();
-        }
-    }
-
     @SuppressWarnings("ConstantConditions")
     public static void main(String[] args) throws Exception {
         // needs to be the first call !!
@@ -173,15 +143,14 @@ public class Main {
         //If args list is empty we just go straight to the GUI version of the app
         if (!Arrays.asList(args).contains("nogui") && !Arrays.asList(args).contains("test")) {
 
-            LookType.DARCULA.setLookAndFeel();
             GUI.pack();
-            GUI.setSize(625, 502);
+            GUI.setSize(625, 530);
             GUI.setResizable(false);
             GUI.setVisible(true);
             GUI.setLocationRelativeTo(null);
 
         } else { //Test if the first argument contains the words nogui, is so we can enter text-only mode
-            if ( Arrays.asList(args).contains("nogui")) {
+            if (Arrays.asList(args).contains("nogui")) {
                 //Getting the version the dungeon was generated in
                 System.out.print("Please provide the version number that the dungeon was created in. You can type things like \"1.16\" and \"a1.0.4\": ");
                 version = MCVersion.fromString(userInput.nextLine());
@@ -210,7 +179,8 @@ public class Main {
                     System.out.println("Since you only have 1 dungeon and have selected a version older than 1.13, Dungeon Data Mode has automatically been selected.");
                     dungeonSeedMode = false;
                 } else {
-                    System.out.print("Do you have dungeon data or do you already have a dungeon seed?\n1     Dungeon Data Mode (Co-ords and Floor Pattern; Typical)\n2     Dungeon Seed Mode (Structure seeds; Uncommon)\nType the corresponding number on the left: ");
+                    System.out.print("Do you have dungeon data or do you already have a dungeon seed?\n1     Dungeon Data Mode (Co-ords and Floor Pattern; Typical)\n2     Dungeon Seed Mode " +
+                        "(Structure seeds; Uncommon)\nType the corresponding number on the left: ");
                     do {
                         input = userInput.nextLine();
                         if (input.equals("2")) {
@@ -313,7 +283,8 @@ public class Main {
                     }
                 }
 
-                System.out.println("Dumping current values:\nDungeon 1:\n" + dungeon1x + "\n" + dungeon1y + "\n" + dungeon1z + "\n" + dungeon1fsx + "\n" + dungeon1fsz + "\n" + dungeon1Sequence + "\n" + dungeon1Biome + "\nDungeon 2:\n" + dungeon2x + "\n" + dungeon2y + "\n" + dungeon2z + "\n" + dungeon2fsx + "\n" + dungeon2fsz + "\n" + dungeon2Sequence + "\n" + dungeon2Biome);
+                System.out.println("Dumping current values:\nDungeon 1:\n" + dungeon1x + "\n" + dungeon1y + "\n" + dungeon1z + "\n" + dungeon1fsx + "\n" + dungeon1fsz + "\n" + dungeon1Sequence +
+                    "\n" + dungeon1Biome + "\nDungeon 2:\n" + dungeon2x + "\n" + dungeon2y + "\n" + dungeon2z + "\n" + dungeon2fsx + "\n" + dungeon2fsz + "\n" + dungeon2Sequence + "\n" + dungeon2Biome);
 
             } else if (Arrays.asList(args).contains("test")) {
                 //Test changes to the cracking code with this method. Supported versions are all major versions between v1.17 and v1.8, plus v1.0 for "Legacy" code.
@@ -535,8 +506,9 @@ public class Main {
                 break;
             case v1_16:
                 System.out.println("Running 1.16 test data..");
-                DungeonData = new DungeonDataProcessor(MCVersion.v1_16, -6799, 61, -1473, "011010011111011111011110011100111011110111011110001011110111011111000011111101011", 9, 9).dungeonDataToDecoratorSeed();
-                StructureSeeds = new DecoratorSeedProcessor(MCVersion.v1_16, -6799 , -1473 , Biomes.DESERT, DungeonData).decoratorSeedsToStructureSeeds();
+                DungeonData =
+                    new DungeonDataProcessor(MCVersion.v1_16, -6799, 61, -1473, "011010011111011111011110011100111011110111011110001011110111011111000011111101011", 9, 9).dungeonDataToDecoratorSeed();
+                StructureSeeds = new DecoratorSeedProcessor(MCVersion.v1_16, -6799, -1473, Biomes.DESERT, DungeonData).decoratorSeedsToStructureSeeds();
                 WorldSeeds = new StructureSeedProcessor(StructureSeeds).getWorldSeedsFromStructureSeeds();
                 System.out.println("Here is the 1.16 dungeon data: " + DungeonData + " | Expected data: [66991252199345]");
                 System.out.println("Here is the 1.16 structure data: " + StructureSeeds + " | Expected data: [?]");
@@ -554,9 +526,11 @@ public class Main {
             case v1_14:
             case v1_13:
                 System.out.println("Running 1.14 and 1.13 test data..");
-                DungeonData1 = new DungeonDataProcessor(MCVersion.v1_13, 693, 30, -74, "111011100101011111011011001111110110111011101111111011101111011011111110111111110", 9, 9).dungeonDataToDecoratorSeed();
+                DungeonData1 =
+                    new DungeonDataProcessor(MCVersion.v1_13, 693, 30, -74, "111011100101011111011011001111110110111011101111111011101111011011111110111111110", 9, 9).dungeonDataToDecoratorSeed();
                 StructureSeeds1 = new DecoratorSeedProcessor(MCVersion.v1_13, 693, -74, Biomes.PLAINS, DungeonData1).decoratorSeedsToStructureSeeds();
-                DungeonData2 = new DungeonDataProcessor(MCVersion.v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011", 9, 9).dungeonDataToDecoratorSeed();
+                DungeonData2 =
+                    new DungeonDataProcessor(MCVersion.v1_13, 280, 29, 674, "111011111101101111111111101111101111110100111110111101111111110111111101111110011", 9, 9).dungeonDataToDecoratorSeed();
                 StructureSeeds2 = new DecoratorSeedProcessor(MCVersion.v1_13, 280, 674, Biomes.PLAINS, DungeonData2).decoratorSeedsToStructureSeeds();
                 StructureSeeds1.retainAll(StructureSeeds2);
                 WorldSeeds = new StructureSeedProcessor(StructureSeeds1).getWorldSeedsFromStructureSeeds();
@@ -602,16 +576,27 @@ public class Main {
     }
 
     /* Cobble = 0; Moss = 1; Unknown = 2
-    // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga  Spawner: [7x7]
-    // 1.16                       Dungeon Seed: [66991252199345];  Coords: [-6799 61 -1473]; Sequence: [011010011111011111011110011100111011110111011110001011110111011111000011111101011]; World Seed: [-720350949281663006]; Biome: Desert            Spawner: [9x9]
-    // 1.15                       Dungeon Seed: [54954658892082];  Coords: [161 16 -716];    Sequence: [1111111101101110111110111011101111111101101100101];                                 World Seed: [7298916735143357077]                           Spawner: [7x7]
-    // 1.14, 1.13                 Dungeon Seed: [82836126371671];  Coords: [693 30 -74];     Sequence: [111011100101011111011011001111110110111011101111111011101111011011111110111111110]; World Seed: [1724951870366438529]                           Spawner: [9x9]
-                                  Dungeon Seed: [19957636759997];  Coords: [280 29 674];     Sequence: [111011111101101111111111101111101111110100111110111101111111110111111101111110011]; World Seed: [1724951870366438529]                           Spawner: [9x9]
-    // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World Seed: [-1700538326672817507]; Version: [1.10.0]       Spawner: [7x9]
-                                  Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World Seed: [-1700538326672817507]; Version: [1.10.0]       Spawner: [9x7]
-    // 1.7 and below              Dungeon Seed: [215824296572061]; Coords: [256 28 129];     Sequence: [111110110111111111111111111111110111111111101111100101110111011];                   World Seed: [4549957071420637180];  Version: [1.4.7]        Spawner: [9x7]
-                                  Dungeon Seed: [185122040393267]; Coords: [240 25 170];     Sequence: [001101111011110110111111100011101111111101000111110010101101011];                   World Seed: [4549957071420637180];  Version: [1.4.7]        Spawner: [9x7]
-    // alpha testing              Dungeon Seed: [240428811966007]; Coords: [140 81 -35];     Sequence: [001011101111111111001111111011011101110111111110000110110111111];                   World Seed: [3257840388504953787];  Version: [a1.2.2]       Spawner: [7x9]
-    //                            Dungeon Seed: [82449899703950];  Coords: [171 13 -34];     Sequence: [101111111111110111011101111100011111111100101011111011001111010];                   World Seed: [3257840388504953787];  Version: [a1.2.2]       Spawner: [7x9]
+    // 1.17                       Dungeon Seed: [137229083672372]; Coords: [25 54 88];       Sequence: [0111010110011110110100010101110110101110111111111];                                 World
+    Seed: [1488979889728021444]; Biome: Giant_Tree_Taiga  Spawner: [7x7]
+    // 1.16                       Dungeon Seed: [66991252199345];  Coords: [-6799 61 -1473]; Sequence: [011010011111011111011110011100111011110111011110001011110111011111000011111101011]; World
+    Seed: [-720350949281663006]; Biome: Desert            Spawner: [9x9]
+    // 1.15                       Dungeon Seed: [54954658892082];  Coords: [161 16 -716];    Sequence: [1111111101101110111110111011101111111101101100101];                                 World
+    Seed: [7298916735143357077]                           Spawner: [7x7]
+    // 1.14, 1.13                 Dungeon Seed: [82836126371671];  Coords: [693 30 -74];     Sequence: [111011100101011111011011001111110110111011101111111011101111011011111110111111110]; World
+    Seed: [1724951870366438529]                           Spawner: [9x9]
+                                  Dungeon Seed: [19957636759997];  Coords: [280 29 674];     Sequence: [111011111101101111111111101111101111110100111110111101111111110111111101111110011]; World
+                                  Seed: [1724951870366438529]                           Spawner: [9x9]
+    // 1.12, 1.11, 1.10, 1.9, 1.8 Dungeon Seed: [14581818956973];  Coords: [137 27 -147];    Sequence: [111110101111111110110110111110011111111111111111111111101111011];                   World
+    Seed: [-1700538326672817507]; Version: [1.10.0]       Spawner: [7x9]
+                                  Dungeon Seed: [226023998267313]; Coords: [61 59 668];      Sequence: [111111110111111111001101101110111111110111111001111111001111111];                   World
+                                  Seed: [-1700538326672817507]; Version: [1.10.0]       Spawner: [9x7]
+    // 1.7 and below              Dungeon Seed: [215824296572061]; Coords: [256 28 129];     Sequence: [111110110111111111111111111111110111111111101111100101110111011];                   World
+    Seed: [4549957071420637180];  Version: [1.4.7]        Spawner: [9x7]
+                                  Dungeon Seed: [185122040393267]; Coords: [240 25 170];     Sequence: [001101111011110110111111100011101111111101000111110010101101011];                   World
+                                  Seed: [4549957071420637180];  Version: [1.4.7]        Spawner: [9x7]
+    // alpha testing              Dungeon Seed: [240428811966007]; Coords: [140 81 -35];     Sequence: [001011101111111111001111111011011101110111111110000110110111111];                   World
+    Seed: [3257840388504953787];  Version: [a1.2.2]       Spawner: [7x9]
+    //                            Dungeon Seed: [82449899703950];  Coords: [171 13 -34];     Sequence: [101111111111110111011101111100011111111100101011111011001111010];                   World
+    Seed: [3257840388504953787];  Version: [a1.2.2]       Spawner: [7x9]
     */
 }
