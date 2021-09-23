@@ -1,6 +1,11 @@
 package kinomora.gui.dungeondatatab;
 
+import kaptainwutax.biomeutils.biome.Biome;
+import kaptainwutax.biomeutils.biome.Biomes;
+import kaptainwutax.mcutils.state.Dimension;
+import kaptainwutax.mcutils.version.MCVersion;
 import kinomora.gui.dungeonseedtab.DungeonSeedTab;
+import kinomora.gui.util.Dropdown;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,14 +14,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class SpawnerDataPanel extends JPanel implements ActionListener, MouseListener {
+    public static final Biome UNKNOWN=new Biome(MCVersion.v1_0, Dimension.OVERWORLD,-1,"UNKNOWN", Biome.Category.NONE, Biome.Precipitation.NONE,0,0,0,null,null);
+    // we made sure to have unknown before every other ones
+    public  static final java.util.List<Biome> ALL_BIOMES= new ArrayList<Biome>() {{
+        add(UNKNOWN);
+        addAll(Biomes.REGISTRY.values());
+    }};
     //meta
     public DungeonDataTab dataParent;
     public DungeonSeedTab seedParent;
-    public String dungeon1Biome = "OTHER";
-    public String dungeon2Biome = "OTHER";
+    public Biome dungeon1Biome = UNKNOWN;
+    public Biome dungeon2Biome =  UNKNOWN;
     JLabel spawnerXLabel = new JLabel("Spawner 1 X");
     JTextField spawnerXField = new JTextField("0", 6);
     JLabel spawnerYLabel = new JLabel("Spawner 1 Y");
@@ -24,7 +37,7 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
     JLabel spawnerZLabel = new JLabel("Spawner 1 Z");
     JTextField spawnerZField = new JTextField("0", 6);
     JLabel biomeLabel = new JLabel("Biome");
-    JComboBox<String> biomeDropdown = new JComboBox<>(new String[]{"OTHER", "DESERT", "SWAMP", "SWAMP_HILLS"});
+    Dropdown<Biome> biomeDropdown = new Dropdown<>(ALL_BIOMES);
     JLabel dungeonSequenceLabel = new JLabel("Dungeon Sequence");
     JLabel dungeonSeedLabel = new JLabel("Dungeon Seed");
     JTextField dungeonSequenceField = new JTextField("", 19);
@@ -98,9 +111,9 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
             biomeDropdown.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     if (getCurrentDungeonNumber() == 1) {
-                        dungeon1Biome = Objects.requireNonNull(biomeDropdown.getSelectedItem()).toString();
+                        dungeon1Biome = biomeDropdown.getSelected();
                     } else {
-                        dungeon2Biome = Objects.requireNonNull(biomeDropdown.getSelectedItem()).toString();
+                        dungeon2Biome = biomeDropdown.getSelected();
                     }
                 }
             });

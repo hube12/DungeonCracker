@@ -6,8 +6,12 @@ import kaptainwutax.mcutils.version.MCVersion;
 import kaptainwutax.seedutils.lcg.LCG;
 import mjtb49.hashreversals.ChunkRandomReverser;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static kinomora.gui.dungeondatatab.SpawnerDataPanel.UNKNOWN;
 
 public class DecoratorSeedProcessor {
     public static final LCG FAILED_DUNGEON = LCG.JAVA.combine(-5);
@@ -32,11 +36,7 @@ public class DecoratorSeedProcessor {
         for (long decSeed : decoratorSeeds) {
             if (version.isNewerOrEqualTo(MCVersion.v1_13)) { //1.13-1.17
                 for (int i = 0; i < 8; i++) {
-
-                    structureSeeds.addAll(ChunkRandomReverser.reversePopulationSeed(
-                        (decSeed ^ LCG.JAVA.multiplier) - getSalt(),
-                        posX & -16, posZ & -16, version)
-                    );
+                    structureSeeds.addAll(reverseSeedForSalt(decSeed));
                     decSeed = FAILED_DUNGEON.nextSeed(decSeed);
                 }
             } else {                                    //1.12-Legacy
@@ -50,15 +50,22 @@ public class DecoratorSeedProcessor {
         return structureSeeds;
     }
 
-    private Long getSalt() {
+    private List<Long> reverseSeedForSalt(long decoratorSeed) {
+
+        List<Long> popSeed = new ArrayList<>();
         if (version.isNewerThan(MCVersion.v1_15)) {
             if (biome == Biomes.DESERT || biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS) {
-                return 30003L;
+                popSeed.addAll(ChunkRandomReverser.reversePopulationSeed((decoratorSeed ^ LCG.JAVA.multiplier) - 30003L, posX & -16, posZ & -16, version));
             } else {
-                return 30002L;
+                popSeed.addAll(ChunkRandomReverser.reversePopulationSeed((decoratorSeed ^ LCG.JAVA.multiplier) - 30002L, posX & -16, posZ & -16, version));
+            }
+            // if unknown we need to add 3 as well as the 2
+            if (biome == UNKNOWN) {
+                popSeed.addAll(ChunkRandomReverser.reversePopulationSeed((decoratorSeed ^ LCG.JAVA.multiplier) - 30003L, posX & -16, posZ & -16, version));
             }
         } else {
-            return 20003L;
+            popSeed.addAll(ChunkRandomReverser.reversePopulationSeed((decoratorSeed ^ LCG.JAVA.multiplier) - 20003L, posX & -16, posZ & -16, version));
         }
+        return popSeed;
     }
 }

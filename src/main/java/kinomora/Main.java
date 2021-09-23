@@ -144,7 +144,7 @@ public class Main {
         if (!Arrays.asList(args).contains("nogui") && !Arrays.asList(args).contains("test")) {
 
             GUI.pack();
-            GUI.setSize(625, 530);
+            GUI.setSize(700, 600);
             GUI.setResizable(false);
             GUI.setVisible(true);
             GUI.setLocationRelativeTo(null);

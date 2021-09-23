@@ -1,7 +1,6 @@
 package kinomora.gui.dungeondatatab;
 
 import kinomora.Main;
-import kinomora.gui.util.BiomeNameToBiome;
 
 import javax.swing.*;
 import java.awt.*;
@@ -389,8 +388,8 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                 } else {
                     spawnerDataPanel.dungeonSeedField.setText(dungeon2Seeds.toString());
                 }
-                worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon1Biome),
-                    dungeon1Seeds, dungeon2x, dungeon2z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon2Biome), dungeon2Seeds);
+                worldSeeds = Main.getWorldSeedsForGUIDoubleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, spawnerDataPanel.dungeon1Biome,
+                    dungeon1Seeds, dungeon2x, dungeon2z, spawnerDataPanel.dungeon2Biome, dungeon2Seeds);
                 if (worldSeeds.isEmpty()) {
                     worldSeedsTextArea.setText("No valid results");
                 } else {
@@ -409,7 +408,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                     crackDungeonSeed(1);
                 }
                 spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
-                worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, BiomeNameToBiome.getBiomeFromString(spawnerDataPanel.dungeon2Biome),
+                worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z,spawnerDataPanel.dungeon2Biome,
                     dungeon1Seeds);
                 if (worldSeeds.isEmpty()) {
                     worldSeedsTextArea.setText("No valid results");
