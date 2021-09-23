@@ -1,6 +1,5 @@
 package kinomora.gui.dungeonseedtab;
 
-import kinomora.gui.dungeondatatab.DungeonFloorPanel;
 import kinomora.gui.dungeondatatab.SpawnerDataPanel;
 import kinomora.gui.dungeondatatab.VersionPanel;
 
@@ -67,7 +66,6 @@ public class DungeonSeedTab extends JPanel implements ActionListener, MouseListe
         leftPanel.add(spawner2DataPanel, setC(0, 1, 1, 1, 5, 15, GridBagConstraints.PAGE_START, new Insets(5, 5, 5, 0)));
 
         rightPanel.add(versionPanel, setC(0, 0, 3, 1, 54, 0, GridBagConstraints.FIRST_LINE_START, new Insets(5, -95, 0, 0)));
-
 
 
     }

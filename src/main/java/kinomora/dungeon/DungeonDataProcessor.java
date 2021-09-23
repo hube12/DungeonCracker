@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class DungeonDataProcessor {
     // TODO modify me in the gui
-    public static final int CORES= Runtime.getRuntime().availableProcessors();
+    public static final int CORES = Runtime.getRuntime().availableProcessors();
     private final int posX;
     private final int posY;
     private final int posZ;
@@ -67,7 +67,7 @@ public class DungeonDataProcessor {
                 device.skip(1);
             }
         }
-        ForkJoinPool forkJoinPool=new ForkJoinPool(Math.max(CORES - 2, 1));
+        ForkJoinPool forkJoinPool = new ForkJoinPool(Math.max(CORES - 2, 1));
         return StreamEx.of(device.reverse().boxed()).parallel(forkJoinPool).collect(Collectors.toSet());
     }
 }

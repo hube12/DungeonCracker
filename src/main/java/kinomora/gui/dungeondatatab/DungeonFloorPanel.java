@@ -17,19 +17,19 @@ public class DungeonFloorPanel extends JPanel {
     public static int[][] sequenceHack = new int[9][9];
 
     //Yeah I realize there's probably a better way to do this but I don't care >:C
-    public static boolean[] sevenbyseven = new boolean[]{false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, false, false, true, true,
-        true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true,
-        true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false,
-        false};
-    public static boolean[] sevenbynine = new boolean[]{false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true
+    public static boolean[] sevenbyseven = new boolean[] {false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, false, false, true, true,
+                                                          true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true,
+                                                          true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false,
+                                                          false};
+    public static boolean[] sevenbynine = new boolean[] {false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true
         , true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true,
-        false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false};
-    public static boolean[] ninebyseven = new boolean[]{false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true,
-        true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-        true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false};
-    public static boolean[] ninebynine = new boolean[]{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true
+                                                         false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false, false, true, true, true, true, true, true, true, false};
+    public static boolean[] ninebyseven = new boolean[] {false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                                         true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                                         true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false};
+    public static boolean[] ninebynine = new boolean[] {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true
         , true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
-        true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+                                                        true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 
     public int currentFloorSize = 81;
     public int dungeon1FloorSize = 81;
@@ -67,7 +67,7 @@ public class DungeonFloorPanel extends JPanel {
         }
     }
 
-    public void setCompatMode(boolean mode){
+    public void setCompatMode(boolean mode) {
         this.twoButtonMouseCompatMode = mode;
     }
 
@@ -88,6 +88,37 @@ public class DungeonFloorPanel extends JPanel {
 
     public int getCurrentFloorSize() {
         return this.currentFloorSize;
+    }
+
+    public void setCurrentFloorSize(int size) {
+        this.currentFloorSize = size;
+        int ID = 0;
+        FloorButton button;
+        if (size == 81) {
+            for (boolean visibility : ninebynine) {
+                button = buttonIDLookup.get(ID);
+                button.setVisible(visibility);
+                ID++;
+            }
+            currentFloorSize = 81;
+        } else if (size == 63) {
+            for (boolean visibility : sevenbynine) {
+                button = buttonIDLookup.get(ID);
+                button.setVisible(visibility);
+                ID++;
+            }
+            currentFloorSize = 63;
+        } else if (size == 49) {
+            for (boolean visibility : sevenbyseven) {
+                button = buttonIDLookup.get(ID);
+                button.setVisible(visibility);
+                ID++;
+            }
+            currentFloorSize = 49;
+        } else {
+            System.out.println("Critical error in setting current floor size..");
+            System.exit(1);
+        }
     }
 
     public int[] getCurrentFloorDimension() {
@@ -135,37 +166,6 @@ public class DungeonFloorPanel extends JPanel {
         } else {
             System.out.println("Critical error in setting current floor dimension..");
             System.out.println(Arrays.toString(dimension));
-            System.exit(1);
-        }
-    }
-
-    public void setCurrentFloorSize(int size) {
-        this.currentFloorSize = size;
-        int ID = 0;
-        FloorButton button;
-        if (size == 81) {
-            for (boolean visibility : ninebynine) {
-                button = buttonIDLookup.get(ID);
-                button.setVisible(visibility);
-                ID++;
-            }
-            currentFloorSize = 81;
-        } else if (size == 63) {
-            for (boolean visibility : sevenbynine) {
-                button = buttonIDLookup.get(ID);
-                button.setVisible(visibility);
-                ID++;
-            }
-            currentFloorSize = 63;
-        } else if (size == 49) {
-            for (boolean visibility : sevenbyseven) {
-                button = buttonIDLookup.get(ID);
-                button.setVisible(visibility);
-                ID++;
-            }
-            currentFloorSize = 49;
-        } else {
-            System.out.println("Critical error in setting current floor size..");
             System.exit(1);
         }
     }
@@ -236,7 +236,7 @@ public class DungeonFloorPanel extends JPanel {
         return buttonStateArrayCurrent;
     }
 
-    public void resetDungeonData(int reset){
+    public void resetDungeonData(int reset) {
         currentFloorSize = 81;
         currentFloorDimension[0] = 9;
         currentFloorDimension[1] = 9;

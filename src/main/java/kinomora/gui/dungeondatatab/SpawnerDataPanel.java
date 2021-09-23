@@ -5,7 +5,9 @@ import kaptainwutax.biomeutils.biome.Biomes;
 import kaptainwutax.mcutils.state.Dimension;
 import kaptainwutax.mcutils.version.MCVersion;
 import kinomora.gui.dungeonseedtab.DungeonSeedTab;
+import kinomora.gui.util.BoundsPopupMenuListener;
 import kinomora.gui.util.Dropdown;
+import kinomora.gui.util.Str;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +17,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
 
 public class SpawnerDataPanel extends JPanel implements ActionListener, MouseListener {
-    public static final Biome UNKNOWN=new Biome(MCVersion.v1_0, Dimension.OVERWORLD,-1,"UNKNOWN", Biome.Category.NONE, Biome.Precipitation.NONE,0,0,0,null,null);
+    public static final Biome UNKNOWN = new Biome(MCVersion.v1_0, Dimension.OVERWORLD, -1, "Unknown", Biome.Category.NONE, Biome.Precipitation.NONE, 0, 0, 0, null, null);
     // we made sure to have unknown before every other ones
-    public  static final java.util.List<Biome> ALL_BIOMES= new ArrayList<Biome>() {{
+    public static final java.util.List<Biome> ALL_BIOMES_WITH_UNKNOWN = new ArrayList<Biome>() {{
         add(UNKNOWN);
         addAll(Biomes.REGISTRY.values());
     }};
@@ -29,7 +29,7 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
     public DungeonDataTab dataParent;
     public DungeonSeedTab seedParent;
     public Biome dungeon1Biome = UNKNOWN;
-    public Biome dungeon2Biome =  UNKNOWN;
+    public Biome dungeon2Biome = UNKNOWN;
     JLabel spawnerXLabel = new JLabel("Spawner 1 X");
     JTextField spawnerXField = new JTextField("0", 6);
     JLabel spawnerYLabel = new JLabel("Spawner 1 Y");
@@ -37,7 +37,7 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
     JLabel spawnerZLabel = new JLabel("Spawner 1 Z");
     JTextField spawnerZField = new JTextField("0", 6);
     JLabel biomeLabel = new JLabel("Biome");
-    Dropdown<Biome> biomeDropdown = new Dropdown<>(ALL_BIOMES);
+    Dropdown<Biome> biomeDropdown = new Dropdown<>(b -> Str.prettifyDashed(b.getName()), ALL_BIOMES_WITH_UNKNOWN);
     JLabel dungeonSequenceLabel = new JLabel("Dungeon Sequence");
     JLabel dungeonSeedLabel = new JLabel("Dungeon Seed");
     JTextField dungeonSequenceField = new JTextField("", 19);
@@ -90,8 +90,13 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
             this.add(spawnerZField, setC(1, 2, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 10, 0, 0)));
 
             this.add(biomeLabel, setC(0, 3, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 5, 0, 0)));
-            this.add(biomeDropdown, setC(1, 3, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 10, 0, 0)));
 
+            this.add(biomeDropdown, setC(1, 3, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 10, 0, 0)));
+            // fix the width to only be that much characters as well as number of element to display
+            biomeDropdown.setMaximumRowCount(10);
+            BoundsPopupMenuListener listener = new BoundsPopupMenuListener(true, false);
+            biomeDropdown.addPopupMenuListener(listener);
+            biomeDropdown.setPrototypeDisplayValue("XXXXXXXX");
             this.add(dungeonSequenceLabel, setC(0, 4, 2, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(10, 5, 0, 0)));
             this.add(dungeonSequenceField, setC(0, 5, 2, 1, 2, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
 
@@ -144,7 +149,7 @@ public class SpawnerDataPanel extends JPanel implements ActionListener, MouseLis
         }
     }
 
-    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, int weightx, int weighty, int ipadx, int ipady, int anchor, Insets insets) {
+    private GridBagConstraints setC(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int ipadx, int ipady, int anchor, Insets insets) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = gridx;
         c.gridy = gridy;

@@ -31,6 +31,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     public static int[][] emptyFloorSequence = new int[9][9];
     public static int[][] buttonStateArrayDungeon1 = new int[9][9];
     public static int[][] buttonStateArrayDungeon2 = new int[9][9];
+    public boolean twoButtonMouseCompatMode = false;
     JButton rotateCounterClockwise = new JButton(COUNTERCLOCKWISE_ICON);
     JButton size7x7 = new JButton(SPAWNER_SHAPE_SMALL_ICON);
     JButton size7x9 = new JButton(SPAWNER_SHAPE_TALL_ICON);
@@ -40,8 +41,6 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
     JButton clearFloorData = new JButton(TRASH_ICON);
     JButton clearProgramData = new JButton(TRASH_ALL_ICON);
     JButton crackSeedButton = new JButton("Crack Seed");
-    public boolean twoButtonMouseCompatMode = false;
-
     //---Application data---
     //Program data
     boolean validInput;
@@ -197,7 +196,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         dungeonSubButtonPanel.add(clearProgramData, setC(8, 0, 1, 1, 0, 0, 0, 0, GridBagConstraints.LINE_START, new Insets(5, 5, 0, 0)));
     }
 
-    public void setTwoButtonMouseCompatMode(boolean mode){
+    public void setTwoButtonMouseCompatMode(boolean mode) {
         this.twoButtonMouseCompatMode = mode;
         dungeonFloorPanel.setCompatMode(mode);
     }
@@ -408,7 +407,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
                     crackDungeonSeed(1);
                 }
                 spawnerDataPanel.dungeonSeedField.setText(dungeon1Seeds.toString());
-                worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z,spawnerDataPanel.dungeon2Biome,
+                worldSeeds = Main.getWorldSeedsForGUISingleDungeon(versionPanel.currentVersionSelected, dungeon1x, dungeon1z, spawnerDataPanel.dungeon2Biome,
                     dungeon1Seeds);
                 if (worldSeeds.isEmpty()) {
                     worldSeedsTextArea.setText("No valid results");
@@ -492,7 +491,7 @@ public class DungeonDataTab extends JPanel implements ActionListener, MouseListe
         }
         dungeonFloorPanel.setCurrentFloorPattern(emptyFloorSequence);
         dungeonFloorPanel.setCurrentFloorSize(81);
-        dungeonFloorPanel.setCurrentFloorDimension(new int[]{9, 9});
+        dungeonFloorPanel.setCurrentFloorDimension(new int[] {9, 9});
         spawnerDataPanel.setDungeonSequenceTextField(dungeonFloorPanel.getCurrentFloorSequence());
         spawnerDataPanel.setTextFieldValue(0, 0, 0);
 

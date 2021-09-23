@@ -140,6 +140,36 @@ public class DungeonCrackerGUI extends JFrame implements ActionListener, ItemLis
         return text;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object event = e.getSource();
+
+        if (event.equals(radioMenuLightMode)) {
+            try {
+                LookType.INTELLIJ.setLookAndFeel();
+                helpMenuText.setForeground(Color.BLACK);
+            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+                unsupportedLookAndFeelException.printStackTrace();
+            }
+        } else if (event.equals(radioMenuDarkMode)) {
+            try {
+                LookType.DARCULA.setLookAndFeel();
+                helpMenuText.setForeground(Color.WHITE);
+            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+                unsupportedLookAndFeelException.printStackTrace();
+            }
+        } else if (event.equals(twoButtonCompatMode)) {
+            dungeonDataTab.setTwoButtonMouseCompatMode(twoButtonCompatMode.isSelected());
+        } else if (event.equals(helpMenuItem)) {
+            JOptionPane.showMessageDialog(this, helpMenuText, "Help Menu", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+
+    }
+
     public enum LookType {
         DARK("Dark", FlatDarkLaf::new),
         LIGHT("Light", FlatLightLaf::new),
@@ -168,39 +198,5 @@ public class DungeonCrackerGUI extends JFrame implements ActionListener, ItemLis
         public boolean isDark() {
             return supplier.get().isDark();
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object event = e.getSource();
-
-        if (event.equals(radioMenuLightMode)) {
-            try {
-                LookType.INTELLIJ.setLookAndFeel();
-                helpMenuText.setForeground(Color.BLACK);
-            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                unsupportedLookAndFeelException.printStackTrace();
-            }
-        } else if (event.equals(radioMenuDarkMode)) {
-            try {
-                LookType.DARCULA.setLookAndFeel();
-                helpMenuText.setForeground(Color.WHITE);
-            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                unsupportedLookAndFeelException.printStackTrace();
-            }
-        } else if (event.equals(twoButtonCompatMode)) {
-            if (twoButtonCompatMode.isSelected()) {
-                dungeonDataTab.setTwoButtonMouseCompatMode(true);
-            } else {
-                dungeonDataTab.setTwoButtonMouseCompatMode(false);
-            }
-        } else if (event.equals(helpMenuItem)) {
-            JOptionPane.showMessageDialog(this, helpMenuText, "Help Menu", JOptionPane.PLAIN_MESSAGE);
-        }
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-
     }
 }

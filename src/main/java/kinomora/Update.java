@@ -95,19 +95,6 @@ public class Update {
         }
     }
 
-    public static class ModalPopup extends JDialog {
-        public ModalPopup(JFrame parent, String waitMsg) {
-            JPanel p1 = new JPanel(new GridBagLayout());
-            p1.add(new JLabel("<html><div style='text-align: center;'>" + waitMsg + "<br>Please wait...</div></html>"));
-            this.setUndecorated(true);
-            this.getContentPane().add(p1);
-            this.pack();
-            this.setLocationRelativeTo(parent);
-            this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-            this.setModal(true);
-        }
-    }
-
     private static SwingWorker<String, Void> getDownloadWorker(JDialog parent, Pair<String, String> newVersion) {
         return new SwingWorker<String, Void>() {
             @Override
@@ -233,7 +220,7 @@ public class Update {
                         }
                     }
                     if (versionToDownload.isEmpty() || !versionToDownload.containsKey("jar")) {
-                        LOGGER.warning("Github release does not contain a correct release."+versionToDownload.keySet());
+                        LOGGER.warning("Github release does not contain a correct release." + versionToDownload.keySet());
                     } else {
                         return versionToDownload;
                     }
@@ -247,6 +234,19 @@ public class Update {
             LOGGER.warning("Github release does not contain a tag_name key.");
         }
         return null;
+    }
+
+    public static class ModalPopup extends JDialog {
+        public ModalPopup(JFrame parent, String waitMsg) {
+            JPanel p1 = new JPanel(new GridBagLayout());
+            p1.add(new JLabel("<html><div style='text-align: center;'>" + waitMsg + "<br>Please wait...</div></html>"));
+            this.setUndecorated(true);
+            this.getContentPane().add(p1);
+            this.pack();
+            this.setLocationRelativeTo(parent);
+            this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            this.setModal(true);
+        }
     }
 
 }

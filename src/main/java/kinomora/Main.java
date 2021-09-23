@@ -1,10 +1,5 @@
 package kinomora;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import kaptainwutax.biomeutils.biome.Biome;
 import kaptainwutax.biomeutils.biome.Biomes;
 import kaptainwutax.mcutils.util.data.Pair;
@@ -14,8 +9,6 @@ import kinomora.dungeon.DungeonDataProcessor;
 import kinomora.dungeon.StructureSeedProcessor;
 import kinomora.gui.DungeonCrackerGUI;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -31,18 +24,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.function.Supplier;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
 
 public class Main {
-    public static java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(Main.class.getName());
-
     // starting from 1.7.2 all dungeon use 256 height
     public static final String APP_VERSION = "@VERSION@"; //using SemVer
+    public static java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(Main.class.getName());
 
     private static void registerLogger() throws IOException {
         Files.createDirectories(Paths.get("logs"));
@@ -144,7 +134,7 @@ public class Main {
         if (!Arrays.asList(args).contains("nogui") && !Arrays.asList(args).contains("test")) {
 
             GUI.pack();
-            GUI.setSize(700, 600);
+            GUI.setSize(700, 650);
             GUI.setResizable(false);
             GUI.setVisible(true);
             GUI.setLocationRelativeTo(null);
